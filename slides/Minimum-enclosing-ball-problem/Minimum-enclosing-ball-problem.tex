@@ -1,0 +1,53 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+% \usetheme{Warsaw}  %% Themenwahl
+
+\title{Minimum enclosing ball problem}
+\author{Max Mustermann}
+\date{\today}
+
+\begin{document}
+\maketitle
+\frame{\tableofcontents[currentsection]}
+
+\section{Abschnitt 1}
+
+\begin{frame}
+  \frametitle{Intro} %%Folientitel
+  \begin{Definition} %%Definition
+    Given a set of vectors $A = \{a_1, \dots, a_m\}\in \R^d$ we want to find the smallest ball containing all points of $A$.
+    % A \subseteq B_{c,\rho} := \{x \in R^d : \Vert x - c \Vert \le \rho \}
+    I.e.
+    \begin{equation}
+      \min_{c,\rho}  \rho
+      s.t. \Vert a_i -c  \Vert \le \rho \quad \forall i=1, \dots, m
+    \end{equation}
+  \end{Definition}
+  Used in clustering, Data classification, facility location, computer graphics.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Rewriting the problem}
+  Square constraints for smoothness
+    \begin{equation}
+      \min_{c,\rho}  \rho
+      s.t. \Vert a_i \Vert^2 - 2 a_i^T c + c^T c  \le \rho \quad \forall i=1, \dots, m
+    \end{equation}
+
+    Build Lagrangian Dual:
+    \begin{equation}
+      L(c, \rho, u) = \rho + \sum_{i=1}^m u_i *  (\Vert a_i -c  \Vert^2- \rho^2)
+    \end{equation}
+    and the dual function:
+    \begin{equation}
+      \Phi(u) = \inf_{c, \rho} L(c, \rho, u) = \sum_{i=1}^m \Vert a_i \Vert^2u_i - \sum_{i=1}^{m} u_i a_i^T c
+    \end{equation}
+    if $\sum_{i=1}^{m} u_i = 1$ with $u_i \ge 0$. Yields the unit simplex.
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Solving via Frank-Wolfe}
+
+\end{frame}
+\end{document}
