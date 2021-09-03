@@ -1,5 +1,9 @@
 \documentclass{beamer}
 \usepackage[utf8]{inputenc}
+
+\input{../../shared.tex}
+
+
 % \usetheme{Warsaw}  %% Themenwahl
 
 % Reference: https://arxiv.org/abs/1912.13213
@@ -183,26 +187,29 @@ It can \emph{also} be used to analyze stochastic algorithms, e.g., Stochastic Gr
     \end{cases}
   \end{equation}
 
-  1. $w_1(i) = 1$ for all $i = 1, \dots, n$
-  2. for $t=1, \dots, T$
-      2.1. compare weights $\sum_{i\in YES} w_t(i)$ vs. $\sum_{i\in NO} w_t(i)$
-      2.2. choose Yes or No depending on above comparison
-      2.3. observe feedback
-      2.4. update weights:
-      \begin{equation}
-        w_{t+1}(i) = \begin{cases}
-            w_t(i) & \text{if Expert $i$ was right} \\
-            (1-\alpha)w_t(i) & \text{if Expert $i$ made a mistake}
-        \end{cases}
+  \begin{enumerate}
+    \item $w_1(i) = 1$ for all $i = 1, \dots, n$
+    \item for $t=1, \dots, T$
+      \begin{enumerate}
+      \item compare weights $\sum_{i\in YES} w_t(i)$ vs. $\sum_{i\in NO} w_t(i)$
+      \item choose Yes or No depending on above comparison
+      \item observe feedback
+      \item update weights:
+        \begin{equation}
+          w_{t+1}(i) = \begin{cases}
+              w_t(i) & \text{if Expert $i$ was right} \\
+              (1-\alpha)w_t(i) & \text{if Expert $i$ made a mistake}
+          \end{cases}
+        \end{equation}
 
-      \end{equation}
+      \end{enumerate}
+  \end{enumerate}
 
 \end{frame}
 
 \begin{frame}
   \frametitle{Weighted majority algorithm II}
   \begin{theorem}
-    \label{thm:}
     Let $M_t$ be the number mistakes we make after $t$ attempts and
     $m_t(i) = \#$ the number of mistakes expert $i$ made...
     Then,
@@ -232,7 +239,7 @@ It can \emph{also} be used to analyze stochastic algorithms, e.g., Stochastic Gr
   \begin{equation}
     w_{t+1}(i) = (1-\alpha)^{m_t(i)} \le \Vert w_{t+1} \Vert_1
   \end{equation}
-  Combinging the above two yields
+  Combining the above two yields
   \begin{equation}
     {(1-\alpha)}^{m_t(i)} \le n (1-\alpha/2)^{M_t}
   \end{equation}
@@ -257,6 +264,55 @@ It can \emph{also} be used to analyze stochastic algorithms, e.g., Stochastic Gr
     -2 m_t(i) (1+\alpha) &\le \frac{2}{\alpha}\log(n) - M_T
     \end{aligned}
   \end{equation}
+  which yields
+  \begin{equation}
+    M_T -  \le 2 m_t(i) (1+\alpha) + \frac{2}{\alpha}\log(n) -
+  \end{equation}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Randomized Weighted Majority}
+
+  Instead of picking the optinion of the (weighted) majority, we only do so with a \textbf{probability}.
+
+  \begin{enumerate}
+    \item $w_1(i) = 1$ for all $i = 1, \dots, n$ and $\alpha \in (0, 1)$
+    \item for $t=1, \dots, T$
+      \begin{enumerate}
+      \item compute $p_t(i) = w_t(i)/\Vert w_t \Vert_1$
+      \item choose expert $i$ with probability $p_t(i)$
+      \item observe feedback
+      \item update weights:
+        \begin{equation}
+          w_{t+1}(i) = \begin{cases}
+              w_t(i) & \text{if expert $i$ was right} \\
+              (1-\alpha)w_t(i) & \text{if expert $i$ made a mistake}
+          \end{cases}
+        \end{equation}
+
+      \end{enumerate}
+  \end{enumerate}
+
+  \onslide<2->{%
+  \emph{Comment:} Randomizing algorithms typically improves the (worst case) analysis.
+
+  }
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Randomized Weighted Majority contd.}
+  As before:\\
+    $M_t= \#$ of mistakes we make after $t$ attempts and
+    $m_t(i) = \#$ of mistakes expert $i$ made.
+    \begin{theorem}
+      \begin{equation}
+        \E[M_T] \le (1+\alpha)m_T(i) + \frac{\log(n)}{\alpha}
+      \end{equation}
+    \end{theorem}
+    Where did we improve? somewhere in the constants.
 
 \end{frame}
 
