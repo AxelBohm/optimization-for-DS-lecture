@@ -1,0 +1,61 @@
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{cleveref}
+\usepackage{amssymb}
+\usepackage{mathtools}
+
+%%Numbers, expectation
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\R}{\mathbb{R}}
+\renewcommand{\phi}{\varphi}
+
+%% mathoperator
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+%proximal operator
+\newcommand{\prox}[3][]{\operatorname{prox}^{#1}_{#2}\left(#3 \right)}
+
+\usepackage{xcolor}
+
+%% sort citations by increasing number
+\usepackage[sort,nocompress]{cite}
+
+\usepackage{graphicx}% http://ctan.org/pkg/graphicx
+\usepackage{caption,subcaption}
+\graphicspath{{../code/ratio-game/}}
+
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{intersections}
+\usepgfplotslibrary{fillbetween}
+
+% \usepackage[right]{showlabels}
+
+
+%%
+\usepackage{amsthm}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{algo}{Algorithm}[section]
+\newtheorem{assumption}{Assumption}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}[section]
+
+\crefname{assumption}{Assumption}{Assumptions}
+% \crefname{lemma}{Lemma}{Lemmas}
+% \crefname{theorem}{Theorem}{Theorems}
+\crefname{equation}{}{}
+
+\usepackage{autonum}
