@@ -1,0 +1,263 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+% \usetheme{Warsaw}  %% Themenwahl
+
+% Reference: https://arxiv.org/abs/1912.13213
+
+\title{Online Optimization}
+\author{Axel}
+\date{\today}
+
+\begin{document}
+\maketitle
+\frame{\tableofcontents[currentsection]}
+
+\section{Introduction}
+
+\begin{frame}
+  \frametitle{What is online Learning}
+Consider the following repeated game:
+
+In each round $t=1,\dots,T$
+\begin{itemize}
+  \item An adversary choose a real number in $y_t \in [0,1]$ and he keeps it secret;
+  \item You try to guess the real number, choosing $x_t \in [0,1]$;
+  \item The adversary's number is revealed and you pay the squared difference ${(x_t-y_t)}^2$.
+\end{itemize}
+\textbf{Task:} guess a sequence of numbers as precisely as possible.
+To be a game, we now have to decide what is the ``winning condition''. Let's see what makes sense to consider as winning condition.
+\textbf{Question:} How to measure success?
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Adversary plays i.i.d.}
+  Consider: Adversary number are drawn from a fixed distribution (with mean $\mu$ and Variance $\sigma^2$).
+  If we knew the distribution, we could pick the mean and pay in expectation $\sigma^2T$ (optimal).
+  \begin{equation}
+    \label{eq:stoch_regret}
+    \E_Y\left[\sum_{t=1}^T (x_t - Y)^2\right] - \sigma^2 T,
+  \end{equation}
+  or equivalently considering the average
+  \begin{equation}
+    \label{eq:av_stoch_regret}
+    \frac{1}{T}\E_Y\left[\sum_{t=1}^T (x_t - Y)^2\right] - \sigma^2~.
+  \end{equation}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Minimizing Regret}
+  Let's rewrite a bit more general
+  \[
+    \E\left[\sum_{t=1}^T (x_t - Y)^2\right] - \min_{ x \in [0,1]} \ \E\left[\sum_{t=1}^T (x-Y)^2\right]~.
+  \]
+  ($\sigma^2T$ was nothing other than the payoff of the best possible strategy)
+
+  Finally: remove the assumption on how the data is generated, consider any arbitrary sequence of $y_t$ (we can remove the expectation because there is no stochasticity anymore).
+  \[
+    \Regret_T:=\sum_{t=1}^T (x_t - y_t)^2 - \min_{x \in [0,1]} \ \sum_{t=1}^T (x - y_t)^2
+  \]
+  The quantity above is called the \emph{Regret}, because it measures how much the algorithm regrets for not sticking on all the rounds to the optimal choice in hindsight.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{General loss functions}
+Online Learning is nothing else than designing and analyzing algorithms to minimize the Regret over a sequence of loss functions with respect to an arbitrary competitor $\bu \in V\subseteq \R^d$:
+\[
+\Regret_T(\bu):=\sum_{t=1}^T \ell_t(\bx_t) - \sum_{t=1}^T \ell_t(\bu)~.
+\]
+
+This framework is pretty powerful, and it allows to reformulate a bunch of different problems in machine learning and optimization as similar games. More in general, with the regret framework we can analyze situations in which the data are not independent and identically distributed from a distribution, yet I would like to guarantee that the algorithm is ``learning'' something. For example, online learning can be used to analyze
+\begin{itemize}
+\item Click prediction problems;
+\item Routing on a network;
+\item Convergence to equilibrium of repeated games.
+\end{itemize}
+It can \emph{also} be used to analyze stochastic algorithms, e.g., Stochastic Gradient Descent, but the adversarial nature of the analysis might give you suboptimal results. For example, it can be used to analyze momentum algorithms, but the adversarial nature of the losses essentially forces you to prove a convergence guarantee that treats the momentum term as a vanishing disturbance that does not help the algorithm in any way.
+
+
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Back to the numbers game}
+  % Now, let's try to design a strategy to make the regret provably sublinear in time, \emph{regardless of how the adversary chooses the numbers}.
+  Let's take a look at the best strategy in hindsight, that is argmin of the second term of the regret. It should be immediate to see that
+  \[
+    x^\star_T := \argmin_{x \in [0,1]} \ \sum_{t=1}^T (x - y_t)^2 = \frac{1}{T} \sum_{t=1}^T y_t~.
+  \]
+  Since we do not know the future $x^*_T$ is not an option in each round
+  However, we do know the past, so a reasonable strategy in each round could be to output the best number over the past.
+
+  For sure, the reason why it could work is not because we expect the future to be like the past, because it is not true! Instead, we want to leverage the fact that the optimal guess should not change too much between rounds, so we can try to ``track'' it over time.
+
+  Hence, on each round $t$ our strategy is to guess $x_t = x_{t-1}^\star=\frac{1}{t-1} \sum_{i=1}^{t-1} y_i$. Such strategy is usually called \emph{Follow-the-Leader} (FTL), because you are following what would have been the optimal thing to do on the past rounds (the Leader).
+
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Follow the leader}
+  Let's now try to show that indeed this strategy will allow us to win the game.
+  \begin{lemma}
+    \label{lemma:be_leader}
+    Let $V \subseteq \R^d$ and $\ell_t :V \rightarrow \R$ an arbitrary sequence of loss functions.
+    Denote by $x^\star_t$ a minimizer of the cumulative losses over the previous $t$ rounds in $V$. Then, we have
+    \[
+      \sum_{t=1}^T \ell_t(x^\star_{t}) \leq \sum_{t=1}^T \ell_t(x^\star_{T})~.
+    \]
+  \end{lemma}
+  %
+  \begin{proof}
+    We prove it by induction over $T$. The base case is
+    \[
+      \ell_1(x^\star_1) \leq \ell_1(x^\star_{1}),
+    \]
+    that is trivially true.
+    Now, for $T\geq2$, we assume that $\sum_{t=1}^{T-1} \ell_t(x^\star_{t}) \leq \sum_{t=1}^{T-1} \ell_t(x^\star_{T-1})$ is true and we must prove the stated inequality, that is
+    \[
+      \sum_{t=1}^T \ell_t(x^\star_{t}) \leq \sum_{t=1}^T \ell_t(x^\star_{T})~.
+    \]
+    This inequality is equivalent to
+    \begin{equation}
+      \label{eq:lemma1}
+      \sum_{t=1}^{T-1} \ell_t(x^\star_{t}) \leq \sum_{t=1}^{T-1} \ell_t(x^\star_{T}),
+    \end{equation}
+    where we removed the last element of the sums because they are the same.
+    Now observe that
+    \[
+      \sum_{t=1}^{T-1} \ell_t(x^\star_{t}) \leq \sum_{t=1}^{T-1} \ell_t(x^\star_{T-1}),
+    \]
+    by induction hypothesis, and
+    \[
+      \sum_{t=1}^{T-1} \ell_t(x^\star_{T-1}) \leq \sum_{t=1}^{T-1} \ell_t(x^\star_{T})
+    \]
+    because $x^\star_{T-1}$ is a minimizer of the left hand side in $V$ and $x^\star_{T} \in V$.
+    Chaining these two inequalities, we have that \eqref{eq:lemma1} is true, and so the theorem is proven.
+  \end{proof}
+  Basically, the above lemma quantifies the idea the knowing the future and being adaptive to it is typically better than not being adaptive to it.
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Follow the leader II}
+  \begin{theorem}
+    Let $y_t \in [0,1]$ for $t=1,\dots,T$ an arbitrary sequence of numbers. Let the algorithm's output $x_t=x_{t-1}^\star:=\frac{1}{t-1}\sum_{i=1}^{t-1} y_i$. Then, we have
+    \[
+      \Regret_T = \sum_{t=1}^T (x_t - y_t)^2 - \min_{x \in [0,1]} \ \sum_{t=1}^T (x - y_t)^2 \leq 4 + 4\ln T~.
+    \]
+  \end{theorem}
+  %
+  \begin{proof}
+    Exercise.
+  \end{proof}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Failure of FTL}
+    Let $V = [-1,1]$ and consider the sequence of losses $\ell_t(x) = z_t x + i_V(x)$, where
+    \begin{align*}
+      z_1 &= -0.5,\\
+      z_{t} &= 1, \ t=2, 4, \dots\\
+      z_{t} &= -1, \ t=3, 5, \dots
+    \end{align*}
+    Predictions of FTL will be $x_t = 1$ for $t$ even and $x_t = -1$ for $t$ odd.
+    Cumulative loss of the FTL algorithm will be $T$ while the cumulative loss of the fixed solution $u = 0$ is 0. Thus, the regret of FTL is $T$.
+
+    \emph{Outlook:} Online gradient descent will be optimal
+\end{frame}
+
+\begin{frame}
+  \frametitle{Weighted majority algorithm}
+  Consider the \emph{learning from experts} scenario.
+  Experts $= 1, \dots, n$. Decision: ``Yes'' or ``No''.
+  \begin{equation}
+    f_t(x_t) = \begin{cases}
+      1 & \text{if wrong}\\
+      0 & otherwise
+    \end{cases}
+  \end{equation}
+
+  1. $w_1(i) = 1$ for all $i = 1, \dots, n$
+  2. for $t=1, \dots, T$
+      2.1. compare weights $\sum_{i\in YES} w_t(i)$ vs. $\sum_{i\in NO} w_t(i)$
+      2.2. choose Yes or No depending on above comparison
+      2.3. observe feedback
+      2.4. update weights:
+      \begin{equation}
+        w_{t+1}(i) = \begin{cases}
+            w_t(i) & \text{if Expert $i$ was right} \\
+            (1-\alpha)w_t(i) & \text{if Expert $i$ made a mistake}
+        \end{cases}
+
+      \end{equation}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Weighted majority algorithm II}
+  \begin{theorem}
+    \label{thm:}
+    Let $M_t$ be the number mistakes we make after $t$ attempts and
+    $m_t(i) = \#$ the number of mistakes expert $i$ made...
+    Then,
+    \begin{equation}
+      M_T \le 2(1+\alpha) m_T(i) + 2 \frac{\log(n)}{\alpha}
+    \end{equation}
+    Also
+    \begin{equation}
+      M_T -m_T(i^*) = R_T
+    \end{equation}
+
+  \end{theorem}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Proof of the Theorem}
+  We always have $ \Vert w_{t+1} \Vert_1 \le \Vert w_t \Vert_1$. Also, if we made a mistake, then
+  \begin{equation}
+    \begin{aligned}
+      \Vert w_{t+1} \Vert_1 &\le \frac12 \Vert w_t \Vert_1 + \frac12 \Vert_1 w_t \Vert (1-\alpha) \\
+      &= \Vert w_t \Vert_1 (1-\alpha/2) \\
+      &\le \Vert w_1 \Vert_1 (1-\alpha/2)^{M_t} \\
+      &= n (1-\alpha/2)^{M_t} \\
+    \end{aligned}
+  \end{equation}
+  Next
+  \begin{equation}
+    w_{t+1}(i) = (1-\alpha)^{m_t(i)} \le \Vert w_{t+1} \Vert_1
+  \end{equation}
+  Combinging the above two yields
+  \begin{equation}
+    {(1-\alpha)}^{m_t(i)} \le n (1-\alpha/2)^{M_t}
+  \end{equation}
+  and
+  \begin{equation}
+    m_t(i) \log(1-\alpha) \le \log(n) + M_T \log(1-\alpha/2).
+  \end{equation}
+\end{frame}
+
+% the rest of the proof is only technical.
+%
+\begin{frame}
+  \frametitle{remainder of the proof}
+  use the fact that for $x\in (0,\frac12)$
+  \begin{equation}
+    -x -x^2 \le \log(1-x) \le -x
+  \end{equation}
+  to deduce that
+  \begin{equation}
+    \begin{aligned}
+    - m_t(i) (\alpha+\alpha^2) &\le \log(n) - M_T \frac{\alpha}{2}
+    -2 m_t(i) (1+\alpha) &\le \frac{2}{\alpha}\log(n) - M_T
+    \end{aligned}
+  \end{equation}
+
+\end{frame}
+
+\end{document}
