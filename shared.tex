@@ -11,11 +11,14 @@
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\E}{\mathbb{E}}
 \newcommand{\R}{\mathbb{R}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\Dh}{\D_h}
 \renewcommand{\phi}{\varphi}
 
 %% mathoperator
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\dom}{dom}
 %proximal operator
 \newcommand{\prox}[3][]{\operatorname{prox}^{#1}_{#2}\left(#3 \right)}
 
@@ -39,22 +42,21 @@
 
 %%
 \theoremstyle{plain}
-% \newtheorem{theorem}{Theorem}[section]
-% \newtheorem{corollary}{Corollary}[section]
-% \newtheorem{lemma}{Lemma}[section]
 \newtheorem{prop}{Proposition}[section]
 \newtheorem{algo}{Algorithm}[section]
 \newtheorem{assumption}{Assumption}
-
-\theoremstyle{definition}
-% \newtheorem{definition}{Definition}[section]
-
 \theoremstyle{remark}
 \newtheorem{remark}{Remark}[section]
 
+% cref
 \crefname{assumption}{Assumption}{Assumptions}
-% \crefname{lemma}{Lemma}{Lemmas}
-% \crefname{theorem}{Theorem}{Theorems}
 \crefname{equation}{}{}
 
 \usepackage{autonum}
+
+\usepackage{bm} %% bold math symbols
+
+
+\author{Axel Böhm}
+
+\usetheme{Berlin}

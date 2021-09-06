@@ -1,0 +1,252 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+
+\input{../../shared.tex}
+
+\newcounter{sauvegardeenumi}
+\newcommand{\asuivre}{\setcounter{sauvegardeenumi}{\theenumi}}
+\newcommand{\suite}{\setcounter{enumi}{\thesauvegardeenumi}}
+
+
+\title{Mirror Descent}
+\date{\today}
+
+\begin{document}
+\maketitle
+\frame{\tableofcontents[currentsection]}
+
+\section{About norms}
+
+\begin{frame}
+  \frametitle{Recap on (sub)-gradient descent}
+
+  When we used a norm $\Vert \cdot \Vert$ we meant the \emph{$2$-norm}, i.e.\
+  \begin{equation}
+    \Vert x \Vert = \sqrt{\sum_{i=1}^{d} x_i^2}.
+  \end{equation}
+  In \emph{gradient descent} we used Lipschitz continuity:
+  \begin{equation}
+    \Vert \nabla f(x) - \nabla f(y) \Vert \le L \Vert x-y \Vert
+  \end{equation}
+  (Lead to a complexity of $\mathcal{O}(\frac{L}{k})$) \\
+
+  \onslide<2->{%
+    For sub-gradient descent we used
+    \begin{equation}
+      \Vert g \Vert \le G
+    \end{equation}
+    (Lead to a complexity of $\mathcal{O}(\frac{G}{\sqrt{k}})$)
+  }
+
+  \onslide<3->{%
+    But there are other norms
+    \begin{equation}
+      \Vert x \Vert_\infty \le \Vert x \Vert_2 \le \sqrt{d} \Vert x \Vert_\infty
+    \end{equation}
+    It can happen that
+    \begin{equation}
+      \Vert g \Vert_\infty \le G \quad \text{but} \quad \Vert g \Vert_2 \approx \sqrt{d}G
+    \end{equation}
+  }
+\end{frame}
+
+\begin{frame}
+  \frametitle{But where did we use the norm in the method?}
+
+  \begin{block}{Gradient Descent}
+    \begin{equation}
+      x_{k+1} = x_k - \alpha_k \nabla f(x_k)
+    \end{equation}
+    equivalently
+    \begin{equation}
+      x_{k+1} = \argmin_{x \in \R^d} \{ f(x_k) + \langle \nabla f(x_k), x-x_k \rangle + \frac{1}{2 \alpha_k} \Vert x-x_k  \Vert_2^2\}
+    \end{equation}
+  \end{block}
+  We can replace the $2$-norm with a more general \textbf{distance}.
+\end{frame}
+
+\section{Bregman distances}%
+\label{sec:}
+
+\begin{frame}
+  \frametitle{Bregman distance}
+  $h: \R^d \to \R \cup \{+\infty\}$ is convex
+  \begin{enumerate}
+    \item h is differentiable of the interior of $\dom h$
+    \item h is $1$-strongly convex w.r.t. $\Vert \cdot \Vert_2$
+  \end{enumerate}
+  Then
+  \begin{equation}
+    \Dh(x,y) := h(x) - h(y) - \langle \nabla h(y), x-y \rangle.
+  \end{equation}
+
+  \onslide<2->{%
+    \begin{block}{Properties}
+      \begin{itemize}
+        \item $\Dh(x, y) \ge 0$
+        \item $\Dh(x, y) \neq \Dh(y, x)$
+        \item $\Dh(\cdot, y)$ is convex for all $y$
+              \begin{equation}
+                \Dh(x,y) \approx \frac12 \langle \nabla^2h(y)(x-y), x-y \rangle = \frac12 \Vert x-y \Vert_{\nabla^2h(y)}^2
+              \end{equation}
+        \item $\Dh(x, y) \ge \frac12 \Vert x-y \Vert^2$ ($1$-strong convexity)
+      \end{itemize}
+    \end{block}
+  }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Examples} % of Bregman distances
+  \begin{enumerate}
+    \item $h(x) = \frac12 \Vert x \Vert_2^2$ gives $\Dh(x,y) = \Vert x-y \Vert^2$
+    \item $h(x) = \frac{1}{2(p-1)} \Vert x \Vert_p^2$ with $p \in [1, 2]$
+    \item  $\Delta^d= \{x \in \R^d_+ : \sum_{i=1}^{d}x_i = 1\}$ the \emph{unit simplex} and
+          \begin{equation}
+            h(x) =
+            \begin{cases}
+              \sum_{i=1}^{d} x_i \log(x_i) & x_i > 0 \\
+              +\infty & \text{otherwise}
+            \end{cases}
+          \end{equation}
+          the \textbf{Negative entropy}.\\
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Negative entropy}
+    Negative entropy: $h(x) = \sum_{i=1}^{d} x_i \log(x_i)$ for $ x_i > 0$. \\
+    Then $ \nabla h(x) = \log(x) + \bm{1}$ (coordinatewise) and
+    \begin{equation}
+    \begin{aligned}
+        \Dh(x,y) &= \sum_{i=1}^{d}x_i \log(x_i) - y_i \log(y_i) - \langle \log(y)+ \bm{1}, x-y \rangle \\
+        &= \sum_{i=1}^{d} x_i \log(x_i) - \sum_{i=1}^{d} x_i \log(y_i) \\
+        &= \sum_{i=1}^{d} x_i \log\left(\frac{x_i}{y_i}\right)
+    \end{aligned}
+    \end{equation}
+    The \textcolor{red}{Kullback-Leibler divergence} $K(X \Vert Y)$
+
+    Is strongly convex over $\Delta$
+    \begin{equation}
+      \D(x, y) \ge \frac12 \Vert x-y \Vert_1^2 \hfill \text{Pinsker's ineq.}
+    \end{equation}
+
+\end{frame}
+
+
+\section{Mirror descent}%
+\label{sec:}
+
+\begin{frame}
+  \frametitle{Mirror descent}
+    Idea: replace squared Euclidian norm with more general object:
+    \begin{equation}
+      \begin{aligned}
+        x_{k+1} &= \argmin_{x \in \R^d} \{ f(x_k) + \langle \nabla f(x_k), x-x_k \rangle + \frac{1}{\alpha_k} \Dh(x,x_k)\} \\
+        \onslide<onwards->{%
+          &= \argmin_{x \in \R^d} \{ \langle \nabla f(x_k), x \rangle + \frac{1}{\alpha_k} \Dh(x,x_k)\} \\
+          &= \argmin_{x \in \R^d} \{ \langle \nabla f(x_k), x \rangle + \frac{1}{\alpha_k} (h(x) - h(x_k) - \langle \nabla h(x_k), x-x_k \rangle)\} \\
+          &= \argmin_{x \in \R^d} \{ \langle \nabla f(x_k), x \rangle + \frac{1}{\alpha_k} (h(x) - \langle \nabla h(x_k), x \rangle)\} \\
+          &= \argmin_{x\in \R^d} \{ \langle \alpha_k \nabla f(x_k) - \nabla h(x_k), x \rangle + h(x) \} \\
+        }
+      \end{aligned}
+    \end{equation}
+
+    \onslide<3->{%
+      \textbf{Question:} But why \emph{mirror} descent?
+    }
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{The Mirror part}
+  \begin{equation}
+    x_{k+1} = \argmin_{x\in \R^d} \{ \langle \alpha_k \nabla f(x_k) - \nabla h(x_k), x \rangle + h(x) \}
+  \end{equation}
+  By optimality condition:
+  \begin{equation}
+    0 = \alpha_k \nabla f(x_k) - \nabla h(x_k) + \nabla h(x_{k+1})
+  \end{equation}
+  Therefore
+  \begin{equation}
+    \nabla h(x_{k+1}) =  \nabla h(x_k)  - \alpha_k \nabla f(x_k)
+  \end{equation}
+
+  \textbf{Put mirror picture here}
+
+\end{frame}
+
+% yura mirror descent part 2 begins here
+
+\begin{frame}
+  \frametitle{Mirror Descent on the unit simplex}
+    Negative entropy: $h(x) = \sum_{i=1}^{d} x_i \log(x_i)$ for $ x_i > 0$. \\
+    We define $a := \alpha_k \nabla f(x_k) - \nabla h(x_k)$. Then
+    \begin{equation}
+      x_{k+1} = \argmin_{x \in \Delta} \{ \langle a, x \rangle + h(x)\}
+    \end{equation}
+    with $x_i \ge 0$ and $\sum x_i = 1$.
+    \begin{block}{How to solve this?}
+      Via \textbf{Lagrange }
+      \begin{equation}
+        L(x,\mu) = \langle a, x \rangle + h(x) - \mu (x_1+\cdots+ x_d -1)
+      \end{equation}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Mirror Descent on the unit simplex [contd]}
+      Then,
+      \begin{equation}
+        \begin{aligned}
+          \partial_{x_i} L(x,\mu) &= a_i + \log(x_i) +1 - \mu \overset{!}{=} 0 \\
+          \log(x_i) &= \mu -1 - a_i  \\
+          x_i &= e^{\mu - 1 - a_i} = \beta e^{-a_i}
+        \end{aligned}
+      \end{equation}
+      with $\beta= e^{\mu-1}$.
+
+      \onslide<2->{%
+        Second constraint:
+        \begin{equation}
+          \begin{aligned}
+            \sum_{i=1}^{d} x_i \overset{!}{=} 1
+            &\Rightarrow \sum_{i=1}^{d} \beta e^{-a_i} = 1
+            \Rightarrow \beta = \frac{1}{\sum_{i=1}^{d} e^{-a_i}} \Rightarrow x_i = \frac{e^{-a_i}}{\sum_{j=1}^{d} e^{-a_j}}
+          \end{aligned}
+        \end{equation}
+      }
+
+      \onslide<3->{%
+        Final mirror descent update:
+        \begin{equation}
+          x_{k+1}(i) = \frac{x_k(i) e^{\alpha_k {[\nabla f(x_k)]}_i}}{\sum_{j=1}^{d}e^{\alpha_k {[\nabla f(x_k)]}_j}}
+        \end{equation}
+      }
+\end{frame}
+
+% \section{convergence analysis}%
+% put here convergence proof?
+%
+\begin{frame}
+  \frametitle{(general) mirror descent convergence statement}
+  \begin{equation}
+    \Vert y \Vert_* := \max_{\Vert x \Vert=1} \{ \langle y, x \rangle\}
+  \end{equation}
+  \begin{theorem}
+    In $(R^d, \Vert \cdot \Vert)$ and subgradients bounded in dual norm $\Vert g_k \Vert_* \le G$, then
+    \begin{equation}
+      f(\hat{x}_k) - f^* \le \frac{\D(x^*, x_1) + \frac12 \sum_i \alpha_i^2 G^2}{\sum_i \alpha_i}
+    \end{equation}
+  \end{theorem}
+
+  \onslide<2->{%
+    \textbf{What about $\D(x^*, x_1) $?}
+    Let $x_1 = (\frac{1}{n}, \cdots , \frac{1}{n})$, then
+    \begin{equation}
+      \D(x, x_1) = \sum x_i \log(\frac{x_i}{\frac1n}) = \sum x_i \log(x_i) + \log(n) \le log(n)
+    \end{equation}
+  }
+
+\end{frame}
+
+\end{document}

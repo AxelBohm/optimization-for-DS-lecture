@@ -340,7 +340,7 @@ To be a game, we now have to decide what is the ``winning condition''. Let's see
       \begin{enumerate}
         \item compute $p_t(i) = w_t(i)/\Vert w_t \Vert_1$
         \item choose expert $i$ with probability $p_t(i)$
-        \item observe loss $\bm{l}_t= (l_t(1), \dots, l_t(n))$
+        \item observe loss $\bm{\ell}_t= (\ell_t(1), \dots, \ell_t(n))$
         \item update weights:
           \begin{equation}
             w_{t+1}(i) = (1-\alpha \ell_t(i)) w_t(i)
@@ -378,13 +378,14 @@ To be a game, we now have to decide what is the ``winning condition''. Let's see
       \begin{enumerate}
         \item compute $p_t(i) = w_t(i)/\Vert w_t \Vert_1$
         \item choose expert $i$ with probability $p_t(i)$
-        \item observe loss $\bm{l}_t= (l_t(1), \dots, l_t(n))$
+        \item observe loss $\bm{\ell}_t= (\ell_t(1), \dots, \ell_t(n))$
         \item update weights:
           \begin{equation}
-            w_{t+1}(i) =  w_t(i) \textcolor{red}{e^{-\alpha l_t(i)}}
+            w_{t+1}(i) =  w_t(i) \textcolor{red}{e^{-\alpha \ell_t(i)}}
           \end{equation}
       \end{enumerate}
   \end{enumerate}
+  \vfill
   Note:
   \begin{equation}
     e^{-x} \approx 1-x
@@ -397,12 +398,14 @@ To be a game, we now have to decide what is the ``winning condition''. Let's see
   \frametitle{Hedge Algorithm [contd]}
 
   \begin{theorem}
-    if $\ell_t(i) \in [-1, 1]$ and $\alpha < \frac12$, then \textbf{Hedge Alg.} guarantees
+    If $\ell_t(i) \in [-1, 1]$ and $\alpha < \frac12$, then \textbf{Hedge Alg.} guarantees
 
     \begin{equation}
-      \sum_{t=1}^{T} \langle \bm{p}_t, \bm{\ell}_t \rangle  - \sum_{t=1}^{T} \ell_t(i) \le \alpha \sum_{t=1}^{T} \langle p_t, \ell_t \rangle^2 + \frac{\log(n)}{\alpha} \quad \forall i
+      \sum_{t=1}^{T} \langle \bm{p}_t, \bm{\ell}_t \rangle  - \sum_{t=1}^{T} \ell_t(i) \le \alpha \sum_{t=1}^{T} \langle p_t, \ell_t \rangle^2 + \frac{\log(n)}{\alpha} \quad \forall i.
     \end{equation}
   \end{theorem}
+  \onslide<2->{%
+
   \textbf{Observe:} Iteration $t$ is just
   \begin{equation}
     \begin{aligned}
@@ -415,6 +418,7 @@ To be a game, we now have to decide what is the ``winning condition''. Let's see
   \begin{equation}
     h(x) = \sum_{i}^{} x(i) \log(x(i))
   \end{equation}
+  }
 
 \end{frame}
 
