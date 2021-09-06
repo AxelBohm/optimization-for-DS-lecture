@@ -2,6 +2,7 @@
 \usepackage[utf8]{inputenc}
 
 \input{../../shared.tex}
+\usepackage{bm}
 
 
 % \usetheme{Warsaw}  %% Themenwahl
@@ -60,7 +61,7 @@ To be a game, we now have to decide what is the ``winning condition''. Let's see
 
   Finally: remove the assumption on how the data is generated, consider any arbitrary sequence of $y_t$ (we can remove the expectation because there is no stochasticity anymore).
   \[
-    \Regret_T:=\sum_{t=1}^T (x_t - y_t)^2 - \min_{x \in [0,1]} \ \sum_{t=1}^T (x - y_t)^2
+    R_T:=\sum_{t=1}^T (x_t - y_t)^2 - \min_{x \in [0,1]} \ \sum_{t=1}^T (x - y_t)^2
   \]
   The quantity above is called the \emph{Regret}, because it measures how much the algorithm regrets for not sticking on all the rounds to the optimal choice in hindsight.
 \end{frame}
@@ -68,40 +69,41 @@ To be a game, we now have to decide what is the ``winning condition''. Let's see
 
 \begin{frame}
   \frametitle{General loss functions}
-Online Learning is nothing else than designing and analyzing algorithms to minimize the Regret over a sequence of loss functions with respect to an arbitrary competitor $\bu \in V\subseteq \R^d$:
-\[
-\Regret_T(\bu):=\sum_{t=1}^T \ell_t(\bx_t) - \sum_{t=1}^T \ell_t(\bu)~.
-\]
+  Online Learning is nothing else than designing and analyzing algorithms to minimize the Regret over a sequence of loss functions with respect to an arbitrary competitor $u \in V\subseteq \R^d$:
+  \[
+    R_T(u):=\sum_{t=1}^T \ell_t(x_t) - \sum_{t=1}^T \ell_t(u)~.
+  \]
 
-This framework is pretty powerful, and it allows to reformulate a bunch of different problems in machine learning and optimization as similar games. More in general, with the regret framework we can analyze situations in which the data are not independent and identically distributed from a distribution, yet I would like to guarantee that the algorithm is ``learning'' something. For example, online learning can be used to analyze
-\begin{itemize}
-\item Click prediction problems;
-\item Routing on a network;
-\item Convergence to equilibrium of repeated games.
-\end{itemize}
-It can \emph{also} be used to analyze stochastic algorithms, e.g., Stochastic Gradient Descent, but the adversarial nature of the analysis might give you suboptimal results. For example, it can be used to analyze momentum algorithms, but the adversarial nature of the losses essentially forces you to prove a convergence guarantee that treats the momentum term as a vanishing disturbance that does not help the algorithm in any way.
-
-
-
+  This framework allows to reformulate problems in machine learning and optimization as similar games.
+  More in general, with the regret framework we can analyze situations in which the data are not independent and identically distributed from a distribution, yet I would like to guarantee that the algorithm is ``learning'' something.
+  For example, online learning can be used to analyze
+  \begin{itemize}
+    \item Click prediction problems;
+    \item Routing on a network;
+    \item Convergence to equilibrium of repeated games.
+  \end{itemize}
+  It can \emph{also} be used to analyze stochastic algorithms, e.g., Stochastic Gradient Descent, but the adversarial nature of the analysis might give you suboptimal results.
 \end{frame}
 
 
 \begin{frame}
   \frametitle{Back to the numbers game}
   % Now, let's try to design a strategy to make the regret provably sublinear in time, \emph{regardless of how the adversary chooses the numbers}.
-  Let's take a look at the best strategy in hindsight, that is argmin of the second term of the regret. It should be immediate to see that
+  Let's take a look at the \textbf{best strategy in hindsight}, that is argmin of the second term of the regret. Clearly
   \[
     x^\star_T := \argmin_{x \in [0,1]} \ \sum_{t=1}^T (x - y_t)^2 = \frac{1}{T} \sum_{t=1}^T y_t~.
   \]
-  Since we do not know the future $x^*_T$ is not an option in each round
-  However, we do know the past, so a reasonable strategy in each round could be to output the best number over the past.
-
-  For sure, the reason why it could work is not because we expect the future to be like the past, because it is not true! Instead, we want to leverage the fact that the optimal guess should not change too much between rounds, so we can try to ``track'' it over time.
-
-  Hence, on each round $t$ our strategy is to guess $x_t = x_{t-1}^\star=\frac{1}{t-1} \sum_{i=1}^{t-1} y_i$. Such strategy is usually called \emph{Follow-the-Leader} (FTL), because you are following what would have been the optimal thing to do on the past rounds (the Leader).
-
-
+  \begin{itemize}
+    \item Don't know the future: $x^*_T$ is not an option in each round
+    \item But do know the past. in each round: best number over the past.
+    \item not because we expect the future to be like the past (not true)
+    \item optimal guess should not change too much between rounds (so we can try to ``track'' it over time)
+  \end{itemize}
+  Hence, on each round $t$ our strategy is to guess $x_t = x_{t-1}^\star=\frac{1}{t-1} \sum_{i=1}^{t-1} y_i$, called \textbf{Follow-the-Leader} (FTL).
 \end{frame}
+
+\section{Strategies}%
+\label{sec:}
 
 \begin{frame}
   \frametitle{Follow the leader}
@@ -151,7 +153,7 @@ It can \emph{also} be used to analyze stochastic algorithms, e.g., Stochastic Gr
   \begin{theorem}
     Let $y_t \in [0,1]$ for $t=1,\dots,T$ an arbitrary sequence of numbers. Let the algorithm's output $x_t=x_{t-1}^\star:=\frac{1}{t-1}\sum_{i=1}^{t-1} y_i$. Then, we have
     \[
-      \Regret_T = \sum_{t=1}^T (x_t - y_t)^2 - \min_{x \in [0,1]} \ \sum_{t=1}^T (x - y_t)^2 \leq 4 + 4\ln T~.
+      R_T = \sum_{t=1}^T (x_t - y_t)^2 - \min_{x \in [0,1]} \ \sum_{t=1}^T (x - y_t)^2 \leq 4 + 4\ln T~.
     \]
   \end{theorem}
   %
@@ -164,16 +166,23 @@ It can \emph{also} be used to analyze stochastic algorithms, e.g., Stochastic Gr
 
 \begin{frame}
   \frametitle{Failure of FTL}
-    Let $V = [-1,1]$ and consider the sequence of losses $\ell_t(x) = z_t x + i_V(x)$, where
-    \begin{align*}
-      z_1 &= -0.5,\\
-      z_{t} &= 1, \ t=2, 4, \dots\\
-      z_{t} &= -1, \ t=3, 5, \dots
-    \end{align*}
+    Let $V = [-1,1]$ and consider the sequence of losses $\ell_t(x) = z_t x + i_V(x)$, where $z_1 = -0.5$
+    \begin{equation*}
+      z_t = \begin{cases}
+       1, & \text{$t$ even} \\
+       -1, & \text{$t$ odd}
+      \end{cases}
+
+    \end{equation*}
     Predictions of FTL will be $x_t = 1$ for $t$ even and $x_t = -1$ for $t$ odd.
     Cumulative loss of the FTL algorithm will be $T$ while the cumulative loss of the fixed solution $u = 0$ is 0. Thus, the regret of FTL is $T$.
 
-    \emph{Outlook:} Online gradient descent will be optimal
+    \textbf{Outlook:}
+    \begin{itemize}
+      \item Follow the \emph{regularized} leader
+      \item Online gradient descent % will be optimal
+    \end{itemize}
+
 \end{frame}
 
 \begin{frame}
@@ -312,7 +321,100 @@ It can \emph{also} be used to analyze stochastic algorithms, e.g., Stochastic Gr
         \E[M_T] \le (1+\alpha)m_T(i) + \frac{\log(n)}{\alpha}
       \end{equation}
     \end{theorem}
-    Where did we improve? somewhere in the constants.
+    \textbf{Improved constants!}
+\end{frame}
+
+\begin{frame}
+  \frametitle{proof of randomized WMA}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Multiplicative Weights Algorithm}
+  Before: Loss $l_t$ was $0$ or $1$
+  Now: General loss functions $\bm{\ell}_t= (\ell_t(1), \dots, \ell_t(n))$ with $\ell_t(i) \in [-1, 1]$
+  \begin{enumerate}
+    \item $w_1(i) = 1$ for all $i = 1, \dots, n$ and $\alpha \in (0, 1)$
+    \item for $t=1, \dots, T$
+      \begin{enumerate}
+        \item compute $p_t(i) = w_t(i)/\Vert w_t \Vert_1$
+        \item choose expert $i$ with probability $p_t(i)$
+        \item observe loss $\bm{l}_t= (l_t(1), \dots, l_t(n))$
+        \item update weights:
+          \begin{equation}
+            w_{t+1}(i) = (1-\alpha \ell_t(i)) w_t(i)
+          \end{equation}
+      \end{enumerate}
+  \end{enumerate}
+
+  Note that
+  \begin{equation}
+    \langle \bm{p}_t, \bm{\ell}_t \rangle = p_t(1)\ell_t(1) + \cdots + p_t(n)\ell_t(n) = \E_i[\ell_t(i)]
+  \end{equation}
+  gives expected loss of round $t$.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Multiplicative Weights Algorithm [contd]}
+
+  \begin{theorem}
+    if $\ell_t(i) \in [-1, 1]$ and $\alpha < \frac12$, then \textbf{MWA} guarantees
+
+    \begin{equation}
+      \sum_{t=1}^{T} \langle \bm{p}_t, \bm{\ell}_t \rangle  - \sum_{t=1}^{T} \ell_t(i) \le \alpha \sum_{t=1}^{T} \vert \ell_t(i) \vert + \frac{\log(n)}{\alpha} \quad \forall i
+    \end{equation}
+
+  \end{theorem}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Hedge Algorithm}
+  \begin{enumerate}
+    \item $w_1(i) = 1$ for all $i = 1, \dots, n$ and $\alpha \in (0, 1)$
+    \item for $t=1, \dots, T$
+      \begin{enumerate}
+        \item compute $p_t(i) = w_t(i)/\Vert w_t \Vert_1$
+        \item choose expert $i$ with probability $p_t(i)$
+        \item observe loss $\bm{l}_t= (l_t(1), \dots, l_t(n))$
+        \item update weights:
+          \begin{equation}
+            w_{t+1}(i) =  w_t(i) \textcolor{red}{e^{-\alpha l_t(i)}}
+          \end{equation}
+      \end{enumerate}
+  \end{enumerate}
+  Note:
+  \begin{equation}
+    e^{-x} \approx 1-x
+  \end{equation}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Hedge Algorithm [contd]}
+
+  \begin{theorem}
+    if $\ell_t(i) \in [-1, 1]$ and $\alpha < \frac12$, then \textbf{Hedge Alg.} guarantees
+
+    \begin{equation}
+      \sum_{t=1}^{T} \langle \bm{p}_t, \bm{\ell}_t \rangle  - \sum_{t=1}^{T} \ell_t(i) \le \alpha \sum_{t=1}^{T} \langle p_t, \ell_t \rangle^2 + \frac{\log(n)}{\alpha} \quad \forall i
+    \end{equation}
+  \end{theorem}
+  \textbf{Observe:} Iteration $t$ is just
+  \begin{equation}
+    \begin{aligned}
+      w_{t+1}(i) &= w_t(i) e^{-\alpha \ell_t(i)} \\
+      p_{t+1}(i) &= \frac{w_{t+1}(i)}{\Vert w_{t+1}\Vert_1}
+    \end{aligned}
+  \end{equation}
+  \textcolor{red}{Online mirror descent!}
+  \textcolor{red}{(KL-divergence setting:)}
+  \begin{equation}
+    h(x) = \sum_{i}^{} x(i) \log(x(i))
+  \end{equation}
 
 \end{frame}
 
