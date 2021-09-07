@@ -12,8 +12,12 @@
 \newcommand{\E}{\mathbb{E}}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\D}{\mathcal{D}}
+\newcommand{\B}{\mathcal{B}}
 \newcommand{\Dh}{\D_h}
 \renewcommand{\phi}{\varphi}
+
+% integral
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
 
 %% mathoperator
 \DeclareMathOperator*{\argmax}{arg\,max}
@@ -28,8 +32,8 @@
 \usepackage[sort,nocompress]{cite}
 
 \usepackage{graphicx}% http://ctan.org/pkg/graphicx
+\graphicspath{{../figures/}{../../figures}} %Setting the graphicspath
 \usepackage{caption,subcaption}
-\graphicspath{{../code/ratio-game/}}
 
 \usepackage{tikz}
 \usepackage{pgfplots}
@@ -56,7 +60,8 @@
 
 \usepackage{bm} %% bold math symbols
 
+\usepackage{bbm} %% for \mathbbm{1}
 
 \author{Axel Böhm}
 
-\usetheme{Berlin}
+\usetheme{Darmstadt}

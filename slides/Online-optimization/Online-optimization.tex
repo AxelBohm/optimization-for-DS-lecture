@@ -69,13 +69,16 @@ To be a game, we now have to decide what is the ``winning condition''. Let's see
 
 \begin{frame}
   \frametitle{General loss functions}
-  Online Learning is nothing else than designing and analyzing algorithms to minimize the Regret over a sequence of loss functions with respect to an arbitrary competitor $u \in V\subseteq \R^d$:
+  Online Learning is the study of algorithms to minimize the \emph{regret} over a sequence of loss functions with respect to an arbitrary competitor $u \in V\subseteq \R^d$:
   \[
     R_T(u):=\sum_{t=1}^T \ell_t(x_t) - \sum_{t=1}^T \ell_t(u)~.
   \]
+  Regret framework allows to
+  \begin{itemize}
+    \item reformulate problems in machine learning and optimization as similar games.
+    \item analyze situations in which the data are not i.i.d.\, yet want to guarantee that the algorithm is ``learning'' something.
+  \end{itemize}
 
-  This framework allows to reformulate problems in machine learning and optimization as similar games.
-  More in general, with the regret framework we can analyze situations in which the data are not independent and identically distributed from a distribution, yet I would like to guarantee that the algorithm is ``learning'' something.
   For example, online learning can be used to analyze
   \begin{itemize}
     \item Click prediction problems;
@@ -172,7 +175,6 @@ To be a game, we now have to decide what is the ``winning condition''. Let's see
        1, & \text{$t$ even} \\
        -1, & \text{$t$ odd}
       \end{cases}
-
     \end{equation*}
     Predictions of FTL will be $x_t = 1$ for $t$ even and $x_t = -1$ for $t$ odd.
     Cumulative loss of the FTL algorithm will be $T$ while the cumulative loss of the fixed solution $u = 0$ is 0. Thus, the regret of FTL is $T$.

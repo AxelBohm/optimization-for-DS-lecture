@@ -1,0 +1,105 @@
+\documentclass{beamer}
+
+\input{../../shared.tex}
+
+\title{Matrix scaling}
+\date{\today}
+
+\begin{document}
+\maketitle
+\frame{\tableofcontents[currentsection]}
+
+\section{Introduction}%
+
+\begin{frame}
+  \frametitle{Introduction}
+  \textbf{given:} a matrix $A \in \R^{m\times n}_+$, vectors $r \in \R_{++}^m$ and $c \in \R^n_{++}$\\
+  \textbf{find:} diagonal matrices $X$ and $Y$ such that for $B = XAY$ it holds:
+  \begin{equation}
+    B \mathbbm{1}_n = r \quad \text{and} \quad B^T \mathbbm{1}_m = c
+  \end{equation}
+  where $\mathbbm{1}_n = (1, \dots, 1)$ exactly $n$-times.
+  Equivalently
+  \begin{equation}
+    \Vert B_{i,:} \Vert_1 = r_i \quad \text{and} \Vert B_{:, j} \Vert = c_j.
+  \end{equation}
+
+  \begin{block}{}
+    In this case $A$ is called $(r,c)$-scalable.
+  \end{block}
+  \onslide<2->{%
+    If $\Vert r \Vert_1 \neq \Vert c \Vert_2$ this is not possible.
+  }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Visualization of diagonal scaling}
+
+  \begin{equation}
+    \begin{aligned}
+    B = \begin{bmatrix}
+      x_1 & & & \\
+      & x_2 & & \\
+      & & \ddots & \\
+      & & & x_m
+    \end{bmatrix}
+    A
+    \begin{bmatrix}
+      y_1 & & & \\
+      & y_2 & & \\
+      & & \ddots & \\
+      & & & y_n
+    \end{bmatrix}
+    \\
+    =
+    \begin{bmatrix}
+      a_{1,1}x_1y_1 & a_{1,2}x_1y_2 & \cdots & a_{1,n} x_1y_m \\
+      \vdots   & \ddots & & \\
+      a_{m,1}x_m y_1 & & \cdots & a_{m,n}x_m y_m
+    \end{bmatrix}
+    \end{aligned}
+  \end{equation}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Applications}
+  \begin{block}{Ill conditioned linear system $Az = b$.}
+    Can multiply both sides by $X$  and substitute $z= Yv$ to get instead
+    \begin{equation}
+      XAz = X
+    \end{equation}
+  \end{block}
+  \begin{block}{$(0-1)$ matrices | bipartite graphs}
+  \end{block}
+  \begin{minipage}{0.5\textwidth}
+    \begin{equation}
+      \begin{bmatrix}
+        0 & 1 & 1 \\
+        1 & 0 & 0 \\
+        0 & 1 & 1
+      \end{bmatrix}
+    \end{equation}
+  \end{minipage}
+  \begin{minipage}{0.25\textwidth}
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=\textwidth]{bipartite-graph.png}
+      \caption{\label{fig:label} }
+    \end{figure}
+  \end{minipage}
+  \begin{definition}
+    A \textbf{matching} is a set of edges without common vertices.
+  \end{definition}
+  \begin{definition}
+    A \textbf{perfect matching} is a matching which covers all vertices.
+  \end{definition}
+
+
+
+
+
+
+\end{frame}
+
+\end{document}
