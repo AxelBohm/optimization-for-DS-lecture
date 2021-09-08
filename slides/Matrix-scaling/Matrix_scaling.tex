@@ -1,6 +1,7 @@
 \documentclass{beamer}
 
 \input{../../shared.tex}
+\DeclareMathOperator*{\perm}{perm}
 
 \title{Matrix scaling}
 \date{\today}
@@ -59,19 +60,19 @@
     \end{bmatrix}
     \end{aligned}
   \end{equation}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{Applications}
-  \begin{block}{Ill conditioned linear system $Az = b$.}
+  \begin{block}{\textbf{Application:} Ill conditioned linear system $Az = b$.}
     Can multiply both sides by $X$  and substitute $z= Yv$ to get instead
     \begin{equation}
       XAz = X
     \end{equation}
   \end{block}
-  \begin{block}{$(0-1)$ matrices | bipartite graphs}
-  \end{block}
+\end{frame}
+
+\section{Matchings}%
+\label{sec:}
+
+\begin{frame}
+  \frametitle{$(0-1)$ matrices | bipartite graphs}
   \begin{minipage}{0.5\textwidth}
     \begin{equation}
       \begin{bmatrix}
@@ -85,21 +86,200 @@
     \begin{figure}[ht]
       \centering
       \includegraphics[width=\textwidth]{bipartite-graph.png}
-      \caption{\label{fig:label} }
+      \caption{bipartite graph}
     \end{figure}
   \end{minipage}
+
+  \onslide<2->{%
+    \begin{definition}
+      A \textbf{matching} is a set of edges without common vertices.
+    \end{definition}
+    % Say something about applications of matching like:
+    % - marriage theorem
+    % - hitchcock transport problem
+    \begin{definition}
+      A \textbf{perfect matching} is a matching which covers all vertices.
+    \end{definition}
+  }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Finding the number of perfect matchings}
+  Finding one is easy (polynomial time).
+  Finding all is in \# P (i.e.\ hard!).
+  \begin{block}{Consider $m=n$, $A\in \R^{n \times n}$}
+    Recall:
+    \begin{equation}
+      \begin{aligned}
+        \text{(determinant)} \quad \det A = \sum_{\sigma} \sign(\sigma) \prod_{i=1}^n a_i \sigma(i) \\
+        \text{(permanent)} \quad \perm A = \sum_{\sigma} \prod_{i=1}^n a_i \sigma(i)
+      \end{aligned}
+    \end{equation}
+  \end{block}
+  \begin{block}{Observation}
+    For a $(0,1)-$matrix $A$, $\perm A$ is the number of perfect matchings.
+    % This means that computing permanent must be hard.
+  \end{block}
+  One is easy to compute the other one hard. How can this be?
+  % Diagionalize via gaussion elimination gives O(n^3) algorithm for computing determinant.
+  % This doesn't work for permanent because it is not invariant under these operation (not multilinear).
+\end{frame}
+
+\section{Permanent}%
+\label{sec:}
+
+\begin{frame}
+  \frametitle{Lower bounding the permanent}
+  % This notion also appears in optimal transport
   \begin{definition}
-    A \textbf{matching} is a set of edges without common vertices.
-  \end{definition}
-  \begin{definition}
-    A \textbf{perfect matching} is a matching which covers all vertices.
+    A matrix $A \in \R^{m\times n}_+$ is called \textbf{doubly stochastic}, if sum of every row and every column is $1$.
   \end{definition}
 
+  \begin{block}{van der Waerden (1926) conjectured}
+    For doubly stochastic matrices the following \emph{lower bound} holds
+    \begin{equation}
+      \perm A \ge \frac{n!}{n^n}.
+    \end{equation}
+  \end{block}
+  \begin{equation}
+   \text{Is tight for} A = \begin{bmatrix}
+      1/n & \cdots & 1/n \\
+      \vdots & \ddots & 1/n \\
+      1/n & \dots & 1/n
+    \end{bmatrix}
+  \end{equation}
+  Proved independently by Jegortschow and Falikman in '80 / '81.
+\end{frame}
 
 
+% do we use this at all?
+\begin{frame}
+  \frametitle{Upper bounding the permanent}
+  \begin{block}{Bregman-Minc}
+    For $(0,1)$-matrices
+    \begin{equation}
+      \perm A \le \prod_{i=1}^n {(r_i !)}^{1/r_i} \quad \text{where $r_i := \Vert A_{i,:} \Vert$}
+    \end{equation}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Matrix scaling to approx.\ permanent}
+  \begin{block}{}
+    If a $(0, 1)$-matrix $A$ can be scaled to be doubly stochastic, i.e.\ it is $\left(\mathbbm{1}, \mathbbm{1}\right)$-scalable, then
+    we can apply lower bound
+    \begin{equation}
+      \perm B = \perm (XAY) = \left(\prod_i x_i\right) \left(\prod_j y_j\right) perm A
+    \end{equation}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Matrix scaling as an optimization problem}
+  \begin{itemize}
+    \item \textbf{given:} $A, r, c$
+    \item \textbf{find:} $X, Y$ such that $B=XAY$ fulfills $B\mathbbm{1}_m=r$ and $B \mathbbm{1}_n=c$.
+    \item $m+n$ unknowns
+          \item $m+n$ constraints
+  \end{itemize}
+  Consider the (\emph{nonconvex}) function
+  \begin{equation}
+    g(x,y) = \langle x, A y \rangle - \langle r, \log x \rangle - \langle c, \log y \rangle
+  \end{equation}
+  with derivative (coordinatewise)
+  \begin{equation}
+    \label{eq:grad-original-formulation}
+    \begin{aligned}
+      \nabla_x g(x,y) = Ay - \frac{r}{x} \\
+      \nabla_y g(x,y) = A^T x - \frac{c}{y}
+    \end{aligned}
+  \end{equation}
+\end{frame}
 
 
+\begin{frame}
+  \frametitle{Reparametrizing this system}
+  Via reparametrization $x= e^\xi$ and $y=e^{\eta}$ we get
+  \begin{equation}
+    f(\xi, \eta) = \sum_{i,j} a_{i,j} e^{\xi_i + \eta_j} - \langle r, \xi \rangle - \langle c, \eta \rangle
+  \end{equation}
+  which is \emph{convex}. It's gradient is given by
+  \begin{equation}
+    \label{eq:grad-convex-reformulation}
+    \frac{\partial f}{\partial \xi_i} = \sum_{j=1}^{n} a_{i,j} e^{\xi_i + \eta_j} - r_i
+  \end{equation}
+  Easy to see that the optimality condition of~\eqref{eq:grad-convex-reformulation} and~\eqref{eq:grad-original-formulation} agree.
+  Implies that even the nonconvex function only has \emph{global} minimizers.
+\end{frame}
 
+\begin{frame}
+  \frametitle{Matrix scaling as an optimization problem [contd]}
+  It is easy to see that a solution $(x,y)$ of
+  \begin{equation}
+    \begin{aligned}
+      Ay - \frac{r}{x} = 0 \\
+      A^T x - \frac{c}{y} = 0
+    \end{aligned}
+  \end{equation}
+  defines a solution to the \emph{matrix scaling} problem via $X=\diag x$ and $Y=\diag y$
+  \begin{equation}
+    \left(\begin{array}{c}
+            a_{1 1} y_1 + a_{1 2} y_2 + \cdots \\
+            a_{2 1} y_1 + a_{2 2} y_2 + \cdots \\
+            a_{m 1} y_1 + a_{m 2} y_2 + \cdots \\
+          \end{array}\right)
+        \begin{array}{c}
+          \cdot x_1 = r_1\\
+          \cdot x_2 = r_2\\
+          \cdot x_m = r_m
+        \end{array}
+      \end{equation}
+\end{frame}
+
+\begin{frame}
+  \frametitle{}
+  The question remains: how to minimize
+  \begin{equation}
+    g(x,y) = \langle x, A y \rangle - \langle r, \log x \rangle - \langle c, \log y \rangle
+  \end{equation}
+  \onslide<2->{%
+    \begin{block}{alternating minimiziation}
+      Given a problem
+      \begin{equation}
+        \begin{aligned}
+          &\min_{x,y} \phi(x,y)\\
+          x_{k+1} &= \argmin_x \phi(x,y_k) \\
+          y_{k+1} &= \argmin_y \phi(x_{k+1}, y)
+        \end{aligned}
+      \end{equation}
+    \end{block}
+    makes sense as long as the subproblems are easy (e.g. convex).
+  }
+  \begin{equation}
+    g(x,y) = \langle x, A y \rangle - \langle r, \log x \rangle - \langle c, \log y \rangle
+  \end{equation}
+  \begin{equation}
+    \text{opt. cond.\ for $x$} \quad Ay - \frac{r}{x} = 0
+    \text{opt. cond.\ for $y$} \quad Ay - \frac{c}{y} = 0
+  \end{equation}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{}
+
+  \begin{block}{Sinkhorn '60}
+    Given $(x_0, y_0)$, for $k=1,\dots$
+    \begin{equation}
+      \begin{aligned}
+        x_{k+1}&= \frac{r}{A y_k} \\
+        y_{k+1}&= \frac{r}{A x_{k+1}} \\
+      \end{aligned}
+    \end{equation}
+  \end{block}
+  Linear convergence if $a_{i,j} > 0$.
+  \textbf{Q:} What if $A$ is not $(r,c)$-scalable?
+  % Then the optimization problem has no solution as FOC are never fulfilled
 \end{frame}
 
 \end{document}
