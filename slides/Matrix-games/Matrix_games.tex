@@ -1,0 +1,91 @@
+\documentclass{beamer}
+
+\input{../../shared.tex}
+\DeclareMathOperator*{\perm}{perm}
+
+\title{Matrix games}
+\date{\today}
+
+\begin{document}
+\maketitle
+\frame{\tableofcontents[currentsection]}
+
+\section{Introduction}%
+
+\begin{frame}
+  \frametitle{Introduction}
+  Given
+  \begin{itemize}
+    \item Player I (rows, Alice)
+          \item Player II (columns, Bob)
+          \item a \emph{payoff} matrix $A \in \R^{m \times n}$
+  \end{itemize}
+  Every round
+  \begin{enumerate}
+    \item Alice picks (row) strategy $i\in [m]:= \{1,\dots, m\}$
+          Bob picks (col) strategy $j\in [n]$
+    \item Bob pays Alice the amount $a_{i,j}$
+  \end{enumerate}
+  \begin{center}
+    \textbf{zero-sum game}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Example: penalty game}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[scale=0.2]{penalty-game.png}
+    \caption{penalty game}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Example: prisoners dilemma}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{prison.jpg}
+    \caption{\label{fig:label} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Worst case}
+
+  \begin{itemize}
+    \item Alice gets $\onslide<2->{\max_{j\in [m]}}\min_{j\in [n]} a_{i,j}$
+    \onslide<3->{\item Bob gets $\min_{j\in [n]} \max_{j\in [m]} a_{i,j}$}
+  \end{itemize}
+  \onslide<4->{%
+    We claim:
+    \begin{equation}
+      \max_i \min_j a_{i,j} \le \min_{j} \max_i a_{i,j}
+    \end{equation}
+    \begin{center}
+      \textit{``Tallest dwarf is not as tall as the smallest giant.''}
+    \end{center}
+    But equality does not hold in general!
+  }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Proof of the min-max theorem}
+  \begin{equation}
+    \begin{aligned}
+      a_{ij} &\le a_{ij} & \forall i,j \\
+      \onslide<2->{a_{ij} &\le \max_i a_{ij} & \forall i,j }\\
+      \onslide<3->{\min_j a_{ij} &\le \min_j \max_i a_{ij} & \forall i}\\
+    \end{aligned}
+  \end{equation}
+  \begin{definition}
+    We call $(i^*, j^*)$ a saddle point (or \emph{Nash equilibrium}) if
+    \begin{equation}
+      \max_i a_{ij^*} = a_{i^*j^*} = \min_j a_{i^*j}
+    \end{equation}
+  \end{definition}
+\end{frame}
+
+
+
+
+\end{document}
