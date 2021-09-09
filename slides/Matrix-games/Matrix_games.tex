@@ -200,7 +200,6 @@
     \end{array} \right)
  \right\rangle
   \end{equation}
-
 \end{frame}
 
 \begin{frame}
@@ -218,7 +217,72 @@
   \begin{equation}
     \min_C \phi
   \end{equation}
+  \begin{block}{Integrability condition}
+    Is the case if
+    \begin{equation}
+      \frac{\partial \phi}{\partial x \partial y} = \frac{\partial \phi}{\partial y \partial x}
+    \end{equation}
+  \end{block}
+  But
+  \begin{equation}
+    \frac{\partial F_1}{\partial y} = A^T \neq - A = \frac{\partial F_2}{\partial x}
+  \end{equation}
+\end{frame}
 
+
+\begin{frame}
+  \frametitle{VI as Fixed point}
+  \begin{align}
+    \langle F(z^*), z-z^* \rangle \ge 0 \quad \forall z \in C \\
+    \Leftrightarrow
+    z^* = P_C (z^* - F(z^*)) \label{eq:FP}\tag{FP}
+  \end{align}
+  \begin{proof}
+    Applying
+    \begin{equation}
+      \langle P_C(x)-x, x' - P_C(x) \rangle \ge 0 \quad \forall x' \in C
+    \end{equation}
+    with~\eqref{eq:FP}, gives
+    \begin{equation}
+    \langle z^* - (z^* - F(z^*)), z-z^* \rangle \ge 0 \quad \forall z \in C
+    \end{equation}
+  \end{proof}
+  \begin{itemize}
+    \item should remind us of (projected) gradient descent
+          \item when you see a fixed point equation: iterate!
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{But is it any good}
+  \begin{equation}
+    z_{k+1} = z_k - \alpha F(z_k)
+  \end{equation}
+  Then
+  \begin{equation}
+    \begin{aligned}
+      \Vert z_{k+1} \Vert^2 &= \Vert z_k \Vert^2 - \underbrace{2 \alpha \langle F(z_k), z_k \rangle}_{=0} + \alpha^2 \Vert F(z_k) \Vert^2 \\
+      &=\Vert z_k \Vert^2 + \alpha^2 \Vert F(z_k) \Vert^2 \\
+    \end{aligned}
+  \end{equation}
+  Resulting in $\Vert z_{k+1} \Vert \ge \Vert z_k \Vert$
+  \begin{theorem}
+    We can still still show a complexity of $\mathcal{O}(1/\sqrt{k})$ with the same analysis as for subgradient descent for \emph{averaged iterates} in terms of $f_p(x) - f_d(y)$.
+  \end{theorem}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Sketch of the proof}
+  With the notation $g_k = F(z_k)$ we get
+  \begin{equation}
+    \begin{aligned}
+      \Vert x_{k+1} - x^* \Vert^2 &\le \Vert x_k - \alpha_k g_k - x^* \Vert^2 \\
+      &= \Vert x_k-x^* \Vert^2 + 2 \alpha_k \langle g_k, x^*-x_k \rangle + \alpha^2 \Vert g_k \Vert^2.
+    \end{aligned}
+  \end{equation}
+  But now $\langle g_k, x^* - x_k \rangle = [f_d(y_k) - f_p(x_k)]$.
+  Rest of the proof is left as an exercise.
 
 \end{frame}
 
