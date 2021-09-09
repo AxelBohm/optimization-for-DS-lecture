@@ -44,7 +44,7 @@
   \frametitle{Example: prisoners dilemma}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=\textwidth]{prison.jpg}
+    \includegraphics[width=0.5\textwidth]{prison.jpg}
     \caption{\label{fig:label} }
   \end{figure}
 \end{frame}
@@ -66,6 +66,9 @@
     \end{center}
     But equality does not hold in general!
   }
+  % \begin{proof}
+  %   lala
+  % \end{proof}
 \end{frame}
 
 \begin{frame}
@@ -77,15 +80,147 @@
       \onslide<3->{\min_j a_{ij} &\le \min_j \max_i a_{ij} & \forall i}\\
     \end{aligned}
   \end{equation}
+  \onslide<4->{%
   \begin{definition}
     We call $(i^*, j^*)$ a saddle point (or \emph{Nash equilibrium}) if
     \begin{equation}
-      \max_i a_{ij^*} = a_{i^*j^*} = \min_j a_{i^*j}
+      \max_i a_{ij^*} = a_{i^*j^*} = \min_j a_{i^*j}.
     \end{equation}
+    These are called \emph{pure strategies}.
   \end{definition}
+  }
+\end{frame}
+
+% Talk about stackelberg?
+
+\begin{frame}
+  \frametitle{Rock paper scissors}
+  \begin{equation}
+    \begin{array}{l|ccc}
+        & R & P & S \\
+      \hline
+      R & 0 & -1 & 1 \\
+      P & 1 & 0 & -1 \\
+      S & -1 & 1 & 0
+    \end{array}
+  \end{equation}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Mixed Strategies}
+  With pure strategies we do not always have a saddle point.
+  \begin{block}{von Neumann (1928) --- Mixed strategies}
+    \begin{itemize}
+      \item Alice picks strategies $1, \dots, m$ \emph{with probabilities} $x\in \Delta_m$
+      \item Bob picks strategies $1, \dots, n$ \emph{with probabilities} $x\in \Delta_n$
+    \end{itemize}
+    Expected gain of Alice is
+    \begin{equation}
+      \langle x, Ay \rangle = \sum_{i,j} a_{ij} x_i y_j
+    \end{equation}
+  \end{block}
+  \onslide<2->{%
+    \begin{theorem}{Saddle point exists}
+      Expected gain of Alice $=$ expected loss of Bob
+      \begin{equation}
+        \max_{x \in \Delta} \min_{y \in \Delta} \langle x, Ay \rangle = \min_{y \in \Delta} \max_{x \in \Delta} \langle x, Ay \rangle.
+      \end{equation}
+
+    \end{theorem}
+  }
+\end{frame}
+
+\section{Algorithms}%
+\label{sec:}
+
+\begin{frame}
+  \frametitle{Stopping criteria}
+  \begin{equation}
+    \begin{aligned}
+      \min_{x \in \Delta} \max_{y \in \Delta} \langle x, Ay \rangle =: v \\
+      \max_{y \in \Delta} \min_{x \in \Delta} \langle x, Ay \rangle = v
+    \end{aligned}
+  \end{equation}
+  \begin{block}{stopping criterion}
+    \begin{equation}
+      \begin{aligned}
+        f_p(x) - f_p(x^*) &= f_p(x) - v \onslide<2->{\textcolor{red}{\, \le \epsilon/2}}\\
+        f_d(y^*) - f_d(y) &= v - f_d(y) \onslide<2->{\textcolor{red}{\, \le \epsilon/2}} \\
+        \onslide<3->{\Rightarrow f_p(x) - f_d(y) \le \epsilon}
+      \end{aligned}
+    \end{equation}
+  \end{block}
+  \begin{center}
+    Before we never had the optimal value!
+  \end{center}
+  Solution will always be on the boundary:
+  \begin{equation}
+    f_p(x) = \max_{y \in \Delta} \langle A^T x, y \rangle = \max_{j} \langle A^T x, e_j \rangle
+  \end{equation}
 \end{frame}
 
 
+\begin{frame}
+  \frametitle{}
+  Consider
+  \begin{equation}
+      \min_{x \in \Delta} \max_{y \in \Delta} \langle x, Ay \rangle
+  \end{equation}
+  as a minimization problem
+  \begin{equation}
+      \min_{x \in \Delta} \langle x, A y^* \rangle
+  \end{equation}
+  Then
+  \begin{equation}
+    x^* \in \argmin_{y \in \Delta} f_p(x)  \Leftrightarrow \langle \nabla f_p(x^*), x-x^* \rangle \ge 0 \quad \forall x \in D
+  \end{equation}
+  Thus
+  \begin{equation}
+    \begin{aligned}
+      \langle A^T y^*, x-x^* \rangle &\ge 0 \quad \forall  x \in D \\
+      \langle -A x^*, y-y^* \rangle &\ge 0 \quad \forall  y \in D \\
+    \end{aligned}
+  \end{equation}
+  Concatenate the two conditions to get
+  \begin{equation}
+  \left\langle \begin{bmatrix}
+      0 & A^T \\
+      -A & 0
+    \end{bmatrix}
+    \left(\begin{array}{c}
+      x^*\\ y^*
+    \end{array}  \right),
+    \left(\begin{array}{c}
+      x \\ y
+    \end{array}  \right)
+    -
+    \left(\begin{array}{c}
+      x^* \\
+      y^*
+    \end{array} \right)
+ \right\rangle
+  \end{equation}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{}
+  By rewriting $z=(x,y)$ and $F(z) = [A^T y; Ax]$, then
+  \begin{equation}\tag{VI}
+    \label{eq:VI}
+    \langle F(z^*), z-z^* \rangle \ge 0 \quad \forall z \in \Delta_n \times \Delta_m := C
+  \end{equation}
+  \begin{center}
+    \textbf{Variational inequality}
+  \end{center}
+
+  If $F = \nabla \phi$ then~\eqref{eq:VI} would be equivalent to
+  \begin{equation}
+    \min_C \phi
+  \end{equation}
+
+
+\end{frame}
 
 
 \end{document}
