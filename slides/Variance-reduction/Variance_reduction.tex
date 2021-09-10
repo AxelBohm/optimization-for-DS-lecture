@@ -1,0 +1,77 @@
+
+\documentclass{beamer}
+
+% \usepackage{algorithmicx}
+% \usepackage{algpseudocode}
+
+
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\input{../../shared.tex}
+
+% reference: https://yuxinchen2020.github.io/ele522_optimization/lectures/variance_reduction.pdf
+
+\title{Variance reduction for stochastic gradient methods}
+\date{\today}
+
+\begin{document}
+\maketitle
+\frame{\tableofcontents[currentsection]}
+
+\section{Introduction}%
+
+
+A common Task in (supervised) machine learning:
+\begin{equation}
+  \min_{x\in \R^d} f(x) := \frac{1}{n} \sum_{i=1}^{n} \underbrace{\text{loss for $i$-th sample}} + \underbrace{\psi(x)}_{\textcolor{blue}{\text{regularizer}}}
+\end{equation}
+where the $i$-th sample is $(a_i, y_i)$.
+
+\begin{itemize}
+  \item linear regression: $f_i(x) = {(a_i^T x -y_i)}^2$, and $\psi=0$
+  \item logistic regression: $f_i(x) = \log(1+e^{-y_i a_i^T x})$, and $\psi=0$
+        ``sigmoid function'' and logistic loss.
+  \item Lasso: $f_i$ as for linear regression but $\psi(x) = \Vert x \Vert_i$
+  \item SVM: $f_i(x) = \max \{0 , 1 - y_i a_i^T x\}$ and $\psi(x)= \Vert x \Vert^2$
+\end{itemize}
+
+
+\begin{frame}
+  \frametitle{Stochastic gradient descent}
+  \begin{algorithm}
+    \caption{SGD}\label{euclid}
+    \begin{algorithmic}[1]
+      \For{ k = 1,2, \dots}
+      \State pick $i_k$ uniform at random in $[n]$
+      \State $x_{k+1} = x_k  - \alpha_k \nabla f_{i_k}(x_k)$
+      \Endfor
+    \end{algorithmic}
+  \end{algorithm}
+
+  We already noticed that:
+  \begin{itemize}
+    \item large stepsizes fail to suppress variability in the stoch. gradients $\RightArrow$ leads to oscilations
+    \item decreasing stepsizes mitigate this problem but slows down convergence (too conservative)
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Recall SGD}
+  \begin{equation}
+    x_{k+1} = x_k - \alpha_k g_k
+  \end{equation}
+  \begin{itemize}
+    \item $g_k$ is an unbiased estimator of the true gradient $\nabla F(x_k)$
+    \item convergence depends on variance $\E [ \Vert g_k - \nabla F(x_k) \Vert ] \le \sigma_g$
+    \item vanilla SGD $g_k = \nabla f_{i_k}(x_k)$ \\
+          \textbf{issue:} $\sigma_g$ is non-negligible even close to the solution
+    \item \textbf{Q:} can we choose $g_k$ in a different way to reduce variability?
+  \end{itemize}
+
+\end{frame}
+
+
+\end{document}

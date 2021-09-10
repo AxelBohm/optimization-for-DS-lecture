@@ -126,10 +126,12 @@
   \end{equation}
   we can deduce the exact same inequality as before
   \begin{equation}
+    \begin{aligned}
       \Vert x_{k+1} - x^* \Vert^2 &= \Vert P_C(x_k - \alpha_k g_k) - x^* \Vert^2 \\
       &\le \Vert x_k - \alpha_k g_k - x^* \Vert^2 \\
       &= \Vert x_k-x^* \Vert^2 + 2 \alpha_k \langle g_k, x^*-x_k \rangle + \alpha^2 \Vert g_k \Vert^2\\
       &\le \Vert x_k-x^* \Vert^2 + 2 \alpha_k (f^* - f(x_k))+ \alpha^2 \Vert g_k \Vert^2.
+    \end{aligned}
   \end{equation}
 \end{frame}
 
