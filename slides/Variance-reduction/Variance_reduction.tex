@@ -1,9 +1,5 @@
 \documentclass{beamer}
 
-
-\usepackage{algorithm}
-\usepackage{algpseudocode}
-
 \input{../../shared.tex}
 
 % reference: https://yuxinchen2020.github.io/ele522_optimization/lectures/variance_reduction.pdf
@@ -18,25 +14,51 @@
 \section{Introduction}%
 
 
-A common Task in (supervised) machine learning:
-\begin{equation}
-  \min_{x\in \R^d} f(x) := \frac{1}{n} \sum_{i=1}^{n} \underbrace{\text{loss for $i$-th sample}} + \underbrace{\psi(x)}_{\textcolor{blue}{\text{regularizer}}}
-\end{equation}
-where the $i$-th sample is $(a_i, y_i)$.
+\begin{frame}
+  \frametitle{}
+  A common Task in (supervised) machine learning:
+  \begin{equation}
+    \min_{x\in \R^d} f(x) := \frac{1}{n} \sum_{i=1}^{n} \underbrace{f_i(x)}_{\text{loss for $i$-th sample}} + \underbrace{\psi(x)}_{\textcolor{blue}{\text{regularizer}}}
+  \end{equation}
+  where the $i$-th sample is $(a_i, y_i)$.
 
-\begin{itemize}
-  \item linear regression: $f_i(x) = {(a_i^T x -y_i)}^2$, and $\psi=0$
-  \item logistic regression: $f_i(x) = \log(1+e^{-y_i a_i^T x})$, and $\psi=0$
-        ``sigmoid function'' and logistic loss.
-  \item Lasso: $f_i$ as for linear regression but $\psi(x) = \Vert x \Vert_i$
-  \item SVM: $f_i(x) = \max \{0 , 1 - y_i a_i^T x\}$ and $\psi(x)= \Vert x \Vert^2$
-\end{itemize}
+  \textbf{Examples:}
+  \begin{itemize}
+    \item linear regression: $f_i(x) = {(a_i^T x -y_i)}^2$, and $\psi=0$
+    \item logistic regression: $f_i(x) = \log(1+e^{-y_i a_i^T x})$, and $\psi=0$
+          ``sigmoid function'' and logistic loss.
+    \item Lasso: $f_i$ as for linear regression but $\psi(x) = \Vert x \Vert_i$
+    \item SVM: $f_i(x) = \max \{0 , 1 - y_i a_i^T x\}$ and $\psi(x)= \Vert x \Vert^2$
+  \end{itemize}
+\end{frame}
 
+\begin{frame}
+  \frametitle{Gradient descent}
+  \begin{algorithm}[H]
+    \caption{GD}
+    \begin{algorithmic}[1]
+      \For{$k = 1,2, \dots$}
+      \State $x_{k+1} = x_k  - \alpha_k \nabla f(x_k) $
+      \Endfor
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{itemize}
+    \item gradient can be computed via
+          \begin{equation}
+            \nabla f(x) = \nabla \left(\sum_{i=1}^{n}f_i(x)\right) = \sum_{i=1}^{n} \nabla f_i(x_k)
+          \end{equation}
+    \item good convergence properties
+    \item can be expensive if $n$ is large!
+  \end{itemize}
+
+
+\end{frame}
 
 \begin{frame}
   \frametitle{Stochastic gradient descent}
   \begin{algorithm}[H]
-    \caption{SGD}\label{euclid}
+    \caption{SGD}\label{sgd}
     \begin{algorithmic}[1]
       \For{$k = 1,2, \dots$}
       \State pick $i_k$ uniform at random in $[n]$
@@ -47,6 +69,7 @@ where the $i$-th sample is $(a_i, y_i)$.
 
   We already noticed that:
   \begin{itemize}
+    \item unbiased: $\E[\nabla f_{i_k}(x)] = \sum_{i=1}^{n} \P[i=i_k] \nabla f_i(x) = \sum_{i=1}^{n} \frac{1}{n} \nabla f_i(x)$
     \item large stepsizes fail to suppress variability in the stoch.\ gradients $\RightArrow$ leads to oscilations
     \item decreasing stepsizes mitigate this problem but slows down convergence (too conservative)
   \end{itemize}
@@ -65,6 +88,25 @@ where the $i$-th sample is $(a_i, y_i)$.
     \item vanilla SGD $g_k = \nabla f_{i_k}(x_k)$ \\
           \textbf{issue:} $\sigma_g$ is non-negligible even close to the solution
     \item \textbf{Q:} can we choose $g_k$ in a different way to reduce variability?
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Minibatching}
+  \begin{algorithm}[H]
+    \caption{minibatch SGD}
+    \begin{algorithmic}[1]
+      \For{$k = 1,2, \dots$}
+      \State pick $I_k$ random subset of $[n]$ with $\vert I_k \vert = b $
+      \State $x_{k+1} = x_k  - \alpha_k \sum_{i \in I_k} \nabla f_{i}(x_k)$
+      \Endfor
+    \end{algorithmic}
+  \end{algorithm}
+  \begin{itemize}
+    \item typically we make a (uniform) \emph{random} choice $i_k \in [n] = \{1, \dots, n\}$
+          see also the random reshuffling
+    \item by increasing the size to a random subset $\I_k \subset [n]$ of size $b \ll n$
   \end{itemize}
 
 \end{frame}
@@ -216,24 +258,40 @@ where the $i$-th sample is $(a_i, y_i)$.
     \caption{SVRG}\label{}
     \begin{algorithmic}[1]
       \For{$k=1,2, \dots$}
-      \State{Set $x^0 = \tilde{x}= \tilde{x}^{k}$}
-      \State{Compute $\tilde{\mu} \coloneq \nabla f(\tilde{x})$}
+      \State{Set $x^0 = \tilde{x} = x^{m+1}$}
+      \State{Compute $\tilde{\mu} := \nabla f(\tilde{x})$}
       \For{$l=1,2, \dots, m$}
       \State{pick $i_l$ uniform at random in $[n]$}
       \State{Set $x^{l+1} = x^l - \alpha (\nabla f_{i_l}(x^l) - \nabla f_{i_l}(\tilde{x}) + \tilde{\mu})$}
       \Endfor{}
+      \State{$x^0$}
       \Endfor{}
     \end{algorithmic}
   \end{algorithm}
 
   \begin{itemize}
-    \item Does not need to store full table of gradients.
+    \item Does Not need to store full table of gradients.
     \item requires \emph{batch} gradient computation every \emph{epoch}
-    \item convergence rates similar to SAGA, but simpler analysis.
     \item per iteration cost of SVRG is comparable to that of SGD if $m \ge n$
+    \item convergence rates similar to SAGA, but simpler analysis.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{SVRG}
+  \textbf{key idea:} by storing old point we can
+  \begin{equation}
+    \underbrace{\nabla f_{i_k}(x^k) - \nabla f_{i_k}(x^{\text{old}})}_{\to 0 \text{if $x\approx x^{\text{old}}$}} + \underbrace{\nabla f(x^{\text{old}})}_{\to 0 \text{if $x^{\text{old}}$}}
+  \end{equation}
+  \begin{itemize}
+    \item is an unbiased estimate of $\nabla f(x^k)$
+    \item converges to $0$ (meaning reduced variability) if $x^k\approx x^{\text{old}} \approx x^*$
   \end{itemize}
 
 \end{frame}
+
+% talk about \sqrt{n} improvement
+% talk about loopless svrg?
 
 
 \end{document}
