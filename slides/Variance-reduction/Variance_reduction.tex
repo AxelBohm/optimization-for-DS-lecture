@@ -1,12 +1,8 @@
-
 \documentclass{beamer}
-
-% \usepackage{algorithmicx}
-% \usepackage{algpseudocode}
 
 
 \usepackage{algorithm}
-\usepackage{algorithmic}
+\usepackage{algpseudocode}
 
 \input{../../shared.tex}
 
@@ -39,10 +35,10 @@ where the $i$-th sample is $(a_i, y_i)$.
 
 \begin{frame}
   \frametitle{Stochastic gradient descent}
-  \begin{algorithm}
+  \begin{algorithm}[H]
     \caption{SGD}\label{euclid}
     \begin{algorithmic}[1]
-      \For{ k = 1,2, \dots}
+      \For{$k = 1,2, \dots$}
       \State pick $i_k$ uniform at random in $[n]$
       \State $x_{k+1} = x_k  - \alpha_k \nabla f_{i_k}(x_k)$
       \Endfor
@@ -51,7 +47,7 @@ where the $i$-th sample is $(a_i, y_i)$.
 
   We already noticed that:
   \begin{itemize}
-    \item large stepsizes fail to suppress variability in the stoch. gradients $\RightArrow$ leads to oscilations
+    \item large stepsizes fail to suppress variability in the stoch.\ gradients $\RightArrow$ leads to oscilations
     \item decreasing stepsizes mitigate this problem but slows down convergence (too conservative)
   \end{itemize}
 
@@ -59,7 +55,7 @@ where the $i$-th sample is $(a_i, y_i)$.
 
 
 \begin{frame}
-  \frametitle{Recall SGD}
+  \frametitle{Recall SGD (template)}
   \begin{equation}
     x_{k+1} = x_k - \alpha_k g_k
   \end{equation}
@@ -69,6 +65,172 @@ where the $i$-th sample is $(a_i, y_i)$.
     \item vanilla SGD $g_k = \nabla f_{i_k}(x_k)$ \\
           \textbf{issue:} $\sigma_g$ is non-negligible even close to the solution
     \item \textbf{Q:} can we choose $g_k$ in a different way to reduce variability?
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{A simple idea}
+  Consider
+  \begin{itemize}
+    \item estimator $X$ for parameter $\mu$ ($\E[X]=\mu$ and $\Var[X]=\sigma^2$)
+    \item want to keep unbiased but reduce variance
+    \item find $Y$ such that $\E[Y] = 0$ but $\Cov (X,Y)$ is large and $\tilde{X}=X-Y$
+    \item remains unbiased
+
+          \begin{equation}
+            \Var[\tilde{X}] = \Var[X]+\Var[Y]-2\Cov[X,Y]
+          \end{equation}
+    \item can be much smaller than $\V[X]$ if $X,Y$ are highly correlated
+  \end{itemize}
+\end{frame}
+
+\section{SAG}%
+\label{sec:}
+
+\begin{frame}
+  \frametitle{Stochastic average gradient (SAG), 2013}
+  \begin{itemize}
+    \item maintain table containing gradients $g_i$ of $f_i$
+    \item at step $k = 1,2, \dots$ pick random $i_k \in [n]$ and
+          \begin{equation}
+            g_i^k := \nabla f_{i_k}(x^{k})
+          \end{equation}
+          set $g_{i}^k = g_i^{k-1}$ for all $i\neq i_k$ (remain the same)
+    \item Update
+          \begin{equation}
+            x^{k+1} = x^k - \alpha_k \frac{1}{n} \sum_{i=1}^{n} g_i^k
+          \end{equation}
+    \item assuming gradients do not change too much along trajectory
+    \item gradient estimator \textcolor{red}{no longer unbiased}
+    \item Isn't it expensive to average these gradients?
+          \begin{equation}
+            x^{k+1} = x^k -u \alpha_k  \Big( \frac{g_{i_k}^k}{n} - \frac{g_{i_k}^{k-1}}{n} + \underbrace{\frac{1}{n}\sum_{i=1}^{n} g_i^k}_{\text{old table average}} \Big)
+          \end{equation}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{SAG variance reduction}
+  Gradient estimator in SAG:
+  \begin{equation}
+    x^{k+1} = x^k - \alpha_k \frac{1}{n} \Big( \underbrace{g_{i_k}^k}_X - \underbrace{g_{i_k}^{k-1} - \sum_{i=1}^{n} g_i^k}_{Y} \Big)
+  \end{equation}
+  \begin{itemize}
+    \item While $\E[X] = \nabla f(x^k)$, but $\E[Y]\neq 0$ $\rightarrow $ biased estimator
+    \item $X$ and $Y$ are correlated as $X-Y \to 0$  as
+    \item $x^k$ and $x_{k-1}$ both converge to $x^*$ and
+    \item the last term converges to $\nabla f(x^*)= 0$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Convergence}
+  As always, initialization plays a role: $D^2 := \Vert x^0 -x^* \Vert^2$.
+
+  \begin{equation}
+    \begin{aligned}
+      \text{SAG:}& \quad \frac{n}{k}(f(x^0)-f^*) + \frac{L}{k}D^2 \\
+      \text{GD:}& \quad \frac{L}{k}D^2 \\
+      \text{SAG:}& \quad \frac{L}{\sqrt{k}}D^2 \\
+    \end{aligned}
+  \end{equation}
+  \begin{itemize}
+    \item Achieves linear convergence in the \emph{strongly} convex setting.
+    \item proofs are difficult (and computer-aided)
+  \end{itemize}
+
+
+  \begin{center}
+    Same gradient oracle cost as SGD, but same converge rate as GD.
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{SAG.png}
+    \caption{\label{fig:label} }
+  \end{figure}
+
+
+\end{frame}
+
+\section{SAGA}%
+\label{sec:}
+
+\begin{frame}
+  \frametitle{SAGA, 2014}
+  Very similar:
+  \begin{itemize}
+    \item maintain table containing gradients $g_i$ of $f_i$
+    \item at step $k = 1,2, \dots$ pick random $i_k \in [n]$ and
+          \begin{equation}
+            g_i^k := \nabla f_{i_k}(x^{k})
+          \end{equation}
+          set $g_{i}^k = g_i^{k-1}$ for all $i\neq i_k$ (remain the same)
+    \item Update
+          \begin{equation}
+            x^{k+1} = x^k -u \alpha_k  \Big( g_{i_k}^k - g_{i_k}^{k-1} + \frac{1}{n}\sum_{i=1}^{n} g_i^k \Big)
+          \end{equation}
+    \item estimator now \textbf{unbiased}!
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{For Comparison}
+  SAGA gradient estimate:
+  \begin{equation}
+    g_{i_k}^k - g_{i_k}^{k-1} + \frac{1}{n}\sum_{i=1}^{n} g_i^k
+  \end{equation}
+
+  SAGA gradient estimate:
+  \begin{equation}
+    \frac{1}{n}g_{i_k}^k - \frac{1}{n}g_{i_k}^{k-1} + \frac{1}{n}\sum_{i=1}^{n} g_i^k
+  \end{equation}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{}
+
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{SAGA.png}
+    % \caption{\label{fig:label} }
+  \end{figure}
+  Highlights the low variance of SAG.
+\end{frame}
+
+
+\section{SVRG}%
+\label{sec:}
+
+\begin{frame}
+  \frametitle{Stochastic Variance Reduced Gradient (SVRG), 2013}
+
+  \begin{algorithm}[H]
+    \caption{SVRG}\label{}
+    \begin{algorithmic}[1]
+      \For{$k=1,2, \dots$}
+      \State{Set $x^0 = \tilde{x}= \tilde{x}^{k}$}
+      \State{Compute $\tilde{\mu} \coloneq \nabla f(\tilde{x})$}
+      \For{$l=1,2, \dots, m$}
+      \State{pick $i_l$ uniform at random in $[n]$}
+      \State{Set $x^{l+1} = x^l - \alpha (\nabla f_{i_l}(x^l) - \nabla f_{i_l}(\tilde{x}) + \tilde{\mu})$}
+      \Endfor{}
+      \Endfor{}
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{itemize}
+    \item Does not need to store full table of gradients.
+    \item requires \emph{batch} gradient computation every \emph{epoch}
+    \item convergence rates similar to SAGA, but simpler analysis.
+    \item per iteration cost of SVRG is comparable to that of SGD if $m \ge n$
   \end{itemize}
 
 \end{frame}
