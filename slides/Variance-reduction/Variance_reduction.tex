@@ -11,14 +11,14 @@
 \maketitle
 \frame{\tableofcontents[currentsection]}
 
+
 \section{Introduction}%
 
-
 \begin{frame}
-  \frametitle{}
+  \frametitle{The finite sum probem}
   A common Task in (supervised) machine learning:
   \begin{equation}
-    \min_{x\in \R^d} f(x) := \frac{1}{n} \sum_{i=1}^{n} \underbrace{f_i(x)}_{\text{loss for $i$-th sample}} + \underbrace{\psi(x)}_{\textcolor{blue}{\text{regularizer}}}
+    \min_{x\in \R^d} f(x) := \frac{1}{n} \sum_{i=1}^{n} \underbrace{f_i(x)}_{\textcolor{blue}{\text{loss for $i$-th sample}}} + \underbrace{\psi(x)}_{\textcolor{blue}{\text{regularizer}}}
   \end{equation}
   where the $i$-th sample is $(a_i, y_i)$.
 
@@ -35,11 +35,11 @@
 \begin{frame}
   \frametitle{Gradient descent}
   \begin{algorithm}[H]
-    \caption{GD}
+    \caption{(batch) GD}
     \begin{algorithmic}[1]
       \For{$k = 1,2, \dots$}
-      \State $x_{k+1} = x_k  - \alpha_k \nabla f(x_k) $
-      \Endfor
+      \State{ $x_{k+1} = x_k  - \alpha_k \nabla f(x_k) $}
+      \EndFor{}
     \end{algorithmic}
   \end{algorithm}
 
@@ -49,11 +49,10 @@
             \nabla f(x) = \nabla \left(\sum_{i=1}^{n}f_i(x)\right) = \sum_{i=1}^{n} \nabla f_i(x_k)
           \end{equation}
     \item good convergence properties
-    \item can be expensive if $n$ is large!
+    \item can be \textbf{expensive} if $n$ is large!
   \end{itemize}
-
-
 \end{frame}
+
 
 \begin{frame}
   \frametitle{Stochastic gradient descent}
@@ -61,17 +60,17 @@
     \caption{SGD}\label{sgd}
     \begin{algorithmic}[1]
       \For{$k = 1,2, \dots$}
-      \State pick $i_k$ uniform at random in $[n]$
-      \State $x_{k+1} = x_k  - \alpha_k \nabla f_{i_k}(x_k)$
-      \Endfor
+      \State{pick $i_k$ uniform at random in $[n]$}
+      \State{$x_{k+1} = x_k  - \alpha_k \nabla f_{i_k}(x_k)$}
+      \EndFor{}
     \end{algorithmic}
   \end{algorithm}
 
   We already noticed that:
   \begin{itemize}
     \item unbiased: $\E[\nabla f_{i_k}(x)] = \sum_{i=1}^{n} \P[i=i_k] \nabla f_i(x) = \sum_{i=1}^{n} \frac{1}{n} \nabla f_i(x)$
-    \item large stepsizes fail to suppress variability in the stoch.\ gradients $\RightArrow$ leads to oscilations
-    \item decreasing stepsizes mitigate this problem but slows down convergence (too conservative)
+    \item large stepsizes fail to suppress variability in the stoch.\ gradients $\rightarrow$ leads to oscillations
+    \item decreasing stepsizes mitigate this problem but \textbf{slows down} convergence (too \emph{conservative})
   \end{itemize}
 
 \end{frame}
@@ -84,8 +83,9 @@
   \end{equation}
   \begin{itemize}
     \item $g_k$ is an unbiased estimator of the true gradient $\nabla F(x_k)$
-    \item convergence depends on variance $\E [ \Vert g_k - \nabla F(x_k) \Vert ] \le \sigma_g$
-    \item vanilla SGD $g_k = \nabla f_{i_k}(x_k)$ \\
+    \item convergence depends on \textbf{variance} $\E [ \Vert g_k - \nabla F(x_k) \Vert ] \le \sigma_g$
+          (not strictly necessary)
+    \item vanilla SGD uses $g_k = \nabla f_{i_k}(x_k)$ \\
           \textbf{issue:} $\sigma_g$ is non-negligible even close to the solution
     \item \textbf{Q:} can we choose $g_k$ in a different way to reduce variability?
   \end{itemize}
@@ -98,15 +98,20 @@
     \caption{minibatch SGD}
     \begin{algorithmic}[1]
       \For{$k = 1,2, \dots$}
-      \State pick $I_k$ random subset of $[n]$ with $\vert I_k \vert = b $
-      \State $x_{k+1} = x_k  - \alpha_k \sum_{i \in I_k} \nabla f_{i}(x_k)$
-      \Endfor
+      \State{pick $I_k$ random subset of $[n]$ with $\vert I_k \vert = b $}
+      \State{$x_{k+1} = x_k  - \alpha_k \sum_{i \in I_k} \nabla f_{i}(x_k)$}
+      \EndFor{}
     \end{algorithmic}
   \end{algorithm}
   \begin{itemize}
-    \item typically we make a (uniform) \emph{random} choice $i_k \in [n] = \{1, \dots, n\}$
-          see also the random reshuffling
-    \item by increasing the size to a random subset $\I_k \subset [n]$ of size $b \ll n$
+    \item typically we make a (uniform) \emph{random} choice $i_k \in [n] = \{1, \dots, n\}$\\
+          (or random reshuffling)
+    \item by increasing the size to a \textbf{random subset} $I_k \subset [n]$ of size $b \ll n$ we can
+          \begin{itemize}
+            \item decrease variance
+            \item increase cost only moderately,
+            \item but cannot improve theoretical guarantees
+          \end{itemize}
   \end{itemize}
 
 \end{frame}
@@ -198,8 +203,8 @@
     \caption{\label{fig:label} }
   \end{figure}
 
-
 \end{frame}
+
 
 \section{SAGA}%
 \label{sec:}
@@ -249,7 +254,6 @@
 
 
 \section{SVRG}%
-\label{sec:}
 
 \begin{frame}
   \frametitle{Stochastic Variance Reduced Gradient (SVRG), 2013}
@@ -258,21 +262,21 @@
     \caption{SVRG}\label{}
     \begin{algorithmic}[1]
       \For{$k=1,2, \dots$}
-      \State{Set $x^0 = \tilde{x} = x^{m+1}$}
-      \State{Compute $\tilde{\mu} := \nabla f(\tilde{x})$}
-      \For{$l=1,2, \dots, m$}
+      \State{Set $x^1 = \tilde{x} = \tilde{x}^{k}$}
+      \State{Compute $\tilde{\mu} := \nabla f(\tilde{x})$ \hfill \textcolor{blue}{//update snapshot}}
+      \For{$l=1,2, \dots, m$ }\hfill \textcolor{blue}{//$m$ iterations per epoch}
       \State{pick $i_l$ uniform at random in $[n]$}
       \State{Set $x^{l+1} = x^l - \alpha (\nabla f_{i_l}(x^l) - \nabla f_{i_l}(\tilde{x}) + \tilde{\mu})$}
-      \Endfor{}
-      \State{$x^0$}
-      \Endfor{}
+      \EndFor{}
+      \State{$\tilde{x}^{k+1}= x^{m+1}$}
+      \EndFor{}
     \end{algorithmic}
   \end{algorithm}
 
   \begin{itemize}
-    \item Does Not need to store full table of gradients.
+    \item Does \textbf{not} need to \textbf{store} full table of gradients.
     \item requires \emph{batch} gradient computation every \emph{epoch}
-    \item per iteration cost of SVRG is comparable to that of SGD if $m \ge n$
+    \item per iteration cost is comparable to that of SGD if $m \ge n$
     \item convergence rates similar to SAGA, but simpler analysis.
   \end{itemize}
 \end{frame}
@@ -281,7 +285,7 @@
   \frametitle{SVRG}
   \textbf{key idea:} by storing old point we can
   \begin{equation}
-    \underbrace{\nabla f_{i_k}(x^k) - \nabla f_{i_k}(x^{\text{old}})}_{\to 0 \text{if $x\approx x^{\text{old}}$}} + \underbrace{\nabla f(x^{\text{old}})}_{\to 0 \text{if $x^{\text{old}}$}}
+    \underbrace{\nabla f_{i_k}(x^k) - \nabla f_{i_k}(x^{\text{old}})}_{\text{$\to 0$ if $x\approx x^{\text{old}}$}} + \underbrace{\nabla f(x^{\text{old}})}_{\text{$\to 0$ if $x^{\text{old}}$}}
   \end{equation}
   \begin{itemize}
     \item is an unbiased estimate of $\nabla f(x^k)$

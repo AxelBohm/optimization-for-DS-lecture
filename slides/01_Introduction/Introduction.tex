@@ -1,10 +1,8 @@
 \documentclass{beamer}
-\usepackage[utf8]{inputenc}
-% \usetheme{Warsaw}  %% Themenwahl
 
-\title{Minimum enclosing ball problem}
-\author{Max Mustermann}
-\date{\today}
+\input{../../shared.tex}
+
+\title{Optimization for Data Science}
 
 \begin{document}
 \maketitle
@@ -18,11 +16,39 @@
 
 \end{frame}
 
-\section{Applications of Optimization}
+\section{Applications}
+
+
+
+\section{Relevant notions and problem classes}
 
 \begin{frame}
-  \frametitle{In Physics}
+  \frametitle{Relevant Notions}
+  \begin{equation}
+    \min_{x\in C \subseteq \R^d} \, f(x)
+  \end{equation}
 
+  \begin{itemize}
+    \item variables, parameters, candidate solutions $x$
+    \item $f: \R^d \to \R$ objective function
+    \item typically: technical assumptions on $f$
+    \item constrained set $C$
+    \item convexity / differentiability
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Applications of optimization}
+
+  Economics
+  \begin{itemize}
+    \item Microeconomics: Agents maximizing utility
+    \item Porfolioopimization
+    \item Finance: Option pricing
+    \item Stats: maximum likelyhood
+  \end{itemize}
+  Physics
   \begin{itemize}
     \item soap bubble is a sphere because it minimizes surface tension
   \end{itemize}
@@ -30,28 +56,307 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Economics}
+  \frametitle{Optimization for ML}
+  \begin{minipage}{0.5\textwidth}
+    \begin{equation}
+      \min_{\beta_1, \beta_0} \sum_{i=1}^{n} {( \beta_1 x_i + \beta_0 - y_i)}^2
+    \end{equation}
+    For data points $(x_i, y_i)$.
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.45\textwidth}
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{linear_regression.jpg}
+      % \caption{\label{fig:label} }
+    \end{figure}
 
+  \end{minipage}
+
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Optimization for ML}
   \begin{itemize}
-    \item Microeconomics: Agents maximizing utility
-    \item Porfolioopimization
-    \item Finance: Option pricing
+    \item \textcolor{blue}{Mathematical modeling}
+          \begin{itemize}
+            \item defining \& modeling the problem
+            \item finding a good metric / what is success
+            \item accuracy vs.\ solvability trade-off
+          \end{itemize}
+    \item \textcolor{blue}{Computational optimization}
+         \begin{itemize}
+           \item running an (appropriate) optimization algorithm
+         \end{itemize}
+    \item theory vs. practice
+          \begin{itemize}
+            \item libraries available, but algorithms treated as ``black box'' by practitioners
+            \item we will try and understand why and how they work
+          \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Optimization Algorithms}
+  \begin{center}
+    \textcolor{blue}{Simplicity} rules in the large scale setting.
+  \end{center}
+  Main approaches:
+  \begin{itemize}
+    \item First order methods: gradient descent
+    \item Stochastic gradient descent (SGD)
+    \item Coordinate descent
+  \end{itemize}
+
+  History
+  \begin{itemize}
+    \item 1847: Cauchy proposes gradient descent
+    \item 1950s: Linear programming, operations research, soon followed by nonlinear
+    \item 1980s: general convergence theory
+    \item 2005-today: large scale optimization, SGD, distributed optimization
+  \end{itemize}
+\end{frame}
+
+% image of gradient descent
+
+% image of coordinate descent
+
+\begin{frame}
+  \frametitle{Optimization in other settings}
+  \begin{itemize}
+    \item \textcolor{blue}{Second order}
+          \begin{itemize}
+            \item if high precision in solution is required
+            \item too \textbf{expensive} in high dimensions
+          \end{itemize}
+    \item \textcolor{blue}{Zeroth order}
+          \begin{itemize}
+             \item no gradient or functional representation available
+             \item only function values
+             \item for simulation, hyperparameters, black box models
+          \end{itemize}
+    \item constrained problems
+    \item discrete optimization
+          \begin{itemize}
+            \item involving graphs, traveling salesman
+            \item scheduling
+          \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\section{Convexity}%
+\label{sec:}
+
+\begin{frame}
+  \frametitle{Convex sets}
+  A set $C$ is \textcolor{blue}{convex} if the line segment between any two points remains inside $C$, i.e.\ for any $x,y \in C$ and $\lambda\in [0,1]$.
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{convex_sets}
+    % \caption{\label{} }
+  \end{figure}
+  \begin{center}
+    Which of these sets are convex?
+  \end{center}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Properties of convex sets}
+  \begin{itemize}
+    \item intersection remains convex
+    \item can separated by a hyperplane
+    \item projections onto them are unique
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Convex functions}
+  We call a function $f \to \R\cup\{+\infty\}$ \textcolor{blue}{convex} if the function values lie below the line segment between $(x, f(x))$ and $(y, f(y))$
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth,keepaspectratio]{convex_functions}
+  \end{figure}
+
+  Sometimes we will call $\{x: f(x)< +\infty \}$ the domain of $f$.
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Convex optimization}
+  Are of the form
+  \begin{equation}
+    \min_x \, f(x) \quad \text{such that $x\in C$}
+  \end{equation}
+  where \textcolor{blue}{both}
+  \begin{itemize}
+    \item $f$ is a convex function
+    \item $C$ is a convex set
+  \end{itemize}
+  Why?
+  \begin{itemize}
+    \item Every local minimum is a global minimum
+    \item Not all problems are convex but can be used as approximate model
   \end{itemize}
 
 \end{frame}
 
 
-\section{Relevant notions}
+\begin{frame}
+  \frametitle{Examples of convex functions}
+  \begin{itemize}
+    \item linear: $f(x) = a^T x$
+    \item affine: $f(x) = a^T x + b$
+    \item exponential: $f(x) = e^{\alpha x}$
+    \item norms, $\Vert \cdot \Vert_1, \Vert \cdot \Vert_2, \Vert \cdot \Vert_\infty$ \hfill \textcolor{purple}{show this}
+    \item composition of linear and convex $f(x)=\Vert Ax-b  \Vert^2$
+  \end{itemize}
+
+\end{frame}
+
 
 \begin{frame}
-  \frametitle{Relevant Notions and subfields}
+  \frametitle{Differentiable function}
+  Derivative at a point is the \textcolor{blue}{best linear approximation} of the function at this point.
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth,keepaspectratio]{differentiable_function}
+    % \caption{\label{fig:label} }
+  \end{figure}
+  \begin{center}
+    Graph of $f(x)+ {\nabla f(x)}^T (y-x)$ is a \textcolor{blue}{tangent hyperplane} to the graph of $f$ at $(x,f(x))$
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{First-order characterization of convexity}
+
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth,keepaspectratio]{graph_above_tangent}
+    % \caption{\label{fig:label} }
+  \end{figure}
+  If $f$ is differentiable, then
+  \begin{center}
+    $f$ is convex \emph{if and only if:} $f(y) \ge f(x) + {\nabla f(x)}^T (y-x)$
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Nonsmooth functions }
+  do in fact play a role in practice
+  \begin{itemize}
+    \item ReLu, Hinge loss, norms
+    \item can induce sparsity in the solution
+    \item appear as the maximum over a family of functions (max pooling, or min-max)
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth,keepaspectratio]{nonsmooth}
+    % \caption{\label{fig:label} }
+  \end{figure}
+
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Second-order characterization of convexity}
+  If $f$ is \textcolor{blue}{twice differentiable} then it is \textcolor{blue}{convex} \textbf{if and only if} its \emph{Hessian} $\nabla^2 f(x) \R^{d}$, given by
   \begin{equation}
-    \min_{x\in C} \, f(x)
+    {\nabla^2 f(x)}_{ij} := \frac{\partial^2 f}{\partial x_i \partial x_j}
+  \end{equation}
+  is \textcolor{blue}{positive semidefinite}, i.e.
+  \begin{equation}
+    \nabla^2 f(x) \succcurlyeq 0
   \end{equation}
 
+  \textcolor{gray}{A matrix $M$ is \emph{positive semidefinite} if $x^T M x \ge 0$ for all $x$.}\\
+  Also used in algorithm like \emph{Newtons} method.
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Examples}
   \begin{itemize}
-    \item convexity
+    \item \textcolor{blue}{quadratic function:} $f(x)= \frac12 x^T Q x + c^T x$, then
+          \begin{equation}
+            \nabla^2 f(x) = Q
+          \end{equation}
+          and $f$ is convex iff $Q \succcurlyeq 0$.
+    \item \textcolor{blue}{least squares objective:} $f(x) = \Vert Ax -b \Vert^2$, then
+          \begin{equation}
+             \nabla^2 f(x) = A^T A
+          \end{equation}
+          is always convex for any A.
   \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Local minima are global}
+
+  \begin{definition}
+    A \textcolor{blue}{local minimum} of $f$ is a point $\bar{x}$ such that there exists $\epsilon>0$
+    \begin{equation}
+      f(\bar{x}) \le f(y) \quad \forall y: \text{s.t.} \Vert \bar{x}-y \Vert \le \epsilon
+    \end{equation}
+  \end{definition}
+
+  \begin{lemma}%
+    \label{lem:}
+    Let $x^*$ be local minimum of a convex function $f$ then $x^*$ is a global minimum.
+  \end{lemma}
+\textcolor{purple}{Prove this!}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Critical points are global minima}
+
+  \begin{definition}
+    We call a point $\bar{x}$ \textcolor{blue}{critical} or \textcolor{blue}{stationary} if
+    $\nabla f(\bar{x}) = 0$
+  \end{definition}
+  \begin{lemma}%
+    If $\bar{x}$ is a stationary point of the \textbf{convex} function $f$, then $\bar{x}$ is a \textcolor{blue}{global minimizer} of $f$.
+  \end{lemma}
+  \textcolor{purple}{Prove this and give a geometric intuition in words using the first order characterization of convexity}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Constrained minimization}
+
+  \begin{minipage}{0.5\textwidth}
+    \begin{definition}
+      $x^*$ is a minimizer of $f$ \textcolor{blue}{over $C$} if
+      \begin{equation}
+        f(x^*) \le f(x), \forall x \in C
+      \end{equation}
+    \end{definition}
+    \begin{lemma}%
+      $x^*$ is a minimizer of $f$ over $C$ \emph{if and only if}
+      \begin{equation}
+        \langle \nabla f(x^*), x-x^* \rangle \ge 0 \quad \forall x \in C
+      \end{equation}
+    \end{lemma}
+  \textcolor{blue}{Prove this.}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.45\textwidth}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{constrained.png}
+    % \caption{\label{fig:label} }
+  \end{figure}
+  \end{minipage}
 
 \end{frame}
 
