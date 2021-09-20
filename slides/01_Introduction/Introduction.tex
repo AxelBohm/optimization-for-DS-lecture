@@ -8,31 +8,40 @@
 \maketitle
 \frame{\tableofcontents[currentsection]}
 
+\begin{frame}
+  \frametitle{Course organization}
+  \begin{itemize}
+    \item Lectures (contribution counts)
+    \item hands on sessions on some Thursdays
+    \item a small weekly problem set
+    \item Project
+    \item oral exam
+  \end{itemize}
+
+  Find everything on github.
+
+\end{frame}
+
+
+
+\section{Introduction}
 
 \begin{frame}
   \frametitle{What is Optimization}
 
-  Given a (typically) real-valued function $f$ which represents some cost/regret/loss (or gain/profit/utility) we aim to find the argument/decision associated with smallest cost (or largest profit).
+  \begin{center}
+    \textit{Given a function $f$ which represents some cost/regret/loss (or gain/profit/utility) we aim to find the argument/decision associated with smallest cost (or largest profit).}
+  \end{center}
 
-\end{frame}
-
-\section{Applications}
-
-
-
-\section{Relevant notions and problem classes}
-
-\begin{frame}
-  \frametitle{Relevant Notions}
   \begin{equation}
-    \min_{x\in C \subseteq \R^d} \, f(x)
+    \min_{x\in C } \, f(x)
   \end{equation}
 
   \begin{itemize}
     \item variables, parameters, candidate solutions $x$
-    \item $f: \R^d \to \R$ objective function
+    \item objective function $f$ (typically real-valued)
     \item typically: technical assumptions on $f$
-    \item constrained set $C$
+    \item constrained set $C \subset \R^d$
     \item convexity / differentiability
   \end{itemize}
 \end{frame}
@@ -44,13 +53,17 @@
   Economics
   \begin{itemize}
     \item Microeconomics: Agents maximizing utility
-    \item Porfolioopimization
-    \item Finance: Option pricing
+    \item Game theory and equlibria
+    % \item Finance: Option pricing
     \item Stats: maximum likelyhood
   \end{itemize}
   Physics
   \begin{itemize}
     \item soap bubble is a sphere because it minimizes surface tension
+  \end{itemize}
+  Chemistry
+  \begin{itemize}
+    \item Protein folding
   \end{itemize}
 
 \end{frame}
@@ -101,7 +114,7 @@
 \begin{frame}
   \frametitle{Optimization Algorithms}
   \begin{center}
-    \textcolor{blue}{Simplicity} rules in the large scale setting.
+    \textit{\textcolor{blue}{Simplicity} rules in the large scale setting.}
   \end{center}
   Main approaches:
   \begin{itemize}
@@ -119,9 +132,29 @@
   \end{itemize}
 \end{frame}
 
-% image of gradient descent
 
-% image of coordinate descent
+\begin{frame}
+  \frametitle{Example: Coordinate descent}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{coordinate_descent}
+    % \caption{\label{fig:label} }
+  \end{figure}
+  \textcolor{blue}{\textbf{Strategy:}} Minimize along one coordinate at a time, while keeping the others fixed.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Example: Gradient descent}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{coordinate_descent}
+    % \caption{\label{fig:label} }
+  \end{figure}
+  \textcolor{blue}{\textbf{Strategy:}} Follow the direction of (local) \textbf{steepest descent}.
+\end{frame}
+
+% image of gradient descent
 
 \begin{frame}
   \frametitle{Optimization in other settings}
@@ -214,7 +247,8 @@
     \item affine: $f(x) = a^T x + b$
     \item exponential: $f(x) = e^{\alpha x}$
     \item norms, $\Vert \cdot \Vert_1, \Vert \cdot \Vert_2, \Vert \cdot \Vert_\infty$ \hfill \textcolor{purple}{show this}
-    \item composition of linear and convex $f(x)=\Vert Ax-b  \Vert^2$
+    \item composition of linear and convex: \\
+          for example $f(x)=\Vert Ax-b  \Vert^2$
   \end{itemize}
 
 \end{frame}
@@ -321,7 +355,7 @@
 
   \begin{definition}
     We call a point $\bar{x}$ \textcolor{blue}{critical} or \textcolor{blue}{stationary} if
-    $\nabla f(\bar{x}) = 0$
+    $\nabla f(\bar{x}) = 0$.
   \end{definition}
   \begin{lemma}%
     If $\bar{x}$ is a stationary point of the \textbf{convex} function $f$, then $\bar{x}$ is a \textcolor{blue}{global minimizer} of $f$.
@@ -330,6 +364,29 @@
 
 \end{frame}
 
+
+\begin{frame}
+  \frametitle{Strong convexity}
+  \begin{definition}
+    We call $f$ \textcolor{blue}{strongly convex} if there exist $\mu> 0$ such that
+    \begin{equation}
+      f - \frac{\mu}{2} \Vert \cdot \Vert^2 \quad \text{is convex.}
+    \end{equation}
+  \end{definition}
+
+  Equivalently:
+  \begin{itemize}
+    \item can be lower bounded by a quadratic
+          \begin{equation}
+            f(x) + \langle \nabla f(x), y-x \rangle + \frac{\mu}{2} \Vert y-x \Vert^2 \le f(y)
+          \end{equation}
+    \item Hessian is pos. def. everywhere
+          \begin{equation}
+            \nabla^2 f(x) \succ 0.
+          \end{equation}
+  \end{itemize}
+
+\end{frame}
 
 \begin{frame}
   \frametitle{Constrained minimization}
@@ -347,7 +404,7 @@
         \langle \nabla f(x^*), x-x^* \rangle \ge 0 \quad \forall x \in C
       \end{equation}
     \end{lemma}
-  \textcolor{blue}{Prove this.}
+  % \textcolor{purple}{Prove this.}
   \end{minipage}
   \hfill
   \begin{minipage}{0.45\textwidth}
@@ -357,6 +414,23 @@
     % \caption{\label{fig:label} }
   \end{figure}
   \end{minipage}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Proof}
+  $x^*$ is a minimizer of $f$ over $C$ \emph{if and only if}
+  \begin{equation}
+    \langle \nabla f(x^*), x-x^* \rangle \ge 0 \quad \forall x \in C
+  \end{equation}
+  Assume that $f(x^*)\le f(x)$ forall $x \in C$ then $\forall t \in [0, 1]$
+  \begin{equation}
+    \begin{aligned}
+      0 &\le f(x^* + t(x-x^*)) - f(x^*) \\
+      0 &\le \lim_{t\to 0} \frac{f(x^* + t(x-x^*)) - f(x^*)}{t} \\
+        &= \langle \nabla f(x^*), x-x^* \rangle.
+    \end{aligned}
+  \end{equation}
+  where the last equality follows from the chain rule.
 
 \end{frame}
 

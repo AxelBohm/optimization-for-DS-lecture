@@ -73,6 +73,15 @@
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 
+% for some reason this was required on one void linux installation (but not the other)
+\usepackage{sansmathaccent}
+\pdfmapfile{+sansmathaccent.map}
+
 \author{Axel Böhm}
 
+% shows which section we're in
 \usetheme{Darmstadt}
+
+% page number
+\setbeamertemplate{footline}[frame number]
+\setbeamercolor{page number in head/foot}{fg=gray}
