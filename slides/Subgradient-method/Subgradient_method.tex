@@ -11,7 +11,7 @@
 \maketitle
 \frame{\tableofcontents[currentsection]}
 
-\section{Introduction}%
+\section{Subgradient theory}%
 
 \begin{frame}
   \frametitle{Smooth vs. nonsmooth}
@@ -20,40 +20,151 @@
     \min_x \, f(x)
   \end{equation}
 
-  \begin{block}{$f$ is \emph{smooth} and convex}
-    Smoothness means $\Vert \nabla f(x) - \nabla f(y) \Vert \le L \Vert x-y \Vert$:
-    \begin{equation}
-      \begin{aligned}
-        \text{GD:} \quad x_{k+1} = x_k - \alpha_k \nabla f(x_k) \\
-        f(x_k) - f^* = \mathcal{O}(\frac{1}{k})
-      \end{aligned}
-    \end{equation}
-    if the stepsize fulfills $\alpha_k \le 1/L$.
-  \end{block}
-  \begin{block}{nonsmooth but convex: \textbf{subgradient method}}
-    \begin{equation}
-      \begin{aligned}
-        \left\lfloor \begin{array}{l}
-                 \text{pick $g_k \in \partial f(x_k)$}
-                 x_{k+1} = x_k - \alpha_k g_k \\
-               \end{array}\right.
-        f(x_k) - f^* = \mathcal{O}(\frac{1}{\sqrt{k}})
-      \end{aligned}
-    \end{equation}
-  \end{block}
+  \begin{minipage}{0.45\textwidth}
+    \begin{block}{$f$ is \emph{smooth} and convex}
+      % Smoothness means $\Vert \nabla f(x) - \nabla f(y) \Vert \le L \Vert x-y \Vert$:
+      \begin{equation}
+        \begin{aligned}
+          \text{GD:} \quad x_{k+1} = x_k - \alpha_k \nabla f(x_k) \\
+          f(x_k) - f^* = \mathcal{O}(\frac{1}{k})
+        \end{aligned}
+      \end{equation}
+      if the stepsize fulfills $\alpha_k \le 1/L$.
+    \end{block}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.45\textwidth}
+    \begin{block}{nonsmooth but convex: \textbf{subgradient method}}
+      \begin{equation}
+        \begin{aligned}
+          \left\lfloor \begin{array}{l}
+                   \text{pick $g_k \in \partial f(x_k)$}\\
+                   x_{k+1} = x_k - \alpha_k g_k \\
+                 \end{array}\right.\\
+               f(x_k) - f^* = \mathcal{O}\left(\frac{1}{\sqrt{k}}\right)
+             \end{aligned}
+           \end{equation}
+           if stepsize $\alpha_k \approx 1/\sqrt{k}$.
+         \end{block}
+       \end{minipage}
+
 \end{frame}
 
-\section{convergence}%
+\begin{frame}
+  \frametitle{Subgradients}
+  What if $f$ is not differentiable?
+  \begin{definition}
+    $g \in \R^d$ is a \textcolor{blue}{subgradient} of $f$ at $x$ if
+    \begin{equation}
+      f(y) \ge f(x) + g^T (y-x)
+    \end{equation}
+  \end{definition}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{subgradients}
+    % \caption{\label{fig:label} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Subgradients II}
+  \begin{definition}
+    The \textcolor{blue}{subdifferential} $\partial f(x)$ is the \emph{set of all subgradients} of $f$ at $x$.
+  \end{definition}
+  Example
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth,keepaspectratio]{subdifferential}
+    % \caption{\label{fig:label} }
+  \end{figure}
+  Subgradient condition at $x=0$ is $f(y)\ge f(0) + g(y-0) = gy$.
+  \textcolor{purple}{What is $\partial f(0)$?}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Subgradients III}
+  \begin{lemma}%
+    If $f$ is differentiable at $x$ then $\partial f(x) \subset \{\nabla f(x)\}$
+  \end{lemma}
+  So either one subgradient or none.\\
+  \begin{minipage}{0.48\textwidth}
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=\textwidth,keepaspectratio]{graph_above_tangent}
+      % \caption{\label{fig:label} }
+    \end{figure}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.48\textwidth}
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=\textwidth,keepaspectratio]{differentiable_function}
+      % \caption{\label{fig:label} }
+    \end{figure}
+  \end{minipage}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Subgradient characterization of convexity}
+  \begin{lemma}%
+    A function $f: \R^d \to \R$ is convex \textit{if and only if} $\partial f(x)$ is not empty for all $x$.
+  \end{lemma}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth,keepaspectratio]{subgradients}
+    \caption{Subgradients at every point.}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Lipschitz = bounded subgradients}
+  \begin{definition}
+    We call $f$ $L$-Lipschitz (continuous) if
+    \begin{equation}
+      \Vert f(x)-f(y) \Vert \le L \Vert x-y \Vert.
+    \end{equation}
+  \end{definition}
+  \begin{lemma}%
+    Let $f$ be convex. Then the following two are equivalent.
+    \begin{enumerate}
+      \item All \textbf{subgradients are uniformly bounded}.
+            \begin{equation}
+              \Vert g \Vert \le L \quad \forall x, \forall g \in \partial f(x)
+            \end{equation}
+      \item $f$ is $L$-Lipschitz
+    \end{enumerate}
+  \end{lemma}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Subgradient optimality condition}
+  \begin{lemma}%
+    Let \textcolor{blue}{$0 \in \partial f(\bar{x})$}, then $\bar{x}$ is a \textcolor{blue}{global minimum}.
+  \end{lemma}
+  \begin{proof}
+    By the definition of subgradients, $g=0 \in \partial f(\bar{x})$ gives
+    \begin{equation}
+      f(y) \ge f(\bar{x}) + g^T(y-\bar{x}) = f(\bar{x}).
+    \end{equation}
+  \end{proof}
+\end{frame}
+
+\section{Convergence subgradient}%
 \label{sec:}
+
 \begin{frame}
   \frametitle{Convergence statement}
   \begin{theorem}
     $f$ is convex, subgradients are bounded $\Vert g(x) \Vert \le G$ for all $g(x)\in \partial f(x)$. Then,
     \begin{equation}
-      f(\bar{x}_k) - f^* \le \frac{\Vert x_1-x^*\Vert^2 + G^2 \sum_{i=1}^{k}\alpha_i^2}{2 \sum_{i=1}^{k}\alpha_i}
+      f(\bar{x}_k) - f^* \le \frac{\Vert x_1-x^*\Vert^2 G}{\sqrt{k}}
     \end{equation}
     for the averaged iterates $\bar{x}_k = \frac{\sum_{i=1}^{k} \alpha_i x_i }{\sum_{i=1}^{k} \alpha_i}$
   \end{theorem}
+  \begin{itemize}
+    \item Also holds for the ``best'' iterate.
+    \item \textbf{Dimension independent!} (no $d$)
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -73,10 +184,19 @@
   \begin{equation}
     \Vert x_{k+1} - x^* \Vert^2 \le \Vert x_k-x^* \Vert^2 + 2 \alpha_k(f(x^*) - f(x_k)) + \alpha_k^2 \Vert g_k \Vert^2.
   \end{equation}
+  Summing up (telescoping) yields
+  \begin{equation}
+    \label{eq:telescoping}
+    2\sum_{i=1}^{k}  \alpha_i(f(x_i) - f(x^*)) + \Vert x_{k+1} - x^* \Vert^2 \le \Vert x_1-x^* \Vert^2 +  \sum_{i=1}^{k} \alpha_i^2 \Vert g_k \Vert^2.
+  \end{equation}
   Via the \emph{bounded subgradient} assumption
   \begin{equation}
     2\sum_{i=1}^{k}  \alpha_i(f(x_i) - f(x^*)) + \Vert x_{k+1} - x^* \Vert^2 \le \Vert x_1-x^* \Vert^2 +  \sum_{i=1}^{k} \alpha_i^2 G^2.
   \end{equation}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Proof [contd]}
   Using Jensens inequality % give intuition for 2-d case
   \begin{equation}
     \sum_{i} \lambda_i f(x_i) \ge \sum_{i} f \left( \frac{\sum_{i} \lambda_i x_i}{\sum_{i}\lambda_i} \right)
@@ -88,7 +208,6 @@
 
 \end{frame}
 
-
 \begin{frame}
   \frametitle{How to choose the stepsize?}
   \begin{equation}
@@ -97,18 +216,37 @@
   Clearly $\alpha_i = \ell_2\ \ell_1$ leads convergence, for example $1/i$.
   However, $\alpha_i = \mathcal{O}(1/\sqrt{i})$ gives
   \begin{equation}
-    \sum \alpha_i = (\frac{1}{\sqrt{1}} + \frac{1}{\sqrt{2}} + \cdots +  \frac{1}{\sqrt{k}}) > \sqrt{k}\\
+    \sum \alpha_i = (\frac{1}{\sqrt{1}} + \frac{1}{\sqrt{2}} + \cdots +  \frac{1}{\sqrt{k}}) > \sqrt{k}
     \sum \alpha_i^2 = (\frac{1}{1} + \frac{1}{2} + \cdots + \frac{1}{k}) \approx \log(k)
   \end{equation}
 
   \begin{equation}
     f(\bar{x}_k) - f^* \le \frac{\Vert x_1-x^*\Vert^2 + G^2 \log(k)}{2 \sqrt{k}}
   \end{equation}
-  gives complexity
+  gives the rate
   \begin{equation}
     \mathcal{O}\left(\frac{\log(k)}{k}\right) =: \tilde{\mathcal{O}}\left(\frac{1}{k}\right)
   \end{equation}
+\end{frame}
 
+\begin{frame}
+  \frametitle{Complexity}
+  For convex Lipschitz functions we require \textcolor{blue}{$\mathcal{O}(\epsilon^{-2})$} iterations. For $D:= \Vert x_1 -x^* \Vert$
+  \begin{equation}
+    f(\bar{x}_k) - f^* \le \frac{D G}{\sqrt{k}}
+  \end{equation}
+  \textbf{Q:} How many iterations to get
+  \begin{equation}
+    f(\bar{x}_k) - f^* \le \epsilon ?
+  \end{equation}
+  \textbf{A:} We get this if
+  \begin{equation}
+    \frac{D G}{\sqrt{k}} \le \epsilon
+  \end{equation}
+  Equivalently
+  \begin{equation}
+    k \ge \frac{D^2 G^2}{\epsilon^2}.
+  \end{equation}
 \end{frame}
 
 
@@ -117,30 +255,43 @@
   \begin{equation}
     \text{(constrained setting)} \quad \min_{x\inC}\, f(x)
   \end{equation}
-  \begin{equation}
-    x_{k+1} = P_C( x_k- \alpha_k g_k )
-  \end{equation}
+  \begin{algorithm}[H]
+    \caption{Projected subgradient method}\label{label:}
+    \begin{algorithmic}[1]
+      \For{$k=1, 2, \dots$}
+      \State{Pick $g_k \in \partial f(x_k)$}
+      \State{$x_{k+1} = P_C( x_k- \alpha_k g_k )$}
+      \Endfor
+    \end{algorithmic}
+  \end{algorithm}
   By using the fact that the projection is a contraction
   \begin{equation}
     \Vert P_C(x) - P_C(y) \Vert \le \Vert x-y \Vert
   \end{equation}
-  we can deduce the exact same inequality as before
-  \begin{equation}
-    \begin{aligned}
-      \Vert x_{k+1} - x^* \Vert^2 &= \Vert P_C(x_k - \alpha_k g_k) - x^* \Vert^2 \\
-      &\le \Vert x_k - \alpha_k g_k - x^* \Vert^2 \\
-      &= \Vert x_k-x^* \Vert^2 + 2 \alpha_k \langle g_k, x^*-x_k \rangle + \alpha^2 \Vert g_k \Vert^2\\
-      &\le \Vert x_k-x^* \Vert^2 + 2 \alpha_k (f^* - f(x_k))+ \alpha^2 \Vert g_k \Vert^2.
-    \end{aligned}
-  \end{equation}
 \end{frame}
-
-
 
 \begin{frame}
-  \frametitle{If $C$ is bounded we can improve a bit}
+  \frametitle{Projected subgradient method II}
+  \begin{proof}
+    We can deduce the exact same inequality as before
+    \begin{equation}
+      \begin{aligned}
+        \Vert x_{k+1} - x^* \Vert^2 &= \Vert P_C(x_k - \alpha_k g_k) - x^* \Vert^2 \\
+        &\le \Vert x_k - \alpha_k g_k - x^* \Vert^2 \\
+        &= \Vert x_k-x^* \Vert^2 + 2 \alpha_k \langle g_k, x^*-x_k \rangle + \alpha^2 \Vert g_k \Vert^2\\
+        &\le \Vert x_k-x^* \Vert^2 + 2 \alpha_k (f^* - f(x_k))+ \alpha^2 \Vert g_k \Vert^2.
+      \end{aligned}
+    \end{equation}
+  \end{proof}
 
 \end{frame}
+
+
+
+% \begin{frame}
+%   \frametitle{If $C$ is bounded we can improve a bit}
+
+% \end{frame}
 
 
 \begin{frame}
@@ -167,7 +318,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Poljak stepsize [contd]}
+  \frametitle{Polyak stepsize [contd]}
   \textit{}
   \begin{itemize}
     \item Requires us to know the optimal objective function value
@@ -183,8 +334,137 @@
       \caption{Interpolation / overparametrization regime}
     \end{figure}
   }
-
 \end{frame}
 
+% \section{With strong convexity}%
+
+\label{sec:}
+\begin{frame}
+  \frametitle{Can we do better?}
+  If $f$ is in addition \emph{strongly convex} the rate improves to
+  \begin{equation}
+    f(\bar{x}_k) - f(x^*) \le \frac{L \Vert x_1-x^* \Vert^2}{\mu T}
+  \end{equation}
+  by choosing the stepsize $\alpha_k \approx \frac{1}{T}$.
+\end{frame}
+
+
+\section{Smooth case}%
+\label{sec:}
+
+\begin{frame}
+  \frametitle{Can we do better if the function is smooth?}
+  \begin{definition}
+    We call a function $L$-\textcolor{blue}{smooth} if
+    \begin{equation}
+      f(y) \le f(x) + \langle \nabla f(x), y-x \rangle + \frac{L}{2} \Vert y-x \Vert^2.
+    \end{equation}
+  \end{definition}
+  \begin{center}
+    \textit{Can be upper bounded by a quadratic.}
+  \end{center}
+  \begin{lemma}%
+    Is implied by $L$-Lipschitz gradients:
+    \begin{equation}
+      \Vert \nabla f(x)-f(y) \Vert \le L \Vert x-y \Vert.
+    \end{equation}
+  \end{lemma}
+  Note: Definition does not require convexity.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Smoothness}
+  If $f$ is convex we get upper and lower bound:
+
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth,keepaspectratio]{smoothness}
+    % \caption{\label{fig:label} }
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{}
+  \begin{itemize}
+    \item Bounded (sub)gradients $\Leftrightarrow$ Lipschitz continuity of $f$
+    \item Smoothness $\Leftrightarrow$ Lipschitz continuity of $\nabla f$ (if convex)
+  \end{itemize}
+
+  \begin{lemma}%
+    Let $f$ be convex and differentiable, then the following are \textit{equivalent}
+    \begin{enumerate}
+      \item $f$ is smooth with parameter $L$
+      \item $\nabla f$ is $L$-Lipschitz
+    \end{enumerate}
+  \end{lemma}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Sufficient decrease}
+  \begin{lemma}%
+    If $f$ is $L$-smooth with stepsize $\alpha = 1/L$, then gradient descent satisfies
+    \begin{equation}
+      f(x_{k+1}) \le f(x_k) - \frac{1}{2L} \Vert \nabla f(x_k) \Vert^2
+    \end{equation}
+  \end{lemma}
+  \begin{proof}
+    \begin{equation}
+      \begin{aligned}
+        f(x_{k+1}) &\le f(x_k) + \langle \nabla f(x_k), x_{k+1}-x_k \rangle + \frac{L}{2}\Vert x_{k+1}-x_k \Vert^2 \\
+        &= f(x_k) - \gamma \Vert \nabla f(x_k) \Vert^2 + \frac{L}{2 \gamma^2} \Vert \nabla f(x_k) \Vert^2 \\
+        &= f(x_k) - \left(\frac{1}{L} - \frac{1}{2L}\right) \Vert \nabla f(x_k) \Vert^2
+      \end{aligned}
+    \end{equation}
+  \end{proof}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Smooth convex functions}
+  \begin{theorem}
+    Let $f: \R^d \to \R$ be convex and $L$-smooth and the stepsize $\alpha=1/L$, then
+    \emph{gradient descent} yields
+    \begin{equation}
+      f(x_k)-f^* \le \frac{L}{2k}\Vert x_1-x^* \Vert^2
+    \end{equation}
+  \end{theorem}
+  \begin{itemize}
+    \item holds for last iterate
+    \item independet of dimension $d$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Complexity of gradient method}
+  Denote $D^2 := \Vert x_1- x^* \Vert^2$
+  \begin{equation}
+    \text{iteration} k \ge \frac{D^2 L}{2 \epsilon} \Rightarrow \text{error} \le \frac{L D^2}{2 k} \le \epsilon
+  \end{equation}
+  Given error $\epsilon=0.01$ results in
+  \begin{itemize}
+    \item $50 \cdot D^2 L$ iterations for \textit{smooth} case
+      \item $10 000 \cdot D^2 G^2$ for nonsmooth but Lipschitz
+  \end{itemize}
+
+  What if we don't know $L$?
+\end{frame}
+
+\begin{frame}
+  \frametitle{Proof of $\mathcal{O}(\epsilon^{-1})$ for smooth functions}
+  \begin{proof}
+    Subgradient analysis gave us
+    \begin{equation}
+      2 \alpha \sum_{i=1}^{k} (f(x_i) - f(x^*)) + \Vert x_{k+1} - x^* \Vert^2 \le \Vert x_1-x^* \Vert^2 +  \alpha^2 \sum_{i=1}^{k}  \Vert g_k \Vert^2,
+    \end{equation}
+    see~\eqref{eq:telescoping}. This time we use \textcolor{blue}{sufficient decrease} to bound gradient norm
+    \begin{equation}
+      \frac{1}{2 L} \sum_{i=1}^{k} \Vert \nabla f(x_k) \Vert^2 \le \sum_{i=1}^{k} (f(x_i) - f(x^*)) = f(x_1) - f(x_k)
+    \end{equation}
+  \end{proof}
+
+\end{frame}
 
 \end{document}
