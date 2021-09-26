@@ -7,7 +7,6 @@
 \newcommand{\asuivre}{\setcounter{sauvegardeenumi}{\theenumi}}
 \newcommand{\suite}{\setcounter{enumi}{\thesauvegardeenumi}}
 
-
 \title{Mirror Descent}
 \date{\today}
 
@@ -22,20 +21,17 @@
 
   When we used a norm $\Vert \cdot \Vert$ we meant the \emph{$2$-norm}, i.e.\
   \begin{equation}
-    \Vert x \Vert = \sqrt{\sum_{i=1}^{d} x_i^2}.
+    \Vert x \Vert = \Big({\sum_{i=1}^{d} x_i^2} \Big)^{1/2}.
   \end{equation}
-  In \emph{gradient descent} we used Lipschitz continuity:
+  In \textbf{gradient descent} we used Lipschitz continuity:
   \begin{equation}
     \Vert \nabla f(x) - \nabla f(y) \Vert \le L \Vert x-y \Vert
   \end{equation}
   (Lead to a complexity of $\mathcal{O}(\frac{L}{k})$) \\
 
   \onslide<2->{%
-    For sub-gradient descent we used
-    \begin{equation}
-      \Vert g \Vert \le G
-    \end{equation}
-    (Lead to a complexity of $\mathcal{O}(\frac{G}{\sqrt{k}})$)
+    For \textbf{sub-gradient descent} we used $\Vert g \Vert \le G$ which
+    lead to a complexity of $\mathcal{O}(\frac{G}{\sqrt{k}})$.
   }
 
   \onslide<3->{%
@@ -43,15 +39,16 @@
     \begin{equation}
       \Vert x \Vert_\infty \le \Vert x \Vert_2 \le \sqrt{d} \Vert x \Vert_\infty
     \end{equation}
-    It can happen that
-    \begin{equation}
-      \Vert g \Vert_\infty \le G \quad \text{but} \quad \Vert g \Vert_2 \approx \sqrt{d}G
-    \end{equation}
+    It can happen that $  \Vert g \Vert_\infty \le G \quad \text{but} \quad \Vert g \Vert_2 \approx \sqrt{d}G$
   }
 \end{frame}
 
 \begin{frame}
-  \frametitle{But where did we use the norm in the method?}
+  \frametitle{Different norms?}
+  \begin{center}
+    \textit{But where did we use the norm in the \textbf{method}?}
+  \end{center}
+
 
   \begin{block}{Gradient Descent}
     \begin{equation}
@@ -59,7 +56,7 @@
     \end{equation}
     equivalently
     \begin{equation}
-      x_{k+1} = \argmin_{x \in \R^d} \{ f(x_k) + \langle \nabla f(x_k), x-x_k \rangle + \frac{1}{2 \alpha_k} \Vert x-x_k  \Vert_2^2\}
+      x_{k+1} = \argmin_{x \in \R^d} \left\{ f(x_k) + \langle \nabla f(x_k), x-x_k \rangle + \frac{1}{2 \alpha_k} \Vert x-x_k  \Vert_2^2 \right\}
     \end{equation}
   \end{block}
   We can replace the $2$-norm with a more general \textbf{distance}.
@@ -114,8 +111,9 @@
 
 \begin{frame}
   \frametitle{Negative entropy}
-    Negative entropy: $h(x) = \sum_{i=1}^{d} x_i \log(x_i)$ for $ x_i > 0$. \\
-    Then $ \nabla h(x) = \log(x) + \bm{1}$ (coordinatewise) and
+  \begin{itemize}
+    \item Negative entropy: $h(x) = \sum_{i=1}^{d} x_i \log(x_i)$ for $ x_i > 0$. \\
+    \item Then $ \nabla h(x) = \log(x) + \bm{1}$ (coordinatewise) and
     \begin{equation}
     \begin{aligned}
         \Dh(x,y) &= \sum_{i=1}^{d}x_i \log(x_i) - y_i \log(y_i) - \langle \log(y)+ \bm{1}, x-y \rangle \\
@@ -123,13 +121,12 @@
         &= \sum_{i=1}^{d} x_i \log\left(\frac{x_i}{y_i}\right)
     \end{aligned}
     \end{equation}
-    The \textcolor{red}{Kullback-Leibler divergence} $K(X \Vert Y)$
-
-    Is strongly convex over $\Delta$
+    Known as \textcolor{red}{Kullback-Leibler divergence} $K(X \Vert Y)$.
+    \item Is strongly convex over $\Delta$
     \begin{equation}
-      \D(x, y) \ge \frac12 \Vert x-y \Vert_1^2 \hfill \text{Pinsker's ineq.}
+      \D(x, y) \ge \frac12 \Vert x-y \Vert_1^2 \quad \text{Pinsker's ineq.}
     \end{equation}
-
+  \end{itemize}
 \end{frame}
 
 
@@ -171,8 +168,15 @@
     \nabla h(x_{k+1}) =  \nabla h(x_k)  - \alpha_k \nabla f(x_k)
   \end{equation}
 
-  \textbf{Put mirror picture here}
+\end{frame}
 
+\begin{frame}
+  \frametitle{Why it's called mirror descent}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{mirror}
+    \caption{$\psi = h$}
+  \end{figure}
 \end{frame}
 
 % yura mirror descent part 2 begins here
@@ -227,13 +231,14 @@
 % \section{convergence analysis}%
 % put here convergence proof?
 %
+% add one slide about dual norms
 \begin{frame}
-  \frametitle{(general) mirror descent convergence statement}
+  \frametitle{(General) mirror descent convergence statement}
   \begin{equation}
     \Vert y \Vert_* := \max_{\Vert x \Vert=1} \{ \langle y, x \rangle\}
   \end{equation}
   \begin{theorem}
-    In $(R^d, \Vert \cdot \Vert)$ and subgradients bounded in dual norm $\Vert g_k \Vert_* \le G$, then
+    In $(\R^d, \Vert \cdot \Vert)$ and subgradients bounded in dual norm $\Vert g_k \Vert_* \le G$, then
     \begin{equation}
       f(\hat{x}_k) - f^* \le \frac{\D(x^*, x_1) + \frac12 \sum_i \alpha_i^2 G^2}{\sum_i \alpha_i}
     \end{equation}
@@ -248,5 +253,7 @@
   }
 
 \end{frame}
+
+% add proof here?
 
 \end{document}
