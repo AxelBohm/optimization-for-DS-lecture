@@ -74,7 +74,7 @@
   Example
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=\textwidth,keepaspectratio]{subdifferential}
+    \includegraphics[width=0.8\textwidth,keepaspectratio]{subdifferential}
     % \caption{\label{fig:label} }
   \end{figure}
   Subgradient condition at $x=0$ is $f(y)\ge f(0) + g(y-0) = gy$.
@@ -187,11 +187,11 @@
   Summing up (telescoping) yields
   \begin{equation}
     \label{eq:telescoping}
-    2\sum_{i=1}^{k}  \alpha_i(f(x_i) - f(x^*)) + \Vert x_{k+1} - x^* \Vert^2 \le \Vert x_1-x^* \Vert^2 +  \sum_{i=1}^{k} \alpha_i^2 \Vert g_k \Vert^2.
+    2\sum_{i=0}^{k-1}  \alpha_i(f(x_i) - f(x^*)) + \Vert x_{k} - x^* \Vert^2 \le \Vert x_0-x^* \Vert^2 +  \sum_{i=0}^{k-1} \alpha_i^2 \Vert g_k \Vert^2.
   \end{equation}
   Via the \emph{bounded subgradient} assumption
   \begin{equation}
-    2\sum_{i=1}^{k}  \alpha_i(f(x_i) - f(x^*)) + \Vert x_{k+1} - x^* \Vert^2 \le \Vert x_1-x^* \Vert^2 +  \sum_{i=1}^{k} \alpha_i^2 G^2.
+    2\sum_{i=0}^{k-1}  \alpha_i(f(x_i) - f(x^*)) + \Vert x_{k} - x^* \Vert^2 \le \Vert x_0-x^* \Vert^2 +  \sum_{i=0}^{k-1} \alpha_i^2 G^2.
   \end{equation}
 \end{frame}
 
@@ -203,7 +203,7 @@
   \end{equation}
   we obtain
   \begin{equation}
-    2\sum_{i=1}^{k}  (f(\bar{x}_k) - f(x^*)) + \Vert x_{k+1} - x^* \Vert^2 \le \Vert x_1-x^* \Vert^2 +  \sum_{i=1}^{k} \alpha_i^2 G^2.
+    2\sum_{i=0}^{k-1}  (f(\bar{x}_k) - f(x^*)) + \Vert x_{k} - x^* \Vert^2 \le \Vert x_1-x^* \Vert^2 +  \sum_{i=0}^{k-1} \alpha_i^2 G^2.
   \end{equation}
 
 \end{frame}
@@ -221,7 +221,7 @@
   \end{equation}
 
   \begin{equation}
-    f(\bar{x}_k) - f^* \le \frac{\Vert x_1-x^*\Vert^2 + G^2 \log(k)}{2 \sqrt{k}}
+    f(\bar{x}_k) - f^* \le \frac{\Vert x_0-x^*\Vert^2 + G^2 \log(k)}{2 \sqrt{k}}
   \end{equation}
   gives the rate
   \begin{equation}
@@ -253,12 +253,12 @@
 \begin{frame}
   \frametitle{Projected subgradient method}
   \begin{equation}
-    \text{(constrained setting)} \quad \min_{x\inC}\, f(x)
+    \text{(constrained setting)} \quad \min_{x\in C}\, f(x)
   \end{equation}
   \begin{algorithm}[H]
     \caption{Projected subgradient method}\label{label:}
     \begin{algorithmic}[1]
-      \For{$k=1, 2, \dots$}
+      \For{$k=0, 1, \dots$}
       \State{Pick $g_k \in \partial f(x_k)$}
       \State{$x_{k+1} = P_C( x_k- \alpha_k g_k )$}
       \Endfor
@@ -364,10 +364,11 @@
     \textit{Can be upper bounded by a quadratic.}
   \end{center}
   \begin{lemma}%
-    Is implied by $L$-Lipschitz gradients:
+    If the gradient of $f$ is $L$-Lipschitz
     \begin{equation}
       \Vert \nabla f(x)-f(y) \Vert \le L \Vert x-y \Vert.
     \end{equation}
+    then it is also $L$-smooth.
   \end{lemma}
   Note: Definition does not require convexity.
 \end{frame}
@@ -386,7 +387,7 @@
 
 
 \begin{frame}
-  \frametitle{}
+  \frametitle{Smooth vs. Lipschitz}
   \begin{itemize}
     \item Bounded (sub)gradients $\Leftrightarrow$ Lipschitz continuity of $f$
     \item Smoothness $\Leftrightarrow$ Lipschitz continuity of $\nabla f$ (if convex)
@@ -428,7 +429,7 @@
     Let $f: \R^d \to \R$ be convex and $L$-smooth and the stepsize $\alpha=1/L$, then
     \emph{gradient descent} yields
     \begin{equation}
-      f(x_k)-f^* \le \frac{L}{2k}\Vert x_1-x^* \Vert^2
+      f(x_k)-f^* \le \frac{L}{2k}\Vert x_0-x^* \Vert^2.
     \end{equation}
   \end{theorem}
   \begin{itemize}
@@ -454,17 +455,33 @@
 
 \begin{frame}
   \frametitle{Proof of $\mathcal{O}(\epsilon^{-1})$ for smooth functions}
-  \begin{proof}
     Subgradient analysis gave us
     \begin{equation}
-      2 \alpha \sum_{i=1}^{k} (f(x_i) - f(x^*)) + \Vert x_{k+1} - x^* \Vert^2 \le \Vert x_1-x^* \Vert^2 +  \alpha^2 \sum_{i=1}^{k}  \Vert g_k \Vert^2,
+      2 \alpha \sum_{i=0}^{k-1} (f(x_i) - f(x^*)) + \Vert x_{k} - x^* \Vert^2 \le \Vert x_0-x^* \Vert^2 +  \alpha^2 \sum_{i=0}^{k-1}  \Vert g_k \Vert^2,
     \end{equation}
     see~\eqref{eq:telescoping}. This time we use \textcolor{blue}{sufficient decrease} to bound gradient norm
     \begin{equation}
-      \frac{1}{2 L} \sum_{i=1}^{k} \Vert \nabla f(x_k) \Vert^2 \le \sum_{i=1}^{k} (f(x_i) - f(x^*)) = f(x_1) - f(x_k)
+      \frac{1}{2 L} \sum_{i=0}^{k-1} \Vert \nabla f(x_k) \Vert^2 \le \sum_{i=0}^{k-1} (f(x_i) - f(x_{i+1})) = f(x_0) - f(x_k)
     \end{equation}
-  \end{proof}
+    Combining things (with $\alpha=1/L$)
+    \begin{equation}
+      \begin{aligned}
+        \sum_{i=0}^{k-1} (f(x_i) - f(x^*))  &\le \frac{L}{2} \Vert x_0-x^* \Vert^2 +  \frac{1}{2L} \sum_{i=0}^{k-1}  \Vert g_k \Vert^2 \\
+        &\le \frac{L}{2} \Vert x_0-x^* \Vert^2 + f(x_0) - f(x^*)
+      \end{aligned}
+    \end{equation}
+\end{frame}
 
+\begin{frame}
+  \frametitle{Proof II}
+  By rewriting:
+    \begin{equation}
+      \sum_{\textcolor{red}{i=1}}^{\textcolor{red}{k}} (f(x_i) - f(x^*)) \le \frac{L}{2} \Vert x_0-x^* \Vert^2
+    \end{equation}
+    As last iterate is the best (sufficient decrease):
+    \begin{equation}
+      f(x_k) - f(x^*) \le \frac{1}{k} \sum_{i=1}^{k} f(x_i) - f(x^*) \le \frac{L}{2 k} \Vert x_0 - x^* \Vert^2
+    \end{equation}
 \end{frame}
 
 \end{document}
