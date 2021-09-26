@@ -245,13 +245,27 @@
   \end{theorem}
 
   \onslide<2->{%
+  }
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Convergence on the unit simplex}
     \textbf{What about $\D(x^*, x_1) $?}
     Let $x_1 = (\frac{1}{n}, \cdots , \frac{1}{n})$, then
     \begin{equation}
-      \D(x, x_1) = \sum x_i \log(\frac{x_i}{\frac1n}) = \sum x_i \log(x_i) + \log(n) \le log(n)
+      \D(x, x_1) = \sum x_i \log\left(\frac{x_i}{\frac1n}\right) = \sum x_i \log(x_i) + \log(n) \le log(n)
     \end{equation}
-  }
+    while $ \Vert x_0 - x^* \Vert^2 \le 2$.
 
+    But if
+    \begin{equation}
+      \Vert g \Vert_\infty = \Vert g \Vert_1^* \le G
+    \end{equation}
+    we can still have
+    \begin{equation}
+      \Vert g \Vert_2 \approx \sqrt{d} G.
+    \end{equation}
 \end{frame}
 
 % add proof here?

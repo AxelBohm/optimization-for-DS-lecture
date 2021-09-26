@@ -1,0 +1,66 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+
+\input{../../shared.tex}
+
+\title{Newton's and Quasi-Newton Methods}
+\date{\today}
+
+
+\begin{document}
+\maketitle
+\frame{\tableofcontents[currentsection]}
+
+\section{Introduction}
+
+\begin{frame}
+  \frametitle{$1$-dimensional case: Newton-Raphson method}
+  \begin{minipage}{0.48\textwidth}
+    \textcolor{blue}{Objective:} Find zero of differentiable $f: \R \to \R$.\\
+    \textcolor{blue}{Strategy:} Solve
+    \begin{equation}
+      f(x_k) + f'(x_k) (x - x_k) = 0.
+    \end{equation}
+    \textcolor{blue}{Method:} Gives
+    \begin{equation}
+      x_{k+1} = x_k - \frac{f(x_k)}{f'(x_k)}
+    \end{equation}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.48\textwidth}
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{newton-raphson}
+      % \caption{\label{fig:label} }
+    \end{figure}
+  \end{minipage}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The Babylonian method}
+  \begin{itemize}
+    \item \textcolor{blue}{compute square root} of $R \in \R_+$
+    \item find zero of $f(x) = x^2 - R$
+    \item use Newton-Raphson:
+          \begin{equation}
+            x_{k+1} = x_k - \frac{f(x_k)}{f'(x_k)} = x_k - \frac{x_k^2 - R}{2 x_k} = \frac12 \left( x_k + \frac{R}{x_k} \right)
+          \end{equation}
+    \item Starting from $x_0 > 0$ we have
+          \begin{equation}
+            x_{k+1} = \frac12 \left( x_k + \frac{R}{x_k} \right) \ge \frac{x_k}{2}.
+          \end{equation}
+    \item Starting from $x_0 = R \ge 1$, it takes $\mathcal{O}(\log R)$ steps to get to $x_k - \sqrt{R} < \frac12$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The Babylonian method - Takeoff}
+  If $x_k - \sqrt{R} < \frac12$ (ensured after $\log R$ steps).
+  \begin{equation}
+    x_{k+1} - \sqrt{R} = \frac12 \left( x_k + \frac{R}{x_k} \right) - \sqrt{R} = \frac{x_k}{2} + \frac{R}{2 x_k} - \sqrt{R} = \frac{1}{2 x_k} {\left( x_k - \sqrt{R} \right)}^2
+  \end{equation}
+
+
+\end{frame}
+
+\end{document}
