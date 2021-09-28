@@ -55,11 +55,286 @@
 
 \begin{frame}
   \frametitle{The Babylonian method - Takeoff}
-  If $x_k - \sqrt{R} < \frac12$ (ensured after $\log R$ steps).
+  Note that
   \begin{equation}
     x_{k+1} - \sqrt{R} = \frac12 \left( x_k + \frac{R}{x_k} \right) - \sqrt{R} = \frac{x_k}{2} + \frac{R}{2 x_k} - \sqrt{R} = \frac{1}{2 x_k} {\left( x_k - \sqrt{R} \right)}^2
   \end{equation}
+  For simplicity $R \ge 1/4$, then $x_k \ge \sqrt{R} \ge 1/2$. Hence
+  \begin{equation}
+    x_{k+1} - \sqrt{R} = \frac{1}{2 x_k} {\left( x_k - \sqrt{R} \right)}^2 \le {\left( x_k - \sqrt{R} \right)}^2
+  \end{equation}
+  If $x_0 - \sqrt{R} < \frac12$ (ensured after $\mathcal{O}(\log R)$ steps).
+  \begin{equation}
+    x_{k} - \sqrt{R} \le {\left( x_0 - \sqrt{R} \right)}^{2^k} \le {\left(\frac12\right)}^{2^k}
+  \end{equation}
+  To achieve $x_k - \sqrt{R} < \epsilon$ we only need $k = \log \log (\epsilon^{-1})$ steps!
+\end{frame}
 
+\begin{frame}
+  \frametitle{The Babylonian method - Example}
+  $R=1000$, in double arithmetic
+  \begin{itemize}
+    \item $7$ steps to get to $x_7 - \sqrt{1000} < 1/2$
+          \item $3$ steps to get to $\sqrt{1000}$ up to \textit{machine precision}
+          \item First phase: $\approx$ \textcolor{blue}{one more correct digit} per iteration
+          \item Second phase: $\approx$ \textcolor{blue}{double the number of correct digits} per iteration
+  \end{itemize}
+
+  \begin{center}
+    In practice: $\log \log x \le 5$.
+  \end{center}
+
+\end{frame}
+
+\section{Newton's method}%
+\label{sec:}
+
+\begin{frame}
+  \frametitle{Newton's method for optimization}
+  \textcolor{blue}{Goal:} Find global minimum $x^*$ of convex, differentiable function $f$.
+  \textcolor{blue}{Strategy:} Search for zero of derivative.
+
+  \textbf{$1$-dimensional case:} Apply Newton-Raphson method to $f'$:
+  \begin{equation}
+    x_{k+1} = x_k - \frac{f'(x_k)}{f''(x_k)} = x_k - {f''(x_k)}^{-1} f(x_k)
+  \end{equation}
+  (requires \textcolor{blue}{twice} differentiable and $f'' > 0$)
+
+  \textbf{$d$-dimensional case:} Newtons methods for minimizing convex $f: \R^d \to \R$:
+  \begin{equation}
+    x_{k+1} = x_k - \nabla^2 f(x_k) \nabla f(x_k)
+  \end{equation}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Newton's method as adaptive gradient descent}
+  General update scheme:
+  \begin{equation}
+    x_{k+1} = x_k - H(x_k) \nabla f(x_k)
+  \end{equation}
+  for some matrix $H(x) \in \R^{d \times d}$.
+  \begin{itemize}
+    \item \textcolor{blue}{Newton's method}: $H = {\nabla^2 f(x_k)}^{-1}$.
+    \item \textcolor{blue}{Gradient descent}: $H = \alpha \Id$
+  \end{itemize}
+  \vspace{1cm}
+  Newton's methods \textbf{adapts} to the local geometry of $f$ at $x_k$ \\
+  $\rightarrow$ \textit{no need for choosing a stepsize}.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Convergence in one step on quadratic functions}
+  A \textcolor{blue}{quadratic} function
+  \begin{equation}
+    f(x) = \frac12 x^T M x + q^T x + c
+  \end{equation}
+  is called \textit{nondegenerate} if $M \in \R^{d \times d}$ is invertible.
+  \begin{itemize}
+    \item $x^* := M^{-1}q$ is the unique solution of $\nabla f(x) = 0$
+    \item $x^*$ is the unique global minimum if $f$ is convex
+  \end{itemize}
+  \begin{lemma}%
+    On nondegenerate quadratic functions with arbitrary starting point $x_0$, Newtons method yields $x_1=x^*$
+  \end{lemma}
+  \begin{proof}
+    We have $\nabla f(x) = Mx -q$ and $\nabla^2 f(x) = M$. Therefore
+    \begin{equation}
+      x_1 = x_0 - \nabla^2 f(x_0) \nabla f(x_0) = x_0 - M^{-1}(M x_0 - q) = M^{-1}q = x^*.
+    \end{equation}
+  \end{proof}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Affine Invariance}
+  Newton’s method is \textcolor{blue}{affine invariant}
+  (invariant under any invertible affine transformation):
+  Denote the Newton step for $h$ by
+  \begin{equation}
+    N_h(x) := x - {\nabla^2 h }^{-1} \nabla h(x).
+  \end{equation}
+  \begin{lemma}%
+    Let $f: \R^d \to \R$ be twice differentiable, $A \in \R^{d \times d}$ an invertible matrix and $b \in \R^d$.
+    \begin{equation}
+      g(x) = Ax + b.
+    \end{equation}
+    Then
+    \begin{equation}
+      N_{f \circ g} = g^{-1} \circ N_f \circ g
+    \end{equation}
+  \end{lemma}
+\end{frame}
+
+\begin{frame}
+  \frametitle{}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{newton_aff_invariance}
+    % \caption{\label{fig:label} }
+  \end{figure}
+  Gradient descent suffers if coordinates are at different scales; Newton's method doesn't.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Minimizing the second-order Taylor approximation}
+  Alternative interpretation of Newton's method:
+  Minimize (local) \textcolor{blue}{quadratic model} of $f$.
+  \begin{lemma}%
+    Let $f$ be conve, twice differentiable and $\nabla^2 f(x) \succ 0$. Then $x_{k+1}$ resulting from \textbf{Newton's step} satisfies
+    \begin{equation}
+      x_{k+1} = \argmin_{x \in \R^d} f(x_k) + \langle \nabla f(x_k), x-x_k \rangle + \frac12 \langle x-x_k, \nabla^2 f(x_k) (x-x_k)  \rangle
+    \end{equation}
+  \end{lemma}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Local Convergence}
+  We will prove:\\
+  Under suitable conditions on $f$ and \textcolor{blue}{close to the minimum} Newton's method approximates solution up to an error $\epsilon$ in \textcolor{blue}{$\log \log (1/\epsilon)$} iterations.
+  \begin{itemize}
+    \item much faster than anything so far..
+    \item only locally
+  \end{itemize}
+  We call this a \textcolor{blue}{local convergence} result.\\
+
+  \textcolor{blue}{Global convergence} statements are more difficult to obtain (some only recently).
+\end{frame}
+
+\section{Convergence analysis}%
+\label{sec:}
+
+\begin{frame}
+  \frametitle{Theorem + Technical conditions }
+  \begin{theorem}
+    Let $f$ be convex with unique global minimum $x^*$, and $X$ a ball around $x^*$ s.t.
+    \begin{enumerate}
+      \item \textcolor{blue}{Bounded inverse Hessians:} There exists $\mu > 0$
+            \begin{equation}
+              \Vert {\nabla^2 f(x)}^{-1} \Vert \le \frac{1}{\mu}, \quad \forall x \in X
+            \end{equation}
+      \item \textcolor{blue}{Lipschitz continuous Hessians:} There exists $B>0$
+            \begin{equation}
+              \Vert \nabla^2 f(x) - \nabla^2 f(y) \Vert \le B \Vert x-y \Vert, \quad \forall x,y \in X
+            \end{equation}
+    \end{enumerate}
+    Then, for $x_{k+1} = N_f(x_k)$ we have
+    \begin{equation}
+      \Vert x_{k+1} -x^* \Vert \le \frac{B}{2 \mu} \Vert x_k - x^* \Vert^2
+    \end{equation}
+  \end{theorem}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Super-exponential speed}
+  \begin{corollary}%
+    In the setting of previous theorem, if
+    \begin{equation}
+      \Vert x_k - x^* \Vert \le \frac{\mu}{B},
+    \end{equation}
+    then
+    \begin{equation}
+      \Vert x_k -x^*  \Vert \le \frac{\mu}{B} {\left( \frac{1}{2} \right)}^{2^k-1}
+    \end{equation}
+  \end{corollary}
+  Close to the global minimum, we will reach distance to the minumum less than $\epsilon$ in at most $\log \log (1/\epsilon)$ steps.
+
+  As for the last phase of Babylonian method.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Super-exponential speed - intuition}
+
+  \begin{itemize}
+    \item Almost constant Hessians close to optimality...
+    \item so $f$ behaves almost like a quadratic
+    \item on which Newton's converge in one step
+  \end{itemize}
+
+  \begin{lemma}%
+    If
+    \begin{equation}
+      \Vert x_0 - x^* \Vert \le \frac{\mu}{B}
+    \end{equation}
+    the Hessians in Newton's method satisfy the \textcolor{blue}{relative error bound}
+    \begin{equation}
+      \frac{\Vert  \nabla^2 f(x_k) - \nabla^2 f(x^*) \Vert}{\Vert \nabla^2 f(x^*) \Vert} \le {\left( \frac12 \right)}^{2^k-1}.
+    \end{equation}
+  \end{lemma}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Proof of convergence theorem}
+  We abbreviate $H = \nabla^2 f(x_k)$, $x=x_k$, $x^+ = x_{k+1}$
+  \begin{equation}
+    \begin{aligned}
+      x^+ - x^* &= x - x^* - H^{-1} \nabla f(x) \\
+      &= x - x^* + H^{-1}( \nabla f(x^*) - \nabla f(x)) \\
+      &= x - x^* + H^{-1} \int_{0}^{1} H(x + t(x^* - x))(x^* - x) \diff t,
+    \end{aligned}
+  \end{equation}
+  \onslide<2->{%
+    where we used the fundamental theorem of calculus
+    \begin{equation}
+      \int_{a}^{b} h' (t) \diff t
+    \end{equation}
+    with
+    \begin{align}
+      h(t)  &= \nabla f(x + t(x^* -x )) \\
+      h'(t) &= \nabla^2f (x + t(x^* -x ))(x^*-x).
+    \end{align}
+  }
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Downside of Newton's method}
+  \textcolor{blue}{Computational bottleneck} in every step:
+  \begin{itemize}
+    \item compute Hessian
+    \item invert Hessian or solve $\nabla^2 f(x_k) \Delta x = - \nabla f(x_k)$
+  \end{itemize}
+  Matrix has size $d\times d$, taking $\mathcal{O}(d^3)$ to invert.\\
+  In many applications the dimension $d$ is large (too large to even store Hessian).
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{The secant method}
+  Another iterative method for finding zeros in $1$-d.
+  Recall Newton-Raphson:
+  \begin{equation}
+    x_{k+1} = x_k - \frac{f(x_k)}{f'(x_k)}
+  \end{equation}
+  Use \textcolor{blue}{finite difference approximation} of $f'(x_k)$:
+  \begin{equation}
+    f'(x_k) \approx \frac{f(x_k) - f(x_{k-1})}{x_k - x_{k-1}}.
+  \end{equation}
+  We obtain the \textcolor{blue}{\textbf{secant method}}:
+  \begin{equation}
+    x_{k+1} = x_k - f(x_k) \frac{f(x_k) - f(x_{k-1})}{x_k - x_{k-1}}.
+  \end{equation}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{The secant method}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth,keepaspectratio]{secant_method}
+  \end{figure}
+  Constructs the line through $(x_{k-1}, f(x_{k-1}))$ and $(x_k, f(x_k))$
+\end{frame}
+
+\begin{frame}
+  \frametitle{}
 
 \end{frame}
 
