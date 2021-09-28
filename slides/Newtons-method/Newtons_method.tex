@@ -299,9 +299,12 @@
     \item compute Hessian
     \item invert Hessian or solve $\nabla^2 f(x_k) \Delta x = - \nabla f(x_k)$
   \end{itemize}
+  \vspace{1cm}
   Matrix has size $d\times d$, taking $\mathcal{O}(d^3)$ to invert.\\
   In many applications the dimension $d$ is large (too large to even store Hessian).
 
+  \vspace{1cm}
+  When training a ML model $d$ is the number or parameters of our ML model (number of features for linear model).
 \end{frame}
 
 
@@ -318,14 +321,14 @@
   \end{equation}
   We obtain the \textcolor{blue}{\textbf{secant method}}:
   \begin{equation}
-    x_{k+1} = x_k - f(x_k) \frac{f(x_k) - f(x_{k-1})}{x_k - x_{k-1}}.
+    x_{k+1} = x_k - f(x_k) \frac{x_k - x_{k-1}}{f(x_k) - f(x_{k-1})}.
   \end{equation}
 
 \end{frame}
 
 
 \begin{frame}
-  \frametitle{The secant method}
+  \frametitle{The secant method II}
   \begin{figure}[ht]
     \centering
     \includegraphics[width=0.7\textwidth,keepaspectratio]{secant_method}
@@ -334,8 +337,57 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{}
+  \frametitle{The secant method III}
+  \begin{itemize}
+    \item is a \emph{derivative-free} version of the Newton-Raphson method.
+    \item \textcolor{blue}{For optimization}: Apply secant method to $f'$ to optimize $f$:
+          \begin{equation}
+            x_{k+1} = x_k - f'(x_k) \frac{x_k - x_{k-1}}{f'(x_k) - f'(x_{k-1})}.
+          \end{equation}
+    \item yields a \textcolor{blue}{second-derivative free} version of Newton's method.
+  \end{itemize}
 
+  \vspace{1cm}
+
+  \onslide<2->{%
+    \begin{center}
+      \textit{What abouthigher dimensions? Can't divide vectors..}
+    \end{center}
+  }
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{The secant condition}
+  In $1$-d:
+  \begin{equation}
+    H_k &:= \frac{f'(x_k) - f'(x_{k-1})}{x_k - x_{k-1}} \approx f''(x_k) \\
+    &\Leftrightarrow f'(x_k) - f'(x_{k-1}) = H_k (x_k - x_{k-1}),
+  \end{equation}
+  the \textcolor{blue}{secant condition}.
+  \begin{itemize}
+    \item Newton's method: $x_{k+1} = x_k - {f''(x_k)}^{-1} f'(x_k)$
+    \item Secant method: $x_{k+1} = x_k - {H_k}^{-1} f'(x_k)$
+  \end{itemize}
+
+  \begin{itemize}
+    \item $d=1$: unique number $H_k$ satisfying the secant condition
+    \item $d>0$: secant condition $\nabla f(x_k) - \nabla f(x_{k-1}) = H_k (x_k - x_{k-1})$ has infinitely many symmetric solutions
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Quasi-Newton methods}
+
+  \begin{equation}
+    \nabla f(x_k) - \nabla f(x_{k-1}) = H_k (x_k - x_{k-1}) \approx \nabla^2 f(x_k) (x_k - x_{k-1})
+  \end{equation}
+
+
+  Any scheme of choosing in each step of the secant method a symmetric $H_k$ that
+satisfies the secant condition defines a \textcolor{blue}{Quasi-Newton method}.
 \end{frame}
 
 \end{document}
