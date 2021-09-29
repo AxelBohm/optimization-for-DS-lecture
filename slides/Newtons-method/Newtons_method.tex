@@ -119,7 +119,9 @@
     \item \textcolor{blue}{Gradient descent}: $H = \alpha \Id$
   \end{itemize}
   \vspace{1cm}
+ \begin{block}{}
   Newton's methods \textbf{adapts} to the local geometry of $f$ at $x_k$ \\
+ \end{block}
   $\rightarrow$ \textit{no need for choosing a stepsize}.
 \end{frame}
 
@@ -140,7 +142,7 @@
   \begin{proof}
     We have $\nabla f(x) = Mx -q$ and $\nabla^2 f(x) = M$. Therefore
     \begin{equation}
-      x_1 = x_0 - \nabla^2 f(x_0) \nabla f(x_0) = x_0 - M^{-1}(M x_0 - q) = M^{-1}q = x^*.
+      x_1 = x_0 - \nabla^2 f(x_0) \nabla f(x_0) = x_0 - M^{-1}(M x_0 - q) = M^{-1}q = x^*. \qed\qedhere
     \end{equation}
   \end{proof}
 \end{frame}
@@ -427,23 +429,24 @@
     \item $d>0$: secant condition $\nabla f(x_k) - \nabla f(x_{k-1}) = H_k (x_k - x_{k-1})$ has infinitely many symmetric solutions
   \end{itemize}
 
-  \textit{Any scheme of choosing in each step of the secant method a symmetric $H_k$ that}
+  \begin{block}{}
+    \textit{Any scheme of choosing in each step of the secant method a symmetric $H_k$ that satisfies the secant condition defines a \textcolor{blue}{Quasi-Newton method}.}
+  \end{block}
 
-satisfies the secant condition defines a \textcolor{blue}{Quasi-Newton method}.
+
 \end{frame}
 
 \begin{frame}
   \frametitle{Quasi-Newton methods II}
 
   \begin{itemize}
-    \item Newton’s method is a Quasi-Newton method if and only if f is a nondegenerate quadratic function.
-    \item I Hence, Quasi-Newton methods do not generalize Newton’s method but form a
-          family of related algorithms.
-    \item The first Quasi-Newton method by William C. Davidon in 1956;
+    \item Newton’s method is a Quasi-Newton method if and only if f is a nondegenerate \textbf{quadratic} function.
+    \item Hence, Quasi-Newton methods do not generalize Newton’s method but form a
+          family of \textit{related} algorithms.
+    \item First Quasi-Newton method by William Davidon in 1956
     \item But the paper got rejected for lacking a convergence analysis,
-    \item was finally officially published in
-          1991, with a foreword giving the historical context
-    \item methods of choice in a number of relevant machine learning applications
+    \item was finally officially published in 1991
+    \item \textcolor{blue}{methods of choice} in a number of relevant machine learning applications
   \end{itemize}
 
 \end{frame}
