@@ -87,7 +87,6 @@
 \end{frame}
 
 \section{Newton's method}%
-\label{sec:}
 
 \begin{frame}
   \frametitle{Newton's method for optimization}
@@ -203,8 +202,8 @@
   \textcolor{blue}{Global convergence} statements are more difficult to obtain (some only recently).
 \end{frame}
 
+
 \section{Convergence analysis}%
-\label{sec:}
 
 \begin{frame}
   \frametitle{Theorem + Technical conditions }
@@ -293,6 +292,43 @@
 
 
 \begin{frame}
+  \frametitle{Proof of convergence theorem II}
+  So far
+  \begin{equation}
+      x^+ - x^* = x - x^* + H^{-1} \int_{0}^{1} H(x + t(x^* - x))(x^* - x) \diff t
+  \end{equation}
+  With
+  \begin{equation}
+    x- x^* = {H(x)}^{-1} \int_{0}^{1} - H(x)(x^*-x)
+  \end{equation}
+  we get
+  \begin{equation}
+    x^+ - x^* =  H^{-1} \int_{0}^{1} (H(x + t(x^* - x))- H(x))(x^* - x) \diff t.
+  \end{equation}
+  Using norms
+  \begin{equation}
+    \Vert x^+ - x^*  \Vert \le  \Vert H^{-1} \Vert \left\Vert  \int_{0}^{1} H(x + t(x^* - x))- H(x)(x^* - x) \diff t \right\Vert
+  \end{equation}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Proof of convergence theorem III}
+
+  \begin{align}
+    \Vert x^+ - x^*  \Vert &=  \Vert H^{-1} \Vert \left\Vert  \int_{0}^{1} (H(x + t(x^* - x))- H(x))(x^* - x) \diff t \right\Vert \\
+    &\le \Vert H^{-1} \Vert  \Vert x^* - x \Vert \int_{0}^{1} \left\Vert  (H(x + t(x^* - x))- H(x)) \right\Vert \diff t \\
+  \end{align}
+  Use \textbf{bounded inverse Hessians} and \textbf{Lipschitz continuity} of the Hessian to conclude
+  \begin{align}
+    \Vert x^+ - x^*  \Vert  &\le \frac{1}{\mu} \Vert x^* - x \Vert \int_{0}^{1} B \Vert t(x^*-x) \Vert \diff t  \\
+    &= \frac{B}{\mu} \Vert x^*-x \Vert^2 \int_{0}^{1}t \diff t = \frac{B}{2\mu} \Vert x-x^* \Vert^2.
+  \end{align}
+
+\end{frame}
+
+
+\begin{frame}
   \frametitle{Downside of Newton's method}
   \textcolor{blue}{Computational bottleneck} in every step:
   \begin{itemize}
@@ -307,8 +343,8 @@
   When training a ML model $d$ is the number or parameters of our ML model (number of features for linear model).
 \end{frame}
 
+
 \section{Quasi-Newton methods}%
-\label{sec:}
 
 \begin{frame}
   \frametitle{The secant method}
@@ -423,7 +459,7 @@ satisfies the secant condition defines a \textcolor{blue}{Quasi-Newton method}.
             x_{k+1} = x_k = H_k^{-1} \nabla f(x_k)
           \end{equation}
     \item How to choose $H_k^{-1}$?
-    \item Newton’s method: $\nabla f(x_k)$ fluctuates only very little in the region of very fast convergence.
+    \item Newton’s method: $\nabla^2 f(x_k)$ fluctuates only very little in the region of very fast convergence.
     \item Makes sense to have $H_k \approx H_{k-1}$ or $H_k^{-1} \approx H_{k-1}^{-1}$
   \end{itemize}
 \end{frame}
@@ -446,4 +482,22 @@ satisfies the secant condition defines a \textcolor{blue}{Quasi-Newton method}.
   \end{equation}
 \end{frame}
 
+
+\begin{frame}
+  \frametitle{BFGS method}
+  \begin{itemize}
+    \item special version of Greenstadt
+    \item is named after Broyden, Fletcher, Goldfarb and Shanno
+          who all came up with it independently around 1970. Greenstadt’s name is
+          mostly forgotten.
+    \item Newton’s method needs to compute and invert
+          Hessians $\rightarrow$ cost of $\mathcal{O}(d^3)$ per iteration
+    \item any method in Greenstadt’s family avoids computation of Hessian.
+          Only gradients are needed.
+    \item In the BFGS method, the cost per iteration drops to $\mathcal{O}(d^2)$.
+    \item even this can be prohibitive $\rightarrow$ limited memory BFGS
+    \item uses observation that we do not need $H_{k}^{-1}$, only $H_{k}^{-1} \nabla f(x_k)$
+  \end{itemize}
+
+\end{frame}
 \end{document}
