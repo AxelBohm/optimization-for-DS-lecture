@@ -6,7 +6,7 @@
 
 \begin{document}
 \maketitle
-\frame{\tableofcontents[currentsection]}
+\frame{\tableofcontents}
 
 \begin{frame}
   \frametitle{Course organization}
@@ -30,7 +30,7 @@
   \frametitle{What is Optimization}
 
   \begin{center}
-    \textit{Given a function $f$ which represents some cost/regret/loss (or gain/profit/utility) we aim to find the argument/decision associated with smallest cost (or largest profit).}
+    \textit{Given a function $f$ which represents some cost/regret/loss (or gain/profit/utility) we aim to find the argument/decision associated with the smallest cost (or largest profit).}
   \end{center}
 
   \begin{equation}
@@ -53,9 +53,8 @@
   Economics
   \begin{itemize}
     \item Microeconomics: Agents maximizing utility
-    \item Game theory and equlibria
-    % \item Finance: Option pricing
-    \item Stats: maximum likelyhood
+    \item Game theory and equilibria
+    \item Stats: maximum likelihood
   \end{itemize}
   Physics
   \begin{itemize}
@@ -111,6 +110,8 @@
 \end{frame}
 
 
+\section{Methods}%
+
 \begin{frame}
   \frametitle{Optimization Algorithms}
   \begin{center}
@@ -118,7 +119,7 @@
   \end{center}
   Main approaches:
   \begin{itemize}
-    \item First order methods: gradient descent
+    \item First order methods: \textbf{gradient descent}
     \item Stochastic gradient descent (SGD)
     \item Coordinate descent
   \end{itemize}
@@ -154,7 +155,15 @@
   \textcolor{blue}{\textbf{Strategy:}} Follow the direction of (local) \textbf{steepest descent}.
 \end{frame}
 
-% image of gradient descent
+
+\begin{frame}
+  \frametitle{}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{gradient_descent_meme}
+    \caption{\label{fig:label} }
+  \end{figure}
+\end{frame}
 
 \begin{frame}
   \frametitle{Optimization in other settings}

@@ -7,7 +7,7 @@
 
 \begin{document}
 \maketitle
-\frame{\tableofcontents[currentsection]}
+\frame{\tableofcontents}
 
 \section{Introduction}%
 
@@ -34,7 +34,7 @@
   \frametitle{Example: penalty game}
   \begin{figure}[ht]
     \centering
-    \includegraphics[scale=0.2]{penalty-game.png}
+    \includegraphics[scale=0.4]{penalty-game}
     \caption{penalty game}
   \end{figure}
 \end{frame}
@@ -43,8 +43,8 @@
   \frametitle{Example: prisoners dilemma}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.5\textwidth]{prison.jpg}
-    \caption{\label{fig:label} }
+    \includegraphics[width=0.5\textwidth]{prison}
+    \caption{prisoners dilemma}
   \end{figure}
 \end{frame}
 
@@ -52,8 +52,9 @@
   \frametitle{Worst case}
 
   \begin{itemize}
-    \item Alice gets $\onslide<2->{\max_{j\in [m]}}\min_{j\in [n]} a_{i,j}$
-    \onslide<3->{\item Bob gets $\min_{j\in [n]} \max_{j\in [m]} a_{i,j}$}
+    \item if Alice chooses strategy $i$ she gets (at least): $\min_{j\in [n]} a_{i,j}$
+    \onslide<2->{\item Alice can ensure payoff $\max_{i\in [m]} \min_{j\in [n]} a_{i,j}$}
+    \onslide<3->{\item Bob pays (at most) $\min_{j\in [n]} \max_{i\in [m]} a_{i,j}$}
   \end{itemize}
   \onslide<4->{%
     We claim:
@@ -63,11 +64,8 @@
     \begin{center}
       \textit{``Tallest dwarf is not as tall as the smallest giant.''}
     \end{center}
-    But equality does not hold in general!
+    But: \textbf{No equality in general!}
   }
-  % \begin{proof}
-  %   lala
-  % \end{proof}
 \end{frame}
 
 \begin{frame}
@@ -107,7 +105,8 @@
 
 \begin{frame}
   \frametitle{Mixed Strategies}
-  With pure strategies we do not always have a saddle point.
+  \textit{With pure strategies we do not always have a saddle point.}
+
   \begin{block}{von Neumann (1928) --- Mixed strategies}
     \begin{itemize}
       \item Alice picks strategies $1, \dots, m$ \emph{with probabilities} $x\in \Delta_m$
@@ -152,6 +151,7 @@
   \begin{center}
     Before we never had the optimal value!
   \end{center}
+  % how does this fit in?
   Solution will always be on the boundary:
   \begin{equation}
     f_p(x) = \max_{y \in \Delta} \langle A^T x, y \rangle = \max_{j} \langle A^T x, e_j \rangle
@@ -167,17 +167,17 @@
   \end{equation}
   as a minimization problem
   \begin{equation}
-      \min_{x \in \Delta} \langle x, A y^* \rangle
+      \min_{x \in \Delta}  f_p(x) = \langle x, A y^* \rangle .
   \end{equation}
-  Then
+  Then, by the \textbf{first-order optimality condition}
   \begin{equation}
-    x^* \in \argmin_{y \in \Delta} f_p(x)  \Leftrightarrow \langle \nabla f_p(x^*), x-x^* \rangle \ge 0 \quad \forall x \in D
+    x^* \in \argmin_{x \in \Delta} f_p(x)  \Leftrightarrow \langle \nabla f_p(x^*), x-x^* \rangle \ge 0 \quad \forall x \in \Delta
   \end{equation}
   Thus
   \begin{equation}
     \begin{aligned}
-      \langle A^T y^*, x-x^* \rangle &\ge 0 \quad \forall  x \in D \\
-      \langle -A x^*, y-y^* \rangle &\ge 0 \quad \forall  y \in D \\
+      \langle A^T y^*, x-x^* \rangle &\ge 0 \quad \forall  x \in \Delta \\
+      \langle -A x^*, y-y^* \rangle &\ge 0 \quad \forall  y \in \Delta \\
     \end{aligned}
   \end{equation}
   Concatenate the two conditions to get
@@ -197,26 +197,54 @@
       x^* \\
       y^*
     \end{array} \right)
- \right\rangle
+ \right\rangle \ge 0.
   \end{equation}
 \end{frame}
 
 \begin{frame}
-  \frametitle{}
+  \frametitle{Games as Variational Inequalities}
+  We had:
+  \begin{equation}
+  \left\langle \begin{bmatrix}
+      0 & A^T \\
+      -A & 0
+    \end{bmatrix}
+    \left(\begin{array}{c}
+      x^*\\ y^*
+    \end{array}  \right),
+    \left(\begin{array}{c}
+      x \\ y
+    \end{array}  \right)
+    -
+    \left(\begin{array}{c}
+      x^* \\
+      y^*
+    \end{array} \right)
+ \right\rangle \ge 0.
+  \end{equation}
   By rewriting $z=(x,y)$ and $F(z) = [A^T y; Ax]$, then
   \begin{equation}\tag{VI}
     \label{eq:VI}
-    \langle F(z^*), z-z^* \rangle \ge 0 \quad \forall z \in \Delta_n \times \Delta_m := C
+    \langle F(z^*), z-z^* \rangle \ge 0 \quad \forall z \in \Delta_n \times \Delta_m =: C
   \end{equation}
   \begin{center}
     \textbf{Variational inequality}
   \end{center}
 
+  \begin{block}{}
   If $F = \nabla \phi$ then~\eqref{eq:VI} would be equivalent to
   \begin{equation}
-    \min_C \phi
+    \min_{z\in C} \, \phi(z)
   \end{equation}
-  \begin{block}{Integrability condition}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Potential - integrability}
+
+  \textbf{Question:} Does there exist a potential $\phi$ for $F$, such that $F = \nabla \phi$
+
+  \begin{block}{Integrability condition (from calculus)}
     Is the case if
     \begin{equation}
       \frac{\partial \phi}{\partial x \partial y} = \frac{\partial \phi}{\partial y \partial x}
@@ -230,20 +258,22 @@
 
 
 \begin{frame}
-  \frametitle{VI as Fixed point}
+  \frametitle{VI as Fixed point equation}
+  \begin{block}{}
+    \vspace{-0.5cm}
   \begin{align}
     \langle F(z^*), z-z^* \rangle \ge 0 \quad \forall z \in C \\
-    \Leftrightarrow
-    z^* = P_C (z^* - F(z^*)) \label{eq:FP}\tag{FP}
+    \Leftrightarrow z^* = P_C (z^* - F(z^*)) \label{eq:FP}\tag{FP}
   \end{align}
+  \end{block}
   \begin{proof}
-    Applying
+    Applying the property of the projection
     \begin{equation}
       \langle P_C(x)-x, x' - P_C(x) \rangle \ge 0 \quad \forall x' \in C
     \end{equation}
     with~\eqref{eq:FP}, gives
     \begin{equation}
-    \langle z^* - (z^* - F(z^*)), z-z^* \rangle \ge 0 \quad \forall z \in C
+    \langle z^* - (z^* - F(z^*)), z-z^* \rangle \ge 0 \quad \forall z \in C.\hfill \qedhere\qed
     \end{equation}
   \end{proof}
   \begin{itemize}
@@ -254,7 +284,7 @@
 
 
 \begin{frame}
-  \frametitle{But is it any good}
+  \frametitle{But is it any good?}
   \begin{equation}
     z_{k+1} = z_k - \alpha F(z_k)
   \end{equation}
@@ -265,10 +295,24 @@
       &=\Vert z_k \Vert^2 + \alpha^2 \Vert F(z_k) \Vert^2 \\
     \end{aligned}
   \end{equation}
-  Resulting in $\Vert z_{k+1} \Vert \ge \Vert z_k \Vert$
+  Resulting in $\Vert z_{k+1} \Vert \ge \Vert z_k \Vert$.
+  \begin{center}
+    $\Rightarrow$ \textbf{No bueno!}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{}
+
+We can still show
   \begin{theorem}
-    We can still still show a complexity of $\mathcal{O}(1/\sqrt{k})$ with the same analysis as for subgradient descent for \emph{averaged iterates} in terms of $f_p(x) - f_d(y)$.
+    complexity of $\mathcal{O}(1/\sqrt{k})$ for \textbf{averaged iterates} in terms of $f_p(x) - f_d(y)$.
   \end{theorem}
+
+  \begin{itemize}
+    \item with the same analysis as for subgradient descent
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
