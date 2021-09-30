@@ -9,14 +9,15 @@
 
 \begin{document}
 \maketitle
-\frame{\tableofcontents[currentsection]}
+\frame{\tableofcontents[]}
 
 \section{Introduction}
 
 \begin{frame}
   \frametitle{$1$-dimensional case: Newton-Raphson method}
+  \textcolor{blue}{Objective:} Find zero of differentiable $f: \R \to \R$.
+  \vspace{0.3cm}
   \begin{minipage}{0.48\textwidth}
-    \textcolor{blue}{Objective:} Find zero of differentiable $f: \R \to \R$.\\
     \textcolor{blue}{Strategy:} Solve
     \begin{equation}
       f(x_k) + f'(x_k) (x - x_k) = 0.
@@ -55,19 +56,24 @@
 
 \begin{frame}
   \frametitle{The Babylonian method - Takeoff}
-  Note that
-  \begin{equation}
-    x_{k+1} - \sqrt{R} = \frac12 \left( x_k + \frac{R}{x_k} \right) - \sqrt{R} = \frac{x_k}{2} + \frac{R}{2 x_k} - \sqrt{R} = \frac{1}{2 x_k} {\left( x_k - \sqrt{R} \right)}^2
-  \end{equation}
-  For simplicity $R \ge 1/4$, then $x_k \ge \sqrt{R} \ge 1/2$. Hence
-  \begin{equation}
-    x_{k+1} - \sqrt{R} = \frac{1}{2 x_k} {\left( x_k - \sqrt{R} \right)}^2 \le {\left( x_k - \sqrt{R} \right)}^2
-  \end{equation}
-  If $x_0 - \sqrt{R} < \frac12$ (ensured after $\mathcal{O}(\log R)$ steps).
-  \begin{equation}
-    x_{k} - \sqrt{R} \le {\left( x_0 - \sqrt{R} \right)}^{2^k} \le {\left(\frac12\right)}^{2^k}
-  \end{equation}
-  To achieve $x_k - \sqrt{R} < \epsilon$ we only need $k = \log \log (\epsilon^{-1})$ steps!
+  \onslide<1>{%
+    Note that
+    \begin{equation}
+      x_{k+1} - \sqrt{R} = \frac12 \left( x_k + \frac{R}{x_k} \right) - \sqrt{R} = \frac{x_k}{2} + \frac{R}{2 x_k} - \sqrt{R} = \frac{1}{2 x_k} {\left( x_k - \sqrt{R} \right)}^2
+    \end{equation}
+    For simplicity $R \ge 1/4$, then $x_k \ge \sqrt{R} \ge 1/2$. Hence
+    \begin{equation}
+      x_{k+1} - \sqrt{R} = \frac{1}{2 x_k} {\left( x_k - \sqrt{R} \right)}^2 \le {\left( x_k - \sqrt{R} \right)}^2
+    \end{equation}
+  }
+
+  \onslide<2->{%
+    If $x_0 - \sqrt{R} < \frac12$ (ensured after $\mathcal{O}(\log R)$ steps).
+    \begin{equation}
+      x_{k} - \sqrt{R} \le {\left( x_0 - \sqrt{R} \right)}^{2^k} \le {\left(\frac12\right)}^{2^k}
+    \end{equation}
+    To achieve $x_k - \sqrt{R} < \epsilon$ we only need $k = \log \log (\epsilon^{-1})$ steps!
+  }
 \end{frame}
 
 \begin{frame}
@@ -86,24 +92,25 @@
 
 \end{frame}
 
+
 \section{Newton's method}%
 
 \begin{frame}
   \frametitle{Newton's method for optimization}
-  \textcolor{blue}{Goal:} Find global minimum $x^*$ of convex, differentiable function $f$.
-  \textcolor{blue}{Strategy:} Search for zero of derivative.
+  \begin{itemize}
+    \item \textcolor{blue}{Goal:} Find global minimum $x^*$ of convex, differentiable function $f$.
+    \item \textcolor{blue}{Strategy:} Search for zero of derivative.
+    \item \textbf{$1$-dimensional case:} Apply Newton-Raphson method to $f'$:
+          \begin{equation}
+            x_{k+1} = x_k - \frac{f'(x_k)}{f''(x_k)} = x_k - {f''(x_k)}^{-1} f(x_k)
+          \end{equation}
+          (requires \textcolor{blue}{twice} differentiable and $f'' > 0$)
 
-  \textbf{$1$-dimensional case:} Apply Newton-Raphson method to $f'$:
-  \begin{equation}
-    x_{k+1} = x_k - \frac{f'(x_k)}{f''(x_k)} = x_k - {f''(x_k)}^{-1} f(x_k)
-  \end{equation}
-  (requires \textcolor{blue}{twice} differentiable and $f'' > 0$)
-
-  \textbf{$d$-dimensional case:} Newtons methods for minimizing convex $f: \R^d \to \R$:
-  \begin{equation}
-    x_{k+1} = x_k - \nabla^2 f(x_k) \nabla f(x_k)
-  \end{equation}
-
+    \item \textbf{$d$-dimensional case:} Newtons methods for minimizing convex $f: \R^d \to \R$:
+          \begin{equation}
+            x_{k+1} = x_k - \nabla^2 f(x_k) \nabla f(x_k).
+          \end{equation}
+  \end{itemize}
 \end{frame}
 
 
@@ -319,16 +326,33 @@
 
   \begin{align}
     \Vert x^+ - x^*  \Vert &=  \Vert H^{-1} \Vert \left\Vert  \int_{0}^{1} (H(x + t(x^* - x))- H(x))(x^* - x) \diff t \right\Vert \\
-    &\le \Vert H^{-1} \Vert  \Vert x^* - x \Vert \int_{0}^{1} \left\Vert  (H(x + t(x^* - x))- H(x)) \right\Vert \diff t \\
+    &\le \Vert H^{-1} \Vert  \Vert x^* - x \Vert \int_{0}^{1} \left\Vert  (H(x + t(x^* - x))- H(x)) \right\Vert \diff t
   \end{align}
   Use \textbf{bounded inverse Hessians} and \textbf{Lipschitz continuity} of the Hessian to conclude
   \begin{align}
     \Vert x^+ - x^*  \Vert  &\le \frac{1}{\mu} \Vert x^* - x \Vert \int_{0}^{1} B \Vert t(x^*-x) \Vert \diff t  \\
-    &= \frac{B}{\mu} \Vert x^*-x \Vert^2 \int_{0}^{1}t \diff t = \frac{B}{2\mu} \Vert x-x^* \Vert^2.
+    &= \frac{B}{\mu} \Vert x^*-x \Vert^2 \int_{0}^{1}t \diff t = \frac{B}{2\mu} \Vert x-x^* \Vert^2. \qed
   \end{align}
 
 \end{frame}
 
+
+\begin{frame}
+  \frametitle{Strong convexity $\Rightarrow$ Bounded inverse Hessians}
+
+  \begin{itemize}
+    \item How to ensure bounded inverse Hessians?
+  \end{itemize}
+
+  \begin{lemma}%
+    Let $f: \R^d \to \R$ be $C^2$ and \textbf{strongly convex} with parameter $\mu$, i.e.\
+    \begin{equation}
+      f(y) \ge f(x) \langle \nabla f(x), y-x \rangle + \frac{\mu}{2} \Vert y-x \Vert^2, \quad \forall x,y.
+    \end{equation}
+  Then, $\nabla^2 f(x)$ is invertible and $\Vert \nabla^2 f(x) \Vert^{-1} \le 1/\mu$ for all $x$.
+  \end{lemma}
+
+\end{frame}
 
 \begin{frame}
   \frametitle{Downside of Newton's method}
@@ -342,7 +366,7 @@
   In many applications the dimension $d$ is large (too large to even store Hessian).
 
   \vspace{1cm}
-  When training a ML model $d$ is the number or parameters of our ML model (number of features for linear model).
+  When training a ML model $d$ is the \textit{number or parameters} of our ML model (number of features for linear model).
 \end{frame}
 
 
@@ -373,7 +397,7 @@
     \centering
     \includegraphics[width=0.7\textwidth,keepaspectratio]{secant_method}
   \end{figure}
-  Constructs the line through $(x_{k-1}, f(x_{k-1}))$ and $(x_k, f(x_k))$
+  Constructs the line through $(x_{k-1}, f(x_{k-1}))$ and $(x_k, f(x_k))$.
 \end{frame}
 
 \begin{frame}
@@ -426,7 +450,7 @@
 
   \begin{itemize}
     \item $d=1$: unique number $H_k$ satisfying the secant condition
-    \item $d>0$: secant condition $\nabla f(x_k) - \nabla f(x_{k-1}) = H_k (x_k - x_{k-1})$ has infinitely many symmetric solutions
+    \item $d>0$: secant condition $\nabla f(x_k) - \nabla f(x_{k-1}) = H_k (x_k - x_{k-1})$ has \textbf{infinitely} many \textit{symmetric} solutions
   \end{itemize}
 
   \begin{block}{}
@@ -441,7 +465,7 @@
 
   \begin{itemize}
     \item Newton’s method is a Quasi-Newton method if and only if f is a nondegenerate \textbf{quadratic} function.
-    \item Hence, Quasi-Newton methods do not generalize Newton’s method but form a
+    \item Hence, Quasi-Newton methods \textit{do not generalize} Newton’s method but form a
           family of \textit{related} algorithms.
     \item First Quasi-Newton method by William Davidon in 1956
     \item But the paper got rejected for lacking a convergence analysis,
@@ -495,8 +519,8 @@
           mostly forgotten.
     \item Newton’s method needs to compute and invert
           Hessians $\rightarrow$ cost of $\mathcal{O}(d^3)$ per iteration
-    \item any method in Greenstadt’s family avoids computation of Hessian.
-          Only gradients are needed.
+    \item Any method in Greenstadt’s family avoids computation of Hessian.
+          \textbf{Only gradients are needed}.
     \item In the BFGS method, the cost per iteration drops to $\mathcal{O}(d^2)$.
     \item even this can be prohibitive $\rightarrow$ limited memory BFGS
     \item uses observation that we do not need $H_{k}^{-1}$, only $H_{k}^{-1} \nabla f(x_k)$
