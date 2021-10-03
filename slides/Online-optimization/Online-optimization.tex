@@ -1,20 +1,16 @@
 \documentclass{beamer}
 
 \input{../../shared_slides.tex}
-\usepackage{bm}
 
-
-% \usetheme{Warsaw}  %% Themenwahl
 
 % Reference: https://arxiv.org/abs/1912.13213
 
 \title{Online Optimization}
-\author{Axel}
 \date{\today}
 
 \begin{document}
 \maketitle
-\frame{\tableofcontents[currentsection]}
+\frame{\tableofcontents}
 
 \section{Introduction}
 
@@ -91,7 +87,7 @@ To be a game, we now have to decide what is the ``winning condition''. Let's see
 \begin{frame}
   \frametitle{Back to the numbers game}
   % Now, let's try to design a strategy to make the regret provably sublinear in time, \emph{regardless of how the adversary chooses the numbers}.
-  Let's take a look at the \textbf{best strategy in hindsight}, that is argmin of the second term of the regret. Clearly
+  Consider: the \textbf{best strategy in hindsight}, that is argmin of the second term of the regret. Clearly
   \[
     x^\star_T := \argmin_{x \in [0,1]} \ \sum_{t=1}^T (x - y_t)^2 = \frac{1}{T} \sum_{t=1}^T y_t~.
   \]
@@ -109,7 +105,7 @@ To be a game, we now have to decide what is the ``winning condition''. Let's see
 
 \begin{frame}
   \frametitle{Follow the leader}
-  Let's now try to show that indeed this strategy will allow us to win the game.
+  Now we show that this strategy will allow us to win the game.
   \begin{lemma}
     \label{lemma:be_leader}
     Let $V \subseteq \R^d$ and $\ell_t :V \rightarrow \R$ an arbitrary sequence of loss functions.
@@ -169,12 +165,12 @@ To be a game, we now have to decide what is the ``winning condition''. Let's see
 \begin{frame}
   \frametitle{Failure of FTL}
     Let $V = [-1,1]$ and consider the sequence of losses $\ell_t(x) = z_t x + i_V(x)$, where $z_1 = -0.5$
-    \begin{equation*}
+    \begin{equation}
       z_t = \begin{cases}
        1, & \text{$t$ even} \\
        -1, & \text{$t$ odd}
       \end{cases}
-    \end{equation*}
+    \end{equation}
     Predictions of FTL will be $x_t = 1$ for $t$ even and $x_t = -1$ for $t$ odd.
     Cumulative loss of the FTL algorithm will be $T$ while the cumulative loss of the fixed solution $u = 0$ is 0. Thus, the regret of FTL is $T$.
 
