@@ -1,24 +1,27 @@
-\documentclass{scrarticl}
+\documentclass{scrartcl}
 
 \input{../../shared.tex}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
 
-\title{Exercises}
+\begin{document}
 
 \begin{definition}
-  Given a vector space $V$ a norm $\Vert \cdot \Vert$ is mapping from $V$ to $[0, +\infty)$ such that
+  Given a vector space $V$ a \textbf{norm} $\Vert \cdot \Vert$ is mapping from $V$ to $[0, +\infty)$ such that
   \begin{enumerate}
     \item \textbf{positive definiteness:} $\Vert x \Vert = 0$ if and only if $x=0$.
     \item \textbf{absolute homogeneity:} $\Vert \lambda x \Vert = \vert \lambda \vert \Vert x \Vert$ for all $\lambda \in \R$.
-      \item \textbf{triangle inequality:} $\Vert x+y \Vert \le \Vert x \Vert + \Vert y \Vert$
+      \item \textbf{triangle inequality:} $\Vert x+y \Vert \le \Vert x \Vert + \Vert y \Vert$ for all $x,y \in V$.
   \end{enumerate}
 \end{definition}
 
+\section{Problem set}%
 
 \begin{enumerate}
   \item Show that all norms are \emph{convex} functions.
-  \item Let $g: \R^m \to \R$ be a convex function and $A \in \R^{m \times d}$ a linear operator. Show that $f(\cdot) = g(A \cdot)$ is also convex.
-  \item Let $x^*$ be local minimum of a convex function $f:\R^d\to \R$ then $x^*$ is a global minimum.
-  \item If $\bar{x}$ is a stationary point of the \textbf{convex} function $f$, then $\bar{x}$ is a global minimizer of $f$.
+  \item Let $g: \R^m \to \R$ be a convex function and $A \in \R^{m \times d}$ a linear operator (matrix). Show that $f(\cdot) = g(A \cdot)$ is also convex.
+  \item Let $x^*$ be local minimum of a convex function $f:\R^d\to \R$. Show that $x^*$ is a global minimum.
+  \item If $\bar{x}$ is a stationary point of the \textbf{convex} function $f$, then $\bar{x}$ is a global minimizer of $f$ (give a geometric intuition).
 \end{enumerate}
 
 

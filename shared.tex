@@ -52,12 +52,12 @@
 
 
 %%
+\usepackage{amsthm}
 \theoremstyle{plain}
 \newtheorem{prop}{Proposition}[section]
 \newtheorem{algo}{Algorithm}[section]
 \newtheorem{assumption}{Assumption}
-\theoremstyle{remark}
-\newtheorem{remark}{Remark}[section]
+
 
 % cref
 \crefname{assumption}{Assumption}{Assumptions}
@@ -78,23 +78,3 @@
 \usepackage{sansmathaccent}
 \pdfmapfile{+sansmathaccent.map}
 
-\author{Axel Böhm}
-
-% shows which section we're in
-\usetheme{Darmstadt}
-
-% page number
-\setbeamertemplate{footline}[frame number]
-\setbeamercolor{page number in head/foot}{fg=gray}
-
-
-% display things like onslide or visible already before but grayed out
-\setbeamercovered{transparent}
-
-% set the itemize item symbol as a diamond
-\setbeamertemplate{itemize item}{$\diamond$}
-% set the itemize subitem symbol as a triangle
-\setbeamertemplate{itemize subitem}{$\blacktriangleright$}
-
-% set the enumerate item symbol as a roman numbers
-\setbeamertemplate{enumerate item}{(\roman{enumi})}

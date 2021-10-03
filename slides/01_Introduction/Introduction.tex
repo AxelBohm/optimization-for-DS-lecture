@@ -1,6 +1,6 @@
 \documentclass{beamer}
 
-\input{../../shared.tex}
+\input{../../shared_slides.tex}
 
 \title{Optimization for Data Science}
 
@@ -95,10 +95,11 @@
       \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{linear_regression.jpg}
       % \caption{\label{fig:label} }
     \end{figure}
-
   \end{minipage}
 
-
+  \begin{itemize}
+    \item Loss functions express the discrepancy between the predictions of the model being trained and the actual problem instances
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -137,7 +138,7 @@
     \item Coordinate descent
   \end{itemize}
 
-  History
+  \textbf{History}
   \begin{itemize}
     \item 1847: Cauchy proposes gradient descent
     \item 1950s: Linear programming, operations research, soon followed by nonlinear
@@ -225,6 +226,9 @@
     \item intersection remains convex
     \item can separated by a hyperplane
     \item projections onto them are unique
+          \begin{equation}
+            P_C(x) := \argmin_{y\in C} \Vert y-x \Vert
+          \end{equation}
   \end{itemize}
 \end{frame}
 
@@ -243,10 +247,13 @@
 
 
 \begin{frame}
-  \frametitle{Convex optimization}
+  \frametitle{Motivation: Convex optimization}
   Are of the form
   \begin{equation}
-    \min_x \, f(x) \quad \text{such that $x\in C$}
+    \begin{aligned}
+      &\min_x \, f(x) \\
+      &\text{such that $x\in C$}
+    \end{aligned}
   \end{equation}
   where \textcolor{blue}{both}
   \begin{itemize}
@@ -255,10 +262,31 @@
   \end{itemize}
   Why?
   \begin{itemize}
-    \item Every local minimum is a global minimum
-    \item Not all problems are convex but can be used as approximate model
+    \item \textit{Every local minimum is a global minimum.}
+    \item Not all problems are convex but can be used as approximate model.
   \end{itemize}
 
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Motivation: Provably (efficiently) solving convex problems}
+  For convex optimization problems, basically all algorithms
+  \begin{itemize}
+    \item Coordinate Descent, (Stochastic) Gradient Descent, Proj.\ GD
+  \end{itemize}
+  \textbf{converge} \textcolor{blue}{provably} to a global optimum including a
+  \begin{itemize}
+    \item \textbf{quantitative bound}.
+  \end{itemize}
+
+  \begin{block}{ Example Theorem }
+    Let $f: \R^d \to R$ be convex then the \textbf{\textcolor{blue}{convergence rate}} is proportional to $1/k$, i.e.\
+    \begin{equation}
+      f(x_k) - f(x^*) \le \frac{c}{k}
+    \end{equation}
+  \end{block}
+  Explanation: The \textcolor{blue}{approximation error} converges to zero and we know how many iterations are needed to achieve given target.
 \end{frame}
 
 
@@ -271,6 +299,7 @@
     \item norms, $\Vert \cdot \Vert_1, \Vert \cdot \Vert_2, \Vert \cdot \Vert_\infty$ \hfill \textcolor{purple}{show this}
     \item composition of linear and convex: \\
           for example $f(x)=\Vert Ax-b  \Vert^2$
+    \item sum of two convex function $f+g$
   \end{itemize}
 
 \end{frame}
@@ -394,7 +423,7 @@
   \begin{lemma}%
     If $\bar{x}$ is a stationary point of the \textbf{convex} function $f$, then $\bar{x}$ is a \textcolor{blue}{global minimizer} of $f$.
   \end{lemma}
-  \textcolor{purple}{Prove this and give a geometric intuition in words using the first order characterization of convexity}
+  \textcolor{purple}{Prove this and give a geometric intuition in words using the first order characterization of convexity.}
 
 \end{frame}
 
@@ -451,12 +480,18 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Proof}
-  $x^*$ is a minimizer of $f$ over $C$ \emph{if and only if}
+  % \frametitle{Proof}
+  \begin{lemma}%
+    $x^*$ is a minimizer of $f$ over $C$ \emph{if and only if}
+    \begin{equation}
+      \langle \nabla f(x^*), x-x^* \rangle \ge 0 \quad \forall x \in C
+    \end{equation}
+  \end{lemma}
+  ``$\Leftarrow$'' From the gradient inequality he deduce
   \begin{equation}
-    \langle \nabla f(x^*), x-x^* \rangle \ge 0 \quad \forall x \in C
+    f(x) - f(x^*) \ge \langle \nabla f(x^*), x-x^* \rangle \onslide<2->{\ge 0} \quad \forall x \in C.
   \end{equation}
-  Assume that $f(x^*)\le f(x)$ forall $x \in C$ then $\forall t \in [0, 1]$
+  ``$\Rightarrow$'' Assume that $f(x^*)\le f(x)$ for all $x \in C$ then $\forall t \in [0, 1]$
   \begin{equation}
     \begin{aligned}
       0 &\le f(x^* + t(x-x^*)) - f(x^*) \\
@@ -464,9 +499,35 @@
         &= \langle \nabla f(x^*), x-x^* \rangle.
     \end{aligned}
   \end{equation}
-  where the last equality follows from the chain rule.
+  where the last equality follows from the chain rule.\qed
 
 \end{frame}
 
+
+\begin{frame}
+  \frametitle{Existence of a minimizer}
+
+  In general a minimizer \textit{does not need to exist}.
+  \begin{itemize}
+    \item can be unbounded from below (linear)
+    \item bounded but infimum is not obtained
+  \end{itemize}
+  \begin{center}
+    \begin{tikzpicture}
+      \draw[->] (-3,0) -- (1.5,0) node[right] {$x$};
+      \draw[->] (0,-0.5) -- (0,2.5) node[above] {$y$};
+      \draw (0,1) node[right] {$y=1$};
+      \draw (1,2.7) node[right] {$f(x)=e^x$};
+      \draw[scale=1,domain=-3:1,smooth,variable=\x,blue] plot ({\x}, {exp(\x)});
+    \end{tikzpicture}
+  \end{center}
+
+  Typically we only consider problems where we assume a minimizer to exist (otherwise our model might be bad).
+
+  \begin{itemize}
+    \item if function is strongly convex a minimizer \textit{always} exists.
+  \end{itemize}
+
+\end{frame}
 
 \end{document}

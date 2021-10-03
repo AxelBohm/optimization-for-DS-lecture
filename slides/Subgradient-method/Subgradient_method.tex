@@ -1,6 +1,6 @@
 \documentclass{beamer}
 
-\input{../../shared.tex}
+\input{../../shared_slides.tex}
 
 % https://openai.com/blog/deep-double-descent/
 
@@ -20,23 +20,24 @@
     \min_x \, f(x)
   \end{equation}
 
-  \begin{minipage}{0.45\textwidth}
-    \begin{block}{$f$ is \emph{smooth} and convex}
+  \begin{minipage}{0.48\textwidth}
+    \begin{block}{$f$ is \emph{smooth} and convex: Gradient Descent}
       % Smoothness means $\Vert \nabla f(x) - \nabla f(y) \Vert \le L \Vert x-y \Vert$:
       \begin{equation}
         \begin{aligned}
-          \text{GD:} \quad x_{k+1} = x_k - \alpha_k \nabla f(x_k) \\
-          f(x_k) - f^* = \mathcal{O}(\frac{1}{k})
+          \text{iterate:} \quad x_{k+1} = x_k - \alpha_k \nabla f(x_k) \\
+          f(x_k) - f^* = \mathcal{O}\left(\frac{1}{k}\right)
         \end{aligned}
       \end{equation}
       if the stepsize fulfills $\alpha_k \le 1/L$.
     \end{block}
   \end{minipage}
   \hfill
-  \begin{minipage}{0.45\textwidth}
-    \begin{block}{nonsmooth but convex: \textbf{subgradient method}}
+  \begin{minipage}{0.48\textwidth}
+    \begin{block}{nonsmooth but convex: \textbf{Subgradient Method}}
       \begin{equation}
         \begin{aligned}
+        \text{iterate:}
           \left\lfloor \begin{array}{l}
                    \text{pick $g_k \in \partial f(x_k)$}\\
                    x_{k+1} = x_k - \alpha_k g_k \\
@@ -197,7 +198,7 @@
 
 \begin{frame}
   \frametitle{Proof [contd]}
-  Using Jensens inequality % give intuition for 2-d case
+  Using Jensens inequality (convexity with more than $2$ points)
   \begin{equation}
     \sum_{i} \lambda_i f(x_i) \ge \sum_{i} f \left( \frac{\sum_{i} \lambda_i x_i}{\sum_{i}\lambda_i} \right)
   \end{equation}
