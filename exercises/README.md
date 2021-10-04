@@ -2,11 +2,16 @@
 
 I will upload the exercises on Monday shortly after the lecture at the latest.
 
+## Organization
 As discussed in the lecture, 
-- just upload your solutions to a private git-repo (for example github). 
-- one folder per week is good
-- add me as a collaborator so I can view it
+- just upload your solutions to a private git-repository (for example github). 
+- one folder (inside the same repo) per week is good
 - please do so until Monday 9:45 of to following week (so before the lecture)
+- add me as a collaborator so I can view it
 
-Grading
-- 66% of all exercises need to be solved to pass the course
+The first to digits in the name of the folder correspond to the week they are supposed to be done in (starting at 1).
+
+## Grading
+- 66% of all points are required to pass the course
+- every week will be around 10 points
+
