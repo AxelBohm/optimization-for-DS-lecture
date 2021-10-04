@@ -235,13 +235,13 @@
 
 \begin{frame}
   \frametitle{Convex functions}
-  We call a function $f \to \R\cup\{+\infty\}$ \textcolor{blue}{convex} if the function values lie below the line segment between $(x, f(x))$ and $(y, f(y))$
+  We call a function $f \to \R\cup\{+\infty\}$ \textcolor{blue}{convex} if the function values lie below the line segment between $(x, f(x))$ and $(y, f(y))$, i.e./ for any $\lambda\in [0,1]$
   \begin{figure}[ht]
     \centering
     \includegraphics[width=\textwidth,keepaspectratio]{convex_functions}
   \end{figure}
 
-  Sometimes we will call $\{x: f(x)< +\infty \}$ the domain of $f$.
+  Sometimes we will call $\{x: f(x)< +\infty \}$ the \textit{domain} of $f$.
 
 \end{frame}
 
@@ -281,7 +281,7 @@
   \end{itemize}
 
   \begin{block}{ Example Theorem }
-    Let $f: \R^d \to R$ be convex then the \textbf{\textcolor{blue}{convergence rate}} is proportional to $1/k$, i.e.\
+    Let $f: \R^d \to \R$ be convex then the \textbf{\textcolor{blue}{convergence rate}} is proportional to $1/k$, i.e.\
     \begin{equation}
       f(x_k) - f(x^*) \le \frac{c}{k}
     \end{equation}
@@ -353,7 +353,7 @@
 
 \begin{frame}
   \frametitle{Second-order characterization of convexity}
-  If $f$ is \textcolor{blue}{twice differentiable} then it is \textcolor{blue}{convex} \textbf{if and only if} its \emph{Hessian} $\nabla^2 f(x) \R^{d}$, given by
+  If $f$ is \textcolor{blue}{twice differentiable} then it is \textcolor{blue}{convex} \textbf{if and only if} its \emph{Hessian} $\nabla^2 f(x) \in \R^{d \times d}$, given by
   \begin{equation}
     {\nabla^2 f(x)}_{ij} := \frac{\partial^2 f}{\partial x_i \partial x_j}
   \end{equation}
