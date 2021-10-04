@@ -7,3 +7,6 @@ As discussed in the lecture,
 - one folder per week is good
 - add me as a collaborator so I can view it
 - please do so until Monday 9:45 of to following week (so before the lecture)
+
+Grading
+- 66% of all exercises need to be solved to pass the course
