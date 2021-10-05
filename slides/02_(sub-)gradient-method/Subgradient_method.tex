@@ -14,7 +14,7 @@
 \section{Subgradient theory}%
 
 \begin{frame}
-  \frametitle{Smooth vs. nonsmooth}
+  \frametitle{Smooth vs.\ nonsmooth}
 
   \begin{equation}
     \min_x \, f(x)
@@ -25,57 +25,44 @@
       x_{k+1} = x_k - \alpha g_k
     \end{equation}
   \end{block}
-\begin{adjustwidth}{-1.5em}{-1.5em}
-  \begin{minipage}{0.52\textwidth}
-    \begin{block}{}
-    \begin{itemize}
-      \item If $f$ is \textcolor{blue}{smooth} we take $g_k = \nabla f(x_k)$ $\rightarrow$ \textbf{Gradient Descent}.
-      \item stepsize can be constant $1/L$ (smoothness constant)
-      \item convergence rate $f(x_k)-f^* = \mathcal{O}(1/k)$
-    \end{itemize}
-    \end{block}
-  \end{minipage}
-  \hfill
-  \begin{minipage}{0.52\textwidth}
-    \begin{block}{}
-    \begin{itemize}
-      \item If \textcolor{blue}{not} we take $g_k$ a \textit{subgradient} $\rightarrow$ \textbf{Subgradient method}.
-      \item stepsize has to be chosen \emph{small or decreasing} $\approx 1/\sqrt{k}$
-      \item convergence rate is \emph{worse} $f(x_k)-f^* = \mathcal{O}(1/\sqrt{k})$
-    \end{itemize}
-    \end{block}
-  \end{minipage}
+  \begin{adjustwidth}{-1.5em}{-1.5em}
+    \begin{minipage}{0.52\textwidth}
+      \begin{block}{}
+        \begin{itemize}
+          \item If $f$ is \textcolor{blue}{smooth} we take $g_k = \nabla f(x_k)$ $\rightarrow$ \textbf{Gradient Descent}.
+          \item stepsize can be constant $1/L$ (smoothness constant)
+          \item convergence rate $f(x_k)-f^* = \mathcal{O}(1/k)$
+        \end{itemize}
+      \end{block}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.52\textwidth}
+      \begin{block}{}
+        \begin{itemize}
+          \item If \textcolor{blue}{not} we take $g_k$ a \textit{subgradient} $\rightarrow$ \textbf{Subgradient method}.
+          \item stepsize has to be chosen \emph{small or decreasing} $\approx 1/\sqrt{k}$
+          \item convergence rate is \emph{worse} $f(x_k)-f^* = \mathcal{O}(1/\sqrt{k})$
+        \end{itemize}
+      \end{block}
+    \end{minipage}
+  \end{adjustwidth}
+\end{frame}
 
-\end{adjustwidth}
-
-  % \begin{minipage}{0.48\textwidth}
-  %   \begin{block}{$f$ is \emph{smooth} and convex: Gradient Descent}
-  %     % Smoothness means $\Vert \nabla f(x) - \nabla f(y) \Vert \le L \Vert x-y \Vert$:
-  %     \begin{equation}
-  %       \begin{aligned}
-  %         \text{iterate:} \quad x_{k+1} = x_k - \alpha_k \nabla f(x_k) \\
-  %         f(x_k) - f^* = \mathcal{O}\left(\frac{1}{k}\right)
-  %       \end{aligned}
-  %     \end{equation}
-  %     if the stepsize fulfills $\alpha_k \le 1/L$.
-  %   \end{block}
-  % \end{minipage}
-  % \hfill
-  % \begin{minipage}{0.48\textwidth}
-  %   \begin{block}{nonsmooth but convex: \textbf{Subgradient Method}}
-  %     \begin{equation}
-  %       \begin{aligned}
-  %       \text{iterate:}
-  %         \left\lfloor \begin{array}{l}
-  %                  \text{pick $g_k \in \partial f(x_k)$}\\
-  %                  x_{k+1} = x_k - \alpha_k g_k \\
-  %                \end{array}\right.\\
-  %              f(x_k) - f^* = \mathcal{O}\left(\frac{1}{\sqrt{k}}\right)
-  %            \end{aligned}
-  %          \end{equation}
-  %          if stepsize $\alpha_k \approx 1/\sqrt{k}$.
-  %        \end{block}
-  %      \end{minipage}
+\begin{frame}
+  \frametitle{Intuition behind GD}
+  \begin{itemize}
+    \item derivative (gradient) points in the direction of steepest ascent
+          $\rightarrow$ GD is also called \textbf{steepest descent}
+    \item GD update is equivalent to
+          \begin{equation}
+            x_{k+1} = \argmin_{x\in \R^d} \Big\{ \underbrace{f(x_k) + \langle \nabla f(x_k), x-x_k \rangle }_{\text{linearization of $f$}}+ \frac{1}{2 \alpha} \Vert x-x_k \Vert\Big\}
+          \end{equation}
+          \begin{itemize}
+            \item solves a linear model of $f$
+            \item minimizing unconstrained linear models is no good
+            \item so we add a ``proximity term''
+          \end{itemize}
+  \end{itemize}
 
 \end{frame}
 
@@ -261,7 +248,7 @@
   % \end{equation}
 
   \begin{equation}
-    f(\bar{x}_k) - f^* \le \frac{\Vert x_0-x^*\Vert G }{2 \sqrt{k}}.
+    f(\bar{x}_k) - f^* \le \frac{\Vert x_0-x^*\Vert G }{2 \sqrt{k}}. \qed
   \end{equation}
   When ignoring constants (and focusing on the rate) we sometimes write
   \begin{equation}
@@ -290,49 +277,6 @@
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{Projected subgradient method}
-  \begin{equation}
-    \text{(constrained setting)} \quad \min_{x\in C}\, f(x)
-  \end{equation}
-  \begin{algorithm}[H]
-    \caption{Projected subgradient method}\label{label:}
-    \begin{algorithmic}[1]
-      \For{$k=0, 1, \dots$}
-      \State{Pick $g_k \in \partial f(x_k)$}
-      \State{$x_{k+1} = P_C( x_k- \alnpha_k g_k )$}
-      \EndFor
-    \end{algorithmic}
-  \end{algorithm}
-  By using the fact that the projection is a contraction
-  \begin{equation}
-    \Vert P_C(x) - P_C(y) \Vert \le \Vert x-y \Vert
-  \end{equation}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Projected subgradient method II}
-  \begin{proof}
-    We can deduce the exact same inequality as before
-    \begin{equation}
-      \begin{aligned}
-        \Vert x_{k+1} - x^* \Vert^2 &= \Vert P_C(x_k - \alpha_k g_k) - x^* \Vert^2 \\
-        &\le \Vert x_k - \alpha_k g_k - x^* \Vert^2 \\
-        &= \Vert x_k-x^* \Vert^2 + 2 \alpha_k \langle g_k, x^*-x_k \rangle + \alpha^2 \Vert g_k \Vert^2\\
-        &\le \Vert x_k-x^* \Vert^2 + 2 \alpha_k (f^* - f(x_k))+ \alpha^2 \Vert g_k \Vert^2.
-      \end{aligned}
-    \end{equation}
-  \end{proof}
-
-\end{frame}
-
-
-
-% \begin{frame}
-%   \frametitle{If $C$ is bounded we can improve a bit}
-
-% \end{frame}
-
 
 \begin{frame}
   \frametitle{Polyak stepsize}
@@ -340,11 +284,11 @@
   \begin{equation}
     \begin{aligned}
       \Vert x_{k+1} - x^* \Vert^2 &\le \Vert x_k - \alpha_k g_k - x^* \Vert^2 \\
-      &= \Vert x_k-x^* \Vert^2 + 2 \alpha_k \langle g_k, x^*-x_k \rangle + \alpha^2 \Vert g_k \Vert^2\\
-      &\le \Vert x_k-x^* \Vert^2 + 2 \alpha_k (f^* - f(x_k))+ \alpha^2 \Vert g_k \Vert^2.
+      &= \Vert x_k-x^* \Vert^2 + 2 \alpha \langle g_k, x^*-x_k \rangle + \alpha^2 \Vert g_k \Vert^2\\
+      &\le \Vert x_k-x^* \Vert^2 + 2 \alpha (f^* - f(x_k))+ \alpha^2 \Vert g_k \Vert^2.
     \end{aligned}
   \end{equation}
-  Can we pick $\alpha_k$ such that the RHS is minimized?
+  Can we pick $\alpha$ such that the RHS is minimized?
   \begin{equation}
     \min_\alpha \, \alpha^2 \Vert g_k \Vert^2 + 2 \alpha_k (f^* - f(x_k))
   \end{equation}
@@ -370,17 +314,6 @@
     \includegraphics[width=0.7\textwidth]{modern-regime}
     \caption{from openai.com}
   \end{figure}
-\end{frame}
-
-% \section{With strong convexity}%
-
-\begin{frame}
-  \frametitle{Can we do better?}
-  If $f$ is in addition \emph{strongly convex} the rate improves to
-  \begin{equation}
-    f(\bar{x}_k) - f(x^*) \le \frac{L \Vert x_1-x^* \Vert^2}{\mu T}
-  \end{equation}
-  by choosing the stepsize $\alpha_k \approx \frac{1}{T}$.
 \end{frame}
 
 
@@ -492,17 +425,17 @@
   \frametitle{Proof of $\mathcal{O}(\epsilon^{-1})$ for smooth functions}
     Subgradient analysis gave us
     \begin{equation}
-      2 \alpha \sum_{i=0}^{k-1} (f(x_i) - f(x^*)) + \Vert x_{k} - x^* \Vert^2 \le \Vert x_0-x^* \Vert^2 +  \alpha^2 \sum_{i=0}^{k-1}  \Vert g_k \Vert^2,
+      \sum_{i=0}^{k-1} (f(x_i) - f^*) \le \frac{1}{2 \alpha}\Vert x_0-x^* \Vert^2 +  \frac{\alpha}{2} \sum_{i=0}^{k-1}  \Vert g_k \Vert^2,
     \end{equation}
     see~\eqref{eq:telescoping}. This time we use \textcolor{blue}{sufficient decrease} to bound gradient norm
     \begin{equation}
       \frac{1}{2 L} \sum_{i=0}^{k-1} \Vert \nabla f(x_k) \Vert^2 \le \sum_{i=0}^{k-1} (f(x_i) - f(x_{i+1})) = f(x_0) - f(x_k)
     \end{equation}
-    Combining things (with $\alpha=1/L$)
+    Combining the above two (with $\alpha=1/L$)
     \begin{equation}
       \begin{aligned}
-        \sum_{i=0}^{k-1} (f(x_i) - f(x^*))  &\le \frac{L}{2} \Vert x_0-x^* \Vert^2 +  \frac{1}{2L} \sum_{i=0}^{k-1}  \Vert g_k \Vert^2 \\
-        &\le \frac{L}{2} \Vert x_0-x^* \Vert^2 + f(x_0) - f(x^*)
+        \sum_{i=0}^{k-1} (f(x_i) - f^*)  &\le \frac{L}{2} \Vert x_0-x^* \Vert^2 +  \frac{1}{2L} \sum_{i=0}^{k-1}  \Vert g_k \Vert^2 \\
+        &\le \frac{L}{2} \Vert x_0-x^* \Vert^2 + f(x_0) - f(x_k)
       \end{aligned}
     \end{equation}
 \end{frame}
@@ -511,11 +444,11 @@
   \frametitle{Proof II}
   By rewriting:
     \begin{equation}
-      \sum_{\textcolor{red}{i=1}}^{\textcolor{red}{k}} (f(x_i) - f(x^*)) \le \frac{L}{2} \Vert x_0-x^* \Vert^2
+      \sum_{\textcolor{red}{i=1}}^{\textcolor{red}{k}} (f(x_i) - f^*) \le \frac{L}{2} \Vert x_0-x^* \Vert^2
     \end{equation}
     As last iterate is the best (sufficient decrease):
     \begin{equation}
-      f(x_k) - f(x^*) \le \frac{1}{k} \sum_{i=1}^{k} f(x_i) - f(x^*) \le \frac{L}{2 k} \Vert x_0 - x^* \Vert^2
+      f(x_k) - f^* \le \frac{1}{k} \sum_{i=1}^{k} f(x_i) - f^* \le \frac{L}{2 k} \Vert x_0 - x^* \Vert^2 \qed
     \end{equation}
 \end{frame}
 
