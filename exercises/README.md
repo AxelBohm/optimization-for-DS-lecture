@@ -15,3 +15,6 @@ The first to digits in the name of the folder correspond to the week they are su
 - 66% of all points are required to pass the course
 - every week will be around 10 points
 
+## Python
+
+In case you are unsure from where to install, I recommend the Anaconda (or miniconda) distribution.
