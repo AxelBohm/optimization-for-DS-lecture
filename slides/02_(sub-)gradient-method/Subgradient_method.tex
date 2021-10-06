@@ -11,15 +11,15 @@
 \maketitle
 \frame{\tableofcontents}
 
-\section{Subgradient theory}%
+\section{Intro}%
 
 \begin{frame}
   \frametitle{Smooth vs.\ nonsmooth}
-
+  We consider the convex optimization problem
   \begin{equation}
     \min_x \, f(x)
   \end{equation}
-
+  \vspace{-0.5cm}
   \begin{block}{}
     \begin{equation}
       x_{k+1} = x_k - \alpha g_k
@@ -63,8 +63,10 @@
             \item so we add a ``proximity term''
           \end{itemize}
   \end{itemize}
-
 \end{frame}
+
+
+\section{Subgradient theory}%
 
 \begin{frame}
   \frametitle{Subgradients}
