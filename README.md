@@ -8,14 +8,14 @@ This repo contains the material used for the lecture with the name as in the tit
 ## Links
 
 - Details regarding assessment can be found on [ufind](https://ufind.univie.ac.at/en/course.html?lv=053612&semester=2021W).
-- The corresponding _moodle_ course can be found [here](https://moodle.univie.ac.at/course/view.php?id=264643).
+- The corresponding **moodle** course can be found [here](https://moodle.univie.ac.at/course/view.php?id=264643).
   Note that this can only be accessed if you are registered for the course. It contains
   + the BigBlueButton link for the live stream
   + the recordings of the lectures
   + a link to rocket-chat channel which can be used as a forum
 
-- find all the *exercise* [here](https://github.com/AxelBohm/optimization-for-DS-lecture/tree/main/exercises)
-- instructions and possible topics for the *project* are [here](https://github.com/AxelBohm/optimization-for-DS-lecture/tree/main/project)
+- find all the **exercise** [here](https://github.com/AxelBohm/optimization-for-DS-lecture/tree/main/exercises)
+- instructions and possible topics for the **project** are [here](https://github.com/AxelBohm/optimization-for-DS-lecture/tree/main/project)
 
 ## Contribution
 
@@ -31,5 +31,5 @@ Extra credit toward your grade and (more importantly) a certificate will be give
 
 as well as the team with
 
-- the _cleanest code_ in their project
-- the _most creative_ project
+- the **cleanest code** in their project
+- the **most creative** project
