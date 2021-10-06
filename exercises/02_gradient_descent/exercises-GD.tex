@@ -1,0 +1,30 @@
+\documentclass{scrartcl}
+
+\input{../../shared.tex}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\usepackage{enumerate}
+
+\begin{document}
+
+
+\section{Problem set: Gradient descent}%
+
+\paragraph{Exercise (i)} (7P) Enter the missing code snippets in the jupyter notebook. Partial credit will be awarded.
+
+\paragraph{Exercise (ii)} (2P) Prove that the quadratic function
+\begin{equation}
+  f(x) = \frac{1}{2} x^T Q x +b^T x + c
+\end{equation}
+is \textbf{smooth} with parameter $\Vert Q \Vert$.
+
+
+\paragraph{Exercise (iii)} (1P) Suppose that we have observations $(x_i, y_i)$ which are \textbf{centered}, meaning that $\sum_{i=1}^{n}x_i = 0 = \sum_{i=1}^{n}y_i$. Let $(b^*, w^*)$ be the global minimum of the least squares objective
+\begin{equation}
+  f(b, w) = \sum_{i=1}^{n} {(b + w^T x_i - y_i)}^2.
+\end{equation}
+Prove that $b^*=0$.
+
+
+
+\end{document}
