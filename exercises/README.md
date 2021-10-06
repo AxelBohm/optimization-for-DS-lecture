@@ -9,7 +9,7 @@ As discussed in the lecture,
 - please do so until Monday 9:45 of to following week (so before the lecture)
 - add me as a collaborator so I can view it
 
-The first to digits in the name of the folder correspond to the week they are supposed to be done in (starting at 1).
+The first two digits in the name of the folder correspond to the week they are supposed to be done in (starting at 1).
 
 ## Grading
 - 66% of all points are required to pass the course
