@@ -33,3 +33,7 @@ as well as the team with
 
 - the **cleanest code** in their project
 - the **most creative** project
+
+## The motto of this course
+
+![Image](memes/gradient_descent_meme.png)
