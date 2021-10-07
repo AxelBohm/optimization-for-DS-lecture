@@ -14,7 +14,7 @@ This repo contains the material used for the lecture with the name as in the tit
   + the recordings of the lectures
   + a link to rocket-chat channel which can be used as a forum
 
-- find all the **exercise** [here](https://github.com/AxelBohm/optimization-for-DS-lecture/tree/main/exercises)
+- find all the **exercises** [here](https://github.com/AxelBohm/optimization-for-DS-lecture/tree/main/exercises)
 - instructions and possible topics for the **project** are [here](https://github.com/AxelBohm/optimization-for-DS-lecture/tree/main/project)
 
 ## Contribution
