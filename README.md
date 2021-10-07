@@ -36,4 +36,6 @@ as well as the team with
 
 ## The motto of this course
 
-<div style="text-align:center"><img src="memes/gradient_descent_meme.png" /></div>
+<p align="center">
+  <img src="memes/gradient_descent_meme.png" />
+</p>
