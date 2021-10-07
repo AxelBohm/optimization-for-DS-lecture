@@ -14,7 +14,7 @@
 \section{Intro}%
 
 \begin{frame}
-  \frametitle{Smooth vs.\ nonsmooth}
+  \frametitle{Spoiler: Smooth vs.\ nonsmooth}
   We consider the convex optimization problem
   \begin{equation}
     \min_x \, f(x)
@@ -55,7 +55,7 @@
           $\rightarrow$ GD is also called \textbf{steepest descent}
     \item GD update is equivalent to
           \begin{equation}
-            x_{k+1} = \argmin_{x\in \R^d} \Big\{ \underbrace{f(x_k) + \langle \nabla f(x_k), x-x_k \rangle }_{\text{linearization of $f$}}+ \frac{1}{2 \alpha} \Vert x-x_k \Vert\Big\}
+            x_{k+1} = \argmin_{x\in \R^d} \Big\{ \underbrace{f(x_k) + \langle \nabla f(x_k), x-x_k \rangle }_{\text{linearization of $f$}}+ \frac{1}{2 \alpha} \Vert x-x_k \Vert^2 \Big\}
           \end{equation}
           \begin{itemize}
             \item solves a linear model of $f$
