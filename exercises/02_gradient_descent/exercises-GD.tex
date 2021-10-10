@@ -3,6 +3,7 @@
 \input{../../shared.tex}
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
+\newtheorem{lemma}{Lemma}[section]
 \usepackage{enumerate}
 
 \begin{document}
@@ -10,7 +11,26 @@
 
 \section{Problem set: Gradient descent}%
 
+
 \paragraph{Exercise (i)} (7P) Enter the missing code snippets in the jupyter notebook. Partial credit will be awarded.
+
+
+\begin{definition}
+  For a matrix $Q \in \R^{m \times d}$ its \textbf{operator norm} is defined as
+  \begin{equation}
+    \Vert Q \Vert_{op} := \sup_{x \in \R^d: \Vert x \Vert \le 1} \Vert Q x \Vert,
+  \end{equation}
+  but for convenience we will mostly write $\Vert Q \Vert$ (so no subscript) but mean the operator norm.
+\end{definition}
+
+\begin{lemma}%
+  The operator norm of a matrix $Q$ fulfills
+  \begin{equation}
+    \Vert Qx \Vert \le \Vert Q \Vert_{op} \Vert x \Vert.
+  \end{equation}
+  In particular, every linear map (given by a matrix $Q$) is Lipschitz continuous with Lipschitz constant $\Vert Q \Vert$.
+\end{lemma}
+
 
 \paragraph{Exercise (ii)} (2P) Prove that the quadratic function
 \begin{equation}
