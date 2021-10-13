@@ -49,7 +49,7 @@
   \begin{itemize}
     \item Consider $f(x) = x^2$. Clearly, $f$ is $L=2$ smooth.
           \begin{itemize}
-            \item So we can pick $\alpha=1/L = 1/2$ for GD:
+            \item So we can pick $\alpha=1/L = 1/2$ for GD:\
                   \begin{equation}
                     x_{k+1} = x_k - \frac12 \nabla f(x_k) = x_k -x_k = 0.
                   \end{equation}
@@ -57,7 +57,7 @@
           \end{itemize}
     \item Same $f(x)=x^2$, but is also $L=4$ smooth.
           \begin{itemize}
-            \item So we can pick $\alpha=1/L = 1/4$ for GD:
+            \item So we can pick $\alpha=1/L = 1/4$ for GD:\
                   \begin{equation}
                     x_{k+1} = x_k - \frac14 \nabla f(x_k) = x_k -\frac12 x_k = \frac12 x_k.
                   \end{equation}
@@ -67,7 +67,6 @@
                   \end{equation}
            \end{itemize}
   \end{itemize}
-
 \end{frame}
 
 
@@ -78,8 +77,7 @@
     \textcolor{blue}{``Not too flat.''}
   \end{center}
 
-
-  \begin{block}[Recall]
+  \begin{block}{Recall}
     Let $f: \R^d \to \R$ be a differentiable function, then we say $f$ is $\mu$-strongly convex if
     \begin{equation}
       f(y) \ge f(x) + \langle \nabla f(x), y-x \rangle + \frac{\mu}{2} \Vert y-x \Vert^2, \quad \forall x,y.
@@ -91,7 +89,7 @@
 \begin{frame}
   \frametitle{Strong convexity}
   \begin{center}
-    \textcolor{blue}{Can be lowe bounded by a quadratic.}
+    \textcolor{blue}{Can be lower bounded by a quadratic.}
   \end{center}
   \begin{figure}[ht]
     \centering
@@ -185,6 +183,25 @@
   \end{equation}
 \end{frame}
 
+
+\begin{frame}
+  \frametitle{Complexity: $\mathcal{O}(\log(1/\epsilon))$}
+  With $D^2=\Vert x_0-x^* \Vert^2$ we have
+  \begin{equation}
+    f(x_k) - f^* \le \frac{L}{2} {\left(1-\frac{\mu}{L}\right)}^k D^2.
+  \end{equation}
+  So we can ensure $f(x_k)-f^* \le \epsilon$ after
+  \begin{equation}
+    k \ge \frac{L}{\mu} \log\left(\frac{D^2L}{2 \epsilon}\right)
+  \end{equation}
+  iterations.
+  If we want accuracy $\epsilon=0.001$
+  \begin{itemize}
+    \item GD without strong convexity needs $\mathcal{O}(\epsilon^{-1})\approx1000$ iterations,
+    \item whereas here we \textbf{only} need $\log(1000)\approx 7$.
+  \end{itemize}
+
+\end{frame}
 
 
 \end{document}
