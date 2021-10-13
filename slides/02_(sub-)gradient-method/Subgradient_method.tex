@@ -177,7 +177,11 @@
   \begin{theorem}
     $f$ is convex, subgradients are bounded $\Vert g(x) \Vert \le G$ for all $g(x)\in \partial f(x)$. Then,
     \begin{equation}
+<<<<<<< HEAD
       f(\bar{x}_k) - f^* \le \frac{\Vert x_1-x^*\Vert G}{\sqrt{k}}
+=======
+      f(\bar{x}_k) - f^* \le \frac{\Vert x_0-x^*\Vert^2 G}{\sqrt{k}}
+>>>>>>> refs/remotes/origin/main
     \end{equation}
     for the \textbf{averaged} iterates $\bar{x}_k = \frac{1}{k} \sum_{i=0}^{k-1} x_i $
   \end{theorem}
@@ -336,7 +340,7 @@
   \begin{lemma}%
     If the gradient of $f$ is $L$-Lipschitz
     \begin{equation}
-      \Vert \nabla f(x)-f(y) \Vert \le L \Vert x-y \Vert.
+      \Vert \nabla f(x)- \nabla f(y) \Vert \le L \Vert x-y \Vert.
     \end{equation}
     then it is also $L$-smooth.
   \end{lemma}

@@ -1,7 +1,7 @@
 \documentclass{beamer}
 \usepackage[utf8]{inputenc}
 
-\input{../../shared.tex}
+\input{../../shared_slides.tex}
 
 \newcounter{sauvegardeenumi}
 \newcommand{\asuivre}{\setcounter{sauvegardeenumi}{\theenumi}}
@@ -12,7 +12,7 @@
 
 \begin{document}
 \maketitle
-\frame{\tableofcontents[currentsection]}
+\frame{\tableofcontents}
 
 \section{About norms}
 
@@ -62,8 +62,8 @@
   We can replace the $2$-norm with a more general \textbf{distance}.
 \end{frame}
 
+
 \section{Bregman distances}%
-\label{sec:}
 
 \begin{frame}
   \frametitle{Bregman distance}
@@ -131,7 +131,6 @@
 
 
 \section{Mirror descent}%
-\label{sec:}
 
 \begin{frame}
   \frametitle{Mirror descent}
@@ -139,7 +138,7 @@
     \begin{equation}
       \begin{aligned}
         x_{k+1} &= \argmin_{x \in \R^d} \{ f(x_k) + \langle \nabla f(x_k), x-x_k \rangle + \frac{1}{\alpha_k} \Dh(x,x_k)\} \\
-        \onslide<onwards->{%
+        \onslide<2->{%
           &= \argmin_{x \in \R^d} \{ \langle \nabla f(x_k), x \rangle + \frac{1}{\alpha_k} \Dh(x,x_k)\} \\
           &= \argmin_{x \in \R^d} \{ \langle \nabla f(x_k), x \rangle + \frac{1}{\alpha_k} (h(x) - h(x_k) - \langle \nabla h(x_k), x-x_k \rangle)\} \\
           &= \argmin_{x \in \R^d} \{ \langle \nabla f(x_k), x \rangle + \frac{1}{\alpha_k} (h(x) - \langle \nabla h(x_k), x \rangle)\} \\
