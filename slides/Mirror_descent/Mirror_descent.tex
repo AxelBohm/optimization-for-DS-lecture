@@ -19,28 +19,33 @@
 \begin{frame}
   \frametitle{Recap on (sub)-gradient descent}
 
-  When we used a norm $\Vert \cdot \Vert$ we meant the \emph{$2$-norm}, i.e.\
-  \begin{equation}
-    \Vert x \Vert = \Big({\sum_{i=1}^{d} x_i^2} \Big)^{1/2}.
-  \end{equation}
-  In \textbf{gradient descent} we used Lipschitz continuity:
-  \begin{equation}
-    \Vert \nabla f(x) - \nabla f(y) \Vert \le L \Vert x-y \Vert
-  \end{equation}
-  (Lead to a complexity of $\mathcal{O}(\frac{L}{k})$) \\
+  \begin{itemize}
+    \item When we used a norm $\Vert \cdot \Vert$ we meant the \emph{$2$-norm}, i.e.\
+          \begin{equation}
+            \Vert x \Vert_2 = {\Big({\sum_{i=1}^{d} x_i^2} \Big)}^{1/2}.
+          \end{equation}
+    \item In \textbf{gradient descent} we used Lipschitz continuity:
+          \begin{equation}
+            \Vert \nabla f(x) - \nabla f(y) \Vert \le L \Vert x-y \Vert.
+          \end{equation}
+          (Lead to a complexity of $\mathcal{O}(\frac{L}{k})$) \\
 
   \onslide<2->{%
-    For \textbf{sub-gradient descent} we used $\Vert g \Vert \le G$ which
+    \item For \textbf{sub-gradient descent} we used $\Vert g \Vert \le G$ which
     lead to a complexity of $\mathcal{O}(\frac{G}{\sqrt{k}})$.
   }
 
   \onslide<3->{%
-    But there are other norms
+    \item But there are \textcolor{blue}{other norms}
     \begin{equation}
       \Vert x \Vert_\infty \le \Vert x \Vert_2 \le \sqrt{d} \Vert x \Vert_\infty
     \end{equation}
-    It can happen that $  \Vert g \Vert_\infty \le G \quad \text{but} \quad \Vert g \Vert_2 \approx \sqrt{d}G$
+    It can happen that $  \Vert g \Vert_\infty \le G \quad \text{but} \quad \Vert g \Vert_2 \approx \sqrt{d}G$.
   }
+  \end{itemize}
+
+
+
 \end{frame}
 
 \begin{frame}
@@ -94,7 +99,7 @@
 
 \begin{frame}
   \frametitle{Examples} % of Bregman distances
-  \begin{enumerate}
+  \begin{itemize}
     \item $h(x) = \frac12 \Vert x \Vert_2^2$ gives $\Dh(x,y) = \Vert x-y \Vert^2$
     \item $h(x) = \frac{1}{2(p-1)} \Vert x \Vert_p^2$ with $p \in [1, 2]$
     \item  $\Delta^d= \{x \in \R^d_+ : \sum_{i=1}^{d}x_i = 1\}$ the \emph{unit simplex} and
@@ -106,8 +111,9 @@
             \end{cases}
           \end{equation}
           the \textbf{Negative entropy}.\\
-  \end{enumerate}
+  \end{itemize}
 \end{frame}
+
 
 \begin{frame}
   \frametitle{Negative entropy}
@@ -242,9 +248,6 @@
       f(\hat{x}_k) - f^* \le \frac{\D(x^*, x_0) + \frac12 \sum_i \alpha_i^2 G^2}{\sum_i \alpha_i}
     \end{equation}
   \end{theorem}
-
-  \onslide<2->{%
-  }
 
 \end{frame}
 
