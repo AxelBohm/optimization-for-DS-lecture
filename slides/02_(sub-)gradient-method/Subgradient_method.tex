@@ -172,12 +172,12 @@
 \label{sec:}
 
 \begin{frame}
-  \frametitle{Convergence statement}
+  \frametitle{Convergence statement: Subgradient method}
   \textcolor{gray}{We assume there exists minimizer $x^*$ and we write $f^*=f(x^*)$.}
   \begin{theorem}
     $f$ is convex, subgradients are bounded $\Vert g(x) \Vert \le G$ for all $g(x)\in \partial f(x)$. Then,
     \begin{equation}
-      f(\bar{x}_k) - f^* \le \frac{\Vert x_1-x^*\Vert^2 G}{\sqrt{k}}
+      f(\bar{x}_k) - f^* \le \frac{\Vert x_1-x^*\Vert G}{\sqrt{k}}
     \end{equation}
     for the \textbf{averaged} iterates $\bar{x}_k = \frac{1}{k} \sum_{i=0}^{k-1} x_i $
   \end{theorem}
@@ -218,7 +218,7 @@
   \frametitle{Proof [contd]}
   We divide by $2\alpha$ and $k$
   \begin{equation}
-    \frac{1}{k}\sum_{i=0}^{k-1}  f(x_i) - f^*  \le \frac{1}{2 \alpha k} \Vert x_0-x^* \Vert^2 +  \alpha G^2
+    \frac{1}{k}\sum_{i=0}^{k-1}  f(x_i) - f^*  \le \frac{1}{2 \alpha k} \Vert x_0-x^* \Vert^2 +  \frac{\alpha G^2}{2}
   \end{equation}
   Using Jensens inequality (convexity with more than $2$ points)
   \begin{equation}
@@ -226,7 +226,7 @@
   \end{equation}
   we obtain
   \begin{equation}
-    f(\bar{x}_k) - f^*  \le \frac{1}{2 \alpha k} \Vert x_0-x^* \Vert^2 + \alpha G^2.
+    f(\bar{x}_k) - f^*  \le \frac{1}{2 \alpha k} \Vert x_0-x^* \Vert^2 + \frac{\alpha G^2}{2}.
   \end{equation}
 
 \end{frame}
@@ -250,7 +250,7 @@
   % \end{equation}
 
   \begin{equation}
-    f(\bar{x}_k) - f^* \le \frac{\Vert x_0-x^*\Vert G }{2 \sqrt{k}}. \qed
+    f(\bar{x}_k) - f^* \le \frac{\Vert x_0-x^*\Vert G }{\sqrt{k}}. \qed
   \end{equation}
   When ignoring constants (and focusing on the rate) we sometimes write
   \begin{equation}
@@ -292,11 +292,11 @@
   \end{equation}
   Can we pick $\alpha$ such that the RHS is minimized?
   \begin{equation}
-    \min_\alpha \, \alpha^2 \Vert g_k \Vert^2 + 2 \alpha_k (f^* - f(x_k))
+    \min_\alpha \, \alpha^2 \Vert g_k \Vert^2 + 2 \alpha (f^* - f(x_k))
   \end{equation}
   gives
   \begin{equation}
-    \alpha^* = \frac{f(x_k)-f^*}{\Vert g_k \Vert^2}
+    \alpha_k^* = \frac{f(x_k)-f^*}{\Vert g_k \Vert^2}
   \end{equation}
   \begin{equation}
       \Vert x_{k+1} - x^* \Vert^2 = \Vert x_k-x^* \Vert^2 - {\left( \frac{f(x_k)-f^*}{\Vert g_k \Vert} \right)}^2
@@ -385,7 +385,7 @@
     \begin{equation}
       \begin{aligned}
         f(x_{k+1}) &\le f(x_k) + \langle \nabla f(x_k), x_{k+1}-x_k \rangle + \frac{L}{2}\Vert x_{k+1}-x_k \Vert^2 \\
-        &= f(x_k) - \gamma \Vert \nabla f(x_k) \Vert^2 + \frac{L}{2 \gamma^2} \Vert \nabla f(x_k) \Vert^2 \\
+        &= f(x_k) - \alpha \Vert \nabla f(x_k) \Vert^2 + \frac{\alpha^2 L}{2} \Vert \nabla f(x_k) \Vert^2 \\
         &= f(x_k) - \left(\frac{1}{L} - \frac{1}{2L}\right) \Vert \nabla f(x_k) \Vert^2
       \end{aligned}
     \end{equation}
