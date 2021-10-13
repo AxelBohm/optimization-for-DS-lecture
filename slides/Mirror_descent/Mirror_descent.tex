@@ -239,7 +239,7 @@
   \begin{theorem}
     In $(\R^d, \Vert \cdot \Vert)$ and subgradients bounded in dual norm $\Vert g_k \Vert_* \le G$, then
     \begin{equation}
-      f(\hat{x}_k) - f^* \le \frac{\D(x^*, x_1) + \frac12 \sum_i \alpha_i^2 G^2}{\sum_i \alpha_i}
+      f(\hat{x}_k) - f^* \le \frac{\D(x^*, x_0) + \frac12 \sum_i \alpha_i^2 G^2}{\sum_i \alpha_i}
     \end{equation}
   \end{theorem}
 
@@ -250,10 +250,10 @@
 
 \begin{frame}
   \frametitle{Convergence on the unit simplex}
-    \textbf{What about $\D(x^*, x_1) $?}
-    Let $x_1 = (\frac{1}{n}, \cdots , \frac{1}{n})$, then
+    \textbf{What about $\D(x^*, x_0) $?}
+    Let $x_0 = (\frac{1}{n}, \cdots , \frac{1}{n})$, then
     \begin{equation}
-      \D(x, x_1) = \sum x_i \log\left(\frac{x_i}{\frac1n}\right) = \sum x_i \log(x_i) + \log(n) \le log(n)
+      \D(x, x_0) = \sum x_i \log\left(\frac{x_i}{\frac1n}\right) = \sum x_i \log(x_i) + \log(n) \le log(n)
     \end{equation}
     while $ \Vert x_0 - x^* \Vert^2 \le 2$.
 
