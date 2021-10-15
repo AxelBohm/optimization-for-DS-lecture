@@ -3,7 +3,6 @@
 \input{../../shared_slides.tex}
 
 \title{Projected Gradient Descent}
-\date{\today}
 
 \begin{document}
 \maketitle
@@ -20,7 +19,7 @@
     \begin{block}{Constrained optimization problem}
       \begin{equation}
         \begin{aligned}
-          \text{minimize} & f(x)\\
+          \text{minimize } & f(x)\\
           \text{subject to } & x\in C
         \end{aligned}
       \end{equation}
@@ -48,7 +47,7 @@
     \begin{block}{Constrained optimization problem}
       \begin{equation}
         \begin{aligned}
-          \text{minimize} & f(x)\\
+          \text{minimize } & f(x)\\
           \text{subject to } & x\in C
         \end{aligned}
       \end{equation}
@@ -71,12 +70,13 @@
 \begin{frame}
   \frametitle{Projected Gradient Descent}
 
-  % \begin{figure}[ht]
-  %   \centering
-  %   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{projected_GD}
-  %   % \caption{\label{fig:label} }
-  % \end{figure}
+  \textcolor{blue}{Idea:} After every step project back onto the set: $\Pi_C(x) :=\argmin_{y\in C} \Vert y-x \Vert$.
 
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{test}
+      % \caption{\label{fig:label} }
+    \end{figure}
 
 \end{frame}
 
@@ -91,15 +91,58 @@
     \begin{algorithmic}[1]
       \For{$k=0, 1, \dots$}
       \State{Pick $g_k \in \partial f(x_k)$}
-      \State{$x_{k+1} = P_C( x_k- \alpha g_k )$}
+      \State{$y_{k+1} =  x_k- \alpha g_k $}
+      \State{$x_{k+1} = \Pi_C(y_{k+1})$}
       \EndFor
     \end{algorithmic}
   \end{algorithm}
-  By using the fact that the projection is a contraction
-  \begin{equation}
-    \Vert P_C(x) - P_C(y) \Vert \le \Vert x-y \Vert
-  \end{equation}
 \end{frame}
+
+
+\begin{frame}
+  \frametitle{Properties of the Projection}
+  \begin{block}{Fact}
+    Let $C\subseteq \R^d$ be closed and convex, $x\in C$ and $y \in \R^d$.Then
+    \begin{itemize}
+      \item $\langle x- \Pi_C(y), y - \Pi_C(y)  \rangle \le 0$
+      \item $\Vert x - \Pi_C(y) \Vert^2 + \Vert y - \Pi_c(y) \Vert^2 \le \Vert y-x \Vert^2$
+    \end{itemize}
+  \end{block}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[height=0.5\textheight,keepaspectratio]{projection_property}
+    % \caption{\label{fig:label} }
+  \end{figure}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Properties of the Projection}
+  \begin{block}{Fact}
+    Let $C\subseteq \R^d$ be closed and convex, $x\in C$ and $y \in \R^d$.Then
+    \begin{itemize}
+      \item $\langle x- \Pi_C(y), y - \Pi_C(y)  \rangle \le 0$
+      \item $\Vert x - \Pi_C(y) \Vert^2 + \Vert y - \Pi_c(y) \Vert^2 \le \Vert y-x \Vert^2$
+    \end{itemize}
+  \end{block}
+  \begin{proof}
+    Since $\Pi_C(x)$ is the minimizer of a differentiable convex function $d_x(y) =\frac12 \Vert y-x \Vert^2$ over $C$, by the \textbf{first-order optimality condition}
+    \begin{align}
+      0 &\le \langle \nabla d_x(\Pi_C(x)), y - \Pi_C(x) \rangle \\
+        &= \langle \Pi_C(x) - x, y - \Pi_C(x) \rangle
+    \end{align}
+  \end{proof}
+\end{frame}
+
+
+
+\begin{frame}
+  \frametitle{Results for projected GD}
+
+\end{frame}
+
+
 
 \begin{frame}
   \frametitle{Projected subgradient method II}
@@ -107,7 +150,7 @@
     We can deduce the exact same inequality as before
     \begin{equation}
       \begin{aligned}
-        \Vert x_{k+1} - x^* \Vert^2 &= \Vert P_C(x_k - \alpha g_k) - x^* \Vert^2 \\
+        \Vert x_{k+1} - x^* \Vert^2 &= \Vert \Pi_C(x_k - \alpha g_k) - \Pi_C(x^*) \Vert^2 \\
         &\le \Vert x_k - \alpha g_k - x^* \Vert^2 \\
         &= \Vert x_k-x^* \Vert^2 + 2 \alpha \langle g_k, x^*-x_k \rangle + \alpha^2 \Vert g_k \Vert^2\\
         &\le \Vert x_k-x^* \Vert^2 + 2 \alpha (f^* - f(x_k))+ \alpha^2 \Vert g_k \Vert^2.
