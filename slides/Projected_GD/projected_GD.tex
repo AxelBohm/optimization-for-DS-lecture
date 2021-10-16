@@ -66,6 +66,8 @@
   \end{minipage}
 \end{frame}
 
+\section{Projection}%
+\label{sec:}
 
 \begin{frame}
   \frametitle{Projected Gradient Descent}
@@ -139,13 +141,45 @@
 
 \begin{frame}
   \frametitle{Results for projected GD}
+  For \textbf{closed}, \textbf{convex} set $C\subset \R^d$ \textcolor{blue}{same} number of gradient steps.
+  \begin{itemize}
+    \item Lipschitz convex function over $C$: $\mathcal{O}(\epsilon^{-2})$ steps
+    \item Smooth convex function over $C$: $\mathcal{O}(\epsilon^{-1})$ steps
+    \item Smooth and strongly convex over $C$: $\mathcal{O}(\log(\epsilon^{-1}))$
+  \end{itemize}
+
+  But:
+  \begin{itemize}
+    \item Each step requires a projection onto $C$
+    \item May or may not be easy to compute
+  \end{itemize}
 
 \end{frame}
 
 
+\begin{frame}
+  \frametitle{The projection step: $\Pi_C(x) := \argmin_{y\in C} \Vert y-x \Vert$}
+  Computing $\Pi_C(x)$ is an optimization problem itself.
+
+  Efficient in relevant cases:
+  \begin{itemize}
+    \item Box constraints: $C= [a_1, b_1] \times \dots \times [a_d, b_d]$
+    \item Affine subspace (requires solution of system of linear equations)
+          \begin{figure}[ht]
+            \centering
+            \includegraphics[scale=.12]{projection_onto_affine_space}
+          \end{figure}
+    \item Projection onto ball with center $c$
+          \begin{figure}[ht]
+            \centering
+            \includegraphics[scale=.2]{projection_onto_ball}
+          \end{figure}
+  \end{itemize}
+\end{frame}
+
 
 \begin{frame}
-  \frametitle{Projected subgradient method II}
+  \frametitle{Convergence analysis}
   \begin{proof}
     We can deduce the exact same inequality as before
     \begin{equation}
@@ -156,11 +190,93 @@
         &\le \Vert x_k-x^* \Vert^2 + 2 \alpha (f^* - f(x_k))+ \alpha^2 \Vert g_k \Vert^2.
       \end{aligned}
     \end{equation}
+    Continue the proof as in the unconstrained setting.
   \end{proof}
+\end{frame}
+
+
+\section{Proximal Gradient}%
+\label{sec:}
+
+
+\begin{frame}
+  \frametitle{Composite minimization problem}
+
+  Consider objective function composed as
+  \begin{equation}
+    f(x) = g(x) + h(x)
+  \end{equation}
+  where
+  \begin{itemize}
+    \item $g$ is \textcolor{blue}{nice}
+    \item $h$ is \textcolor{blue}{simple}
+  \end{itemize}
+  typically we mean nice means smooth. Relevant if $h$ is not differentiable.
+  Most notably: Lasso
 
 \end{frame}
 
 
+\begin{frame}
+  \frametitle{Idea}
+  Classical gradient step for $g$:
+  \begin{equation}
+    x_{k+1} = \argmin_{x} g(x_k) + \langle \nabla g(x_k), x-x_k \rangle + \frac{1}{2 \alpha} \Vert x-x_k \Vert^2
+  \end{equation}
+  Now, for $f= g+h$ we keep this for $g$ and add $h$ \textcolor{blue}{unmodified}:
+  \begin{align}
+    x_{k+1} &= \argmin_{x} g(x_k) + \langle \nabla g(x_k), x-x_k \rangle + \frac{1}{2 \alpha} \Vert x-x_k \Vert^2 \textcolor{red}{+ h(x)} \\
+    &= \argmin_x \frac{1}{2 \alpha} \Vert x - (x_k - \alpha \nabla g(x_k)) \Vert^2 + h(x)
+  \end{align}
+\end{frame}
 
+
+\begin{frame}
+  \frametitle{The proximal gradient algorithm}
+
+  An iteration is defined as
+  \begin{block}{}
+  \begin{equation}
+    x_{k+1} = \prox{\alpha h}{x_k - \alpha \nabla g(x_k)}
+  \end{equation}
+  \end{block}
+  where the \textcolor{blue}{proximal mapping} for a function $h$ and parameter $\alpha$ is defined as
+  \begin{equation}
+    \prox{\alpha h}{x} = \argmin_{y \in \R^d} \left\{ h(y) + \frac{1}{2 \alpha} \Vert y-x \Vert^2\right\}.
+  \end{equation}
+
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{A generalization of (projected) GD}
+
+  \begin{itemize}
+    \item $h \equiv 0$ recovers \textcolor{blue}{gradient descent}.
+    \item $h = \chi_C$ recovers \textcolor{blue}{projected gradient descent}
+          We call $\chi_C$ the \textbf{indicator function} of $C$
+          \begin{align}
+            \chi_C&: \R^d \to \R \cup +\infty \\
+              & x \mapsto \begin{cases}
+                0 & \text{if $x \in C$} \\
+                +\infty & \text{otherwise.}
+              \end{cases}
+          \end{align}
+          Proximal mapping becomes
+          \begin{equation}
+            \prox{\alpha h}{x} = \argmin_{y \in \R^d} \left\{ \chi_C(y) + \frac{1}{2 \alpha} \Vert y-x \Vert^2\right\} = \argmin_{y \in C} \{ \Vert y-x \Vert^2\}.
+          \end{equation}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Convergence}
+
+  Same complexity as GD or projected GD,
+
+  \textcolor{blue}{if we can compute the proximal mapping!}
+
+\end{frame}
 
 \end{document}
