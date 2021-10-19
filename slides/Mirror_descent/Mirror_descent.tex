@@ -127,7 +127,7 @@
         &= \sum_{i=1}^{d} x_i \log\left(\frac{x_i}{y_i}\right)
     \end{aligned}
     \end{equation}
-    Known as \textcolor{red}{Kullback-Leibler divergence} $K(X \Vert Y)$.
+    Known as \textcolor{blue}{Kullback-Leibler divergence} $K(X \Vert Y)$.
     \item Is strongly convex over $\Delta$
     \begin{equation}
       \D(x, y) \ge \frac12 \Vert x-y \Vert_1^2 \quad \text{Pinsker's ineq.}
@@ -188,7 +188,7 @@
 
 \begin{frame}
   \frametitle{Mirror Descent on the unit simplex}
-    Negative entropy: $h(x) = \sum_{i=1}^{d} x_i \log(x_i)$ for $ x_i > 0$. \\
+    \textcolor{blue}{Negative entropy}: $h(x) = \sum_{i=1}^{d} x_i \log(x_i)$ for $ x_i > 0$. \\
     We define $a := \alpha_k \nabla f(x_k) - \nabla h(x_k)$. Then
     \begin{equation}
       x_{k+1} = \argmin_{x \in \Delta} \{ \langle a, x \rangle + h(x)\}
@@ -239,8 +239,9 @@
 % add one slide about dual norms
 \begin{frame}
   \frametitle{(General) mirror descent convergence statement}
+  Since we changed norm in the space of the variable $x$, we need to go to the \textcolor{blue}{dual norms} in the space of the subgradients
   \begin{equation}
-    \Vert y \Vert_* := \max_{\Vert x \Vert=1} \{ \langle y, x \rangle\}
+    \Vert y \Vert_* := \max_{\Vert x \Vert=1} \{ \langle y, x \rangle\}.
   \end{equation}
   \begin{theorem}
     In $(\R^d, \Vert \cdot \Vert)$ and subgradients bounded in dual norm $\Vert g_k \Vert_* \le G$, then
@@ -270,6 +271,19 @@
     \end{equation}
 \end{frame}
 
-% add proof here?
+\begin{frame}
+  \frametitle{Proof}
+  In the Euclidian space we used
+  \begin{align}
+    \langle x_{k+1}-x_k, x^* -x_{k+1} \rangle =\\
+    = \frac12 \Vert x^*-x_k \Vert^2 - \frac12 \Vert x^*-x_{k+1} \Vert^2 - \frac12 \Vert x_{k+1}-x_k \Vert^2.
+  \end{align}
+  Similar \textcolor{blue}{$3$-point identity} holds for Bregman distances:
+  \begin{equation}
+    \langle \nabla h(x_{k+1})-\nabla h(x_k), x^*-x_{k+1} \rangle =\\
+    = D(x^*, x_k) - D(x^*, x_{k+1}) - D(x_{k+1}, x_k)
+  \end{equation}
+
+\end{frame}
 
 \end{document}
