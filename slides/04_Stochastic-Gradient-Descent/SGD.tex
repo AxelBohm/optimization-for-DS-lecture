@@ -1,13 +1,16 @@
 \documentclass{beamer}
 
 \input{../../shared_slides.tex}
+\usepackage{changepage}
 
 \title{Stochastic Gradient Descent}
 
 \begin{document}
 \maketitle
-% \frame{\tableofcontents}
+\frame{\tableofcontents}
 
+\section{Introduction}%
+\label{sec:}
 
 \begin{frame}
   \frametitle{Finite sum structure}
@@ -38,8 +41,8 @@
   \end{equation}
   \begin{itemize}
     \item Typically no access to $f$
+    \item most of what follows works in this more general setting
   \end{itemize}
-
 \end{frame}
 
 
@@ -57,9 +60,11 @@
     \item requires only \textbf{one} gradient instead of $n$ per iteration.
     \item we call $g_t := \nabla f_i(x_k)$ a \textcolor{blue}{stochastic gradient} (estimator)
   \end{itemize}
-
 \end{frame}
 
+
+\section{Convergence in expectation}%
+\label{sec:}
 
 \begin{frame}
   \frametitle{Unbiased}
@@ -75,7 +80,6 @@
     \E [\nabla f_i(x)] = \frac{1}{n} \sum_{i=1}^{n} \nabla f_i(x) = \nabla f(x)
   \end{equation}
   \end{itemize}
-
 \end{frame}
 
 
@@ -106,21 +110,21 @@
 
 \begin{frame}
   \frametitle{Convergence statement: $\mathcal{O}(\epsilon^{-2})$ steps}
-  \begin{block}{assumptions}
+  \begin{block}{Assumptions}
     \begin{itemize}
       \item $f$ is convex and differentiable
-      \item $\Vert x_0-x^* \Vert \le R$
-      \item stochastic gradient are \textcolor{blue}{bounded} in expectation $\E[\Vert g_k \Vert^2] \le B^2$
+      \item $\Vert x_0-x^* \Vert \le D$
+      \item stochastic gradient are \textcolor{blue}{bounded} in expectation $\E[\Vert g_k \Vert^2] \le B^2$.
     \end{itemize}
   \end{block}
   \begin{theorem}
     With the assumptions above and stepsize
     \begin{equation}
-      \alpha = \frac{R}{B \sqrt{k}}
+      \alpha = \frac{D}{B \sqrt{k}}
     \end{equation}
     yields
     \begin{equation}
-      \E \left[ f(\bar{x}_i) - f^*\right] \le \frac{RB}{\sqrt{k}}.
+      \E \left[ f(\bar{x}_i) - f^*\right] \le \frac{DB}{\sqrt{k}}.
     \end{equation}
   \end{theorem}
   error bound holds in expectation
@@ -145,7 +149,6 @@
   \end{equation}
   Bound gradients and telescope to finish the proof.
   \end{proof}
-  We did not use smoothness. Proof works the same for subgradients.
 \end{frame}
 
 \begin{frame}
@@ -181,6 +184,109 @@
     \item $\vert S \vert= n \Leftrightarrow$ (batch) GD
   \end{itemize}
 
+  \textcolor{blue}{Benefit:} Gradient computation can parallelized.
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Increasing batch size reduces variance}
+
+  Taking an average of independent random variables will reduce variance.
+  \begin{align}
+    \Var[g_k] &= \E \left[ \Vert g_k - \nabla f(x_k) \Vert^2 \right] = \E \left[ \left\Vert \frac{1}{\vert S \vert} \sum_{j\in S} f_j(x_k) - \nabla f(x_k) \right\Vert^2 \right] \\
+              &= \frac{1}{\vert S \vert} \E \left[\Vert \nabla f_i(x_k) - \nabla f(x_k) \Vert^2\right] \\
+    &= \frac{1}{\vert S \vert} \Var[ \nabla f_i(x_k) ]
+  \end{align}
+
+  \textcolor{blue}{However:} We have to use a different analysis to make use of this.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Stochastic Subgradient Method}
+
+  If we go back to the proof: We did not use smoothness. If we choose \textcolor{blue}{unbiased estimate of subgradient} $\E[g_k|x_k] \in \partial f(x_k)$ and iterate
+  \begin{block}{}
+    \begin{align}
+      &\text{sample $i\in 1,\dots, n$ uniformly at random} \\
+      &\text{let $g_k \in \partial f_i(x_k)$}\\
+      &x_{k+1} = x_k - \alpha g_k.
+    \end{align}
+  \end{block}
+  We can get the same $\mathcal{O}(\epsilon^{-2})$ complexity. Smoothness did provide any benefit (in terms of rate).
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Projected SGD}
+
+  \begin{itemize}
+    \item Previous proof can be extended (trivially) to the constrained setting
+    \item with same complexity $\mathcal{O}(\epsilon^{-2})$
+    \item but (ofcourse) additionaly
+  \end{itemize}
+
+\end{frame}
+
+\section{High probability bounds}%
+\label{sec:}
+
+\begin{frame}
+  \frametitle{High probability bounds}
+
+  \begin{theorem}{Hoeffding's inequality}
+    Let $X_i$ be independent random variables that satisfy
+    \begin{itemize}
+      \item $\E X_i = 0$
+      \item $\Vert X_i \Vert \le M$.
+    \end{itemize}
+    Then,
+    \begin{equation}
+      \P\left[ X_1+ \dots + X_k \ge t\right] \le e^{-\frac{t^2}{2kM^2}}
+    \end{equation}
+  \end{theorem}
+
+  Azuma-Hoeffding's generalization does not require independence, only $\E[X_k| X_{k-1}, \dots, 1]=0$.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Statement with high probability}
+  \begin{theorem}
+    Let $\delta>0$ and assumptions as before + iterates remain in bounded set with diameter $D$ (for example constraint set). Then,
+    \begin{equation}
+       f(\bar{x}_i) - f^* \le \frac{D B \delta}{\sqrt{k}}.
+    \end{equation}
+    with \textcolor{blue}{probability} less than $1-e^{-\delta^2/8}$.
+  \end{theorem}
+  $\Rightarrow$ choose $\delta$ large for bound in higher probability.
+\end{frame}
+
+
+\begin{frame}
+  \begin{adjustwidth}{-1.5em}{-1.5em}
+    \begin{minipage}{1.1\textwidth}
+    \begin{proof}
+      \begin{equation}
+        \begin{aligned}
+          \MoveEqLeft \Vert x_{k+1} - x^* \Vert^2 \\
+          &\le \Vert x_k-x^* \Vert^2 + 2 \alpha \langle g_k, x^*-x_k \rangle + \alpha^2 \Vert g_k \Vert^2 \\
+          &\le \Vert x_k-x^* \Vert^2 + 2 \alpha \langle \nabla f(x_k), x^*-x_k \rangle + \alpha^2 \Vert g_k \Vert^2  + \langle v_k, x^*-x_k \rangle\\
+        \end{aligned}
+      \end{equation}
+      with $v_k = g_k -\nabla f(x_k)$.
+      Continue as usual
+      \begin{equation}
+        f(\bar{x}_k) - f^* \le \frac{\Vert x_0-x^* \Vert^2}{2 \alpha k} + \alpha B^2 + \frac{1}{k} \sum_{i=1}^{k} X_i
+      \end{equation}
+      with
+      \begin{equation}
+        X_k := \langle v_k, x^*-x_k \rangle \le \Vert v_k \Vert \Vert x_k-x^* \Vert \le 2BD
+      \end{equation}
+      and $\E[X_k]=0$ fulfilling Hoeffding's assumptions. Use it with $t= DB \sqrt{k}\delta$.
+    \end{proof}
+    \end{minipage}
+  \end{adjustwidth}
 \end{frame}
 
 
