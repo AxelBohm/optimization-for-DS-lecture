@@ -1,0 +1,187 @@
+\documentclass{beamer}
+
+\input{../../shared_slides.tex}
+
+\title{Stochastic Gradient Descent}
+
+\begin{document}
+\maketitle
+% \frame{\tableofcontents}
+
+
+\begin{frame}
+  \frametitle{Finite sum structure}
+
+  Many optimization problems in Data science are \textcolor{blue}{sum structured}:
+  \begin{equation}
+    f(x) = \frac{1}{n} \sum_{i=1}^{n} f_i(x).
+  \end{equation}
+
+  \begin{itemize}
+    \item known as \textcolor{blue}{empirical risk} (minimization)
+    \item $f_i$ corresponds to the loss of the $i$-th observation
+    \item for example: linear regression
+          \begin{equation}
+            f(x) = \Vert Ax-b \Vert^2 = \sum_{i=1}^{n} {(a_i^T x -b_i)}^2
+          \end{equation}
+    \item evaluating $\nabla f$ can be expensive if $n$ is large
+  \end{itemize}
+  
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Risk minimization}
+  In theory we would even like to minimize the \textcolor{blue}{population risk}
+  \begin{equation}
+    f(x) = \E_\xi [ f(x, \xi) ]
+  \end{equation}
+  \begin{itemize}
+    \item Typically no access to $f$
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{(vanilla) Stochastic gradient descent}
+
+  \begin{block}{}
+    \begin{align}
+      &\text{sample $i\in 1,\dots, n$ uniformly at random} \\
+      &x_{k+1} = x_k - \alpha \nabla f_i(x_k).
+    \end{align}
+  \end{block}
+
+  \begin{itemize}
+    \item requires only \textbf{one} gradient instead of $n$ per iteration.
+    \item we call $g_t := \nabla f_i(x_k)$ a \textcolor{blue}{stochastic gradient} (estimator)
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Unbiased}
+  \begin{itemize}
+    \item Can't really use convexity as before since
+          \begin{equation}
+            f(x_k)-f(x^*) \le \langle \nabla f_i(x_k), x^*-x_k \rangle
+          \end{equation}
+          might \textcolor{blue}{not hold} in general.
+    \item But holds \textcolor{blue}{\textbf{in expectation}}!
+    \item For this we need that $\nabla f_i(x)$ is \textcolor{blue}{unbiased estimator} of $\nabla f(x)$
+  \begin{equation}
+    \E [\nabla f_i(x)] = \frac{1}{n} \sum_{i=1}^{n} \nabla f_i(x) = \nabla f(x)
+  \end{equation}
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Gradient inequality holds in expectation}
+
+  \begin{itemize}
+    \item We would like to conclude that
+          \begin{equation}
+            \E \left[ \langle g_k, x^*-x_k \rangle\right] = \langle \E[g_k], \E[x^*-x_k] \rangle
+          \end{equation}
+          but this is not so clear since $x_k$ is also stochastic and in general $\E[XY]\neq \E[X]\E[Y]$.
+
+    \item We use the \textcolor{blue}{\textbf{conditional Expectation}} $\E[\, \cdot \, | x_k]$ (read as expectation of $\cdot$ given $x_k$). Then
+          \begin{equation}
+            \E \left[ \langle g_k, x^*-x_k \rangle | x_k \right] = \langle \E[g_k | x_k], x^*-x_k \rangle = \langle \nabla f(x_k), x^*-x_k \rangle.
+          \end{equation}
+    \item Together with the tower property $\E[\E[X|Y]]= \E[X]$:
+          \begin{align}
+            \E \left[ \langle g_k, x^*-x_k \rangle \right] &= \E\left[\E \left[ \langle g_k, x^*-x_k \rangle | x_k \right] \right] \\
+                                               &= \E\left[\langle \nabla f(x_k), x^*-x_k \rangle \right] \le f(x^*) - f(x_k).
+          \end{align}
+
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Convergence statement: $\mathcal{O}(\epsilon^{-2})$ steps}
+  \begin{block}{assumptions}
+    \begin{itemize}
+      \item $f$ is convex and differentiable
+      \item $\Vert x_0-x^* \Vert \le R$
+      \item stochastic gradient are \textcolor{blue}{bounded} in expectation $\E[\Vert g_k \Vert^2] \le B^2$
+    \end{itemize}
+  \end{block}
+  \begin{theorem}
+    With the assumptions above and stepsize
+    \begin{equation}
+      \alpha = \frac{R}{B \sqrt{k}}
+    \end{equation}
+    yields
+    \begin{equation}
+      \E \left[ f(\bar{x}_i) - f^*\right] \le \frac{RB}{\sqrt{k}}.
+    \end{equation}
+  \end{theorem}
+  error bound holds in expectation
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Proof}
+  \begin{proof}
+
+  We start as usual ($g_k$ is a stochastic gradient)
+  \begin{equation}
+    \begin{aligned}
+      \Vert x_{k+1} - x^* \Vert^2 &\le \Vert x_k - \alpha g_k - x^* \Vert^2 \\
+      &= \Vert x_k-x^* \Vert^2 + 2 \alpha \langle g_k, x^*-x_k \rangle + \alpha^2 \Vert g_k \Vert^2.
+    \end{aligned}
+  \end{equation}
+  Now take expectation
+  \begin{equation}
+      \E \left[\Vert x_{k+1} - x^* \Vert^2\right] \le \E \left[\Vert x_k-x^* \Vert^2\right] + 2 \alpha \E[f^*- f(x_k)]+ \alpha^2 \E[\Vert g_k \Vert^2].
+  \end{equation}
+  Bound gradients and telescope to finish the proof.
+  \end{proof}
+  We did not use smoothness. Proof works the same for subgradients.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Comparing constants: SGD vs. GD}
+  \begin{itemize}
+    \item \textcolor{blue}{GD:} In the bounded (sub-)gradient analysis we assumed $\Vert \nabla f(x) \Vert^2 \le B_{BG}^2$. For finite-sum this gives
+          \begin{equation}
+            \left\Vert \frac{1}{n}\sum_{i=1}^{n}\nabla f_i(x) \right\Vert^2 \le B_{BG}^2
+          \end{equation}
+    \item \textcolor{blue}{SGD:} We assumed that the expected squared norm are bounded, i.e.
+          \begin{equation}
+            \E[ \Vert \nabla f_i(x) \Vert^2 ] = \frac{1}{n} \sum_{i=1}^{n} \Vert \nabla f_i(x) \Vert^2 \le B_{SGD}^2
+          \end{equation}
+  \end{itemize}
+
+  By convexity we have that
+  \begin{itemize}
+    \item $B_{GD}^2 \approx \left\Vert \frac{1}{n}\sum_{i=1}^{n}\nabla f_i(x) \right\Vert^2 \le = \frac{1}{n} \sum_{i=1}^{n} \Vert \nabla f_i(x) \Vert^2 \approx B_{SGD}^2$
+    \item but usually comparable
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Minibatch SGD}
+  Instead of just using a single element $f_i$ we can use several $S \subset \{1, \dots, n\}$
+  \begin{equation}
+    g_k := \frac{1}{\vert S \vert} \sum_{j\in S} \nabla f_j(x_k)
+  \end{equation}
+  Interpolates between
+  \begin{itemize}
+    \item $\vert S \vert=1 \Leftrightarrow $ (vanilla) SGD, as defined earlier
+    \item $\vert S \vert= n \Leftrightarrow$ (batch) GD
+  \end{itemize}
+
+\end{frame}
+
+
+\end{document}
