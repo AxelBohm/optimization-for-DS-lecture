@@ -233,10 +233,7 @@
       }
 \end{frame}
 
-% \section{convergence analysis}%
-% put here convergence proof?
-%
-% add one slide about dual norms
+
 \begin{frame}
   \frametitle{(General) mirror descent convergence statement}
   Since we changed norm in the space of the variable $x$, we need to go to the \textcolor{blue}{dual norms} in the space of the subgradients
@@ -246,11 +243,12 @@
   \begin{theorem}
     In $(\R^d, \Vert \cdot \Vert)$ and subgradients bounded in dual norm $\Vert g_k \Vert_* \le G$, then
     \begin{equation}
-      f(\hat{x}_k) - f^* \le \frac{\D(x^*, x_0) + \frac12 \sum_i \alpha_i^2 G^2}{\sum_i \alpha_i}
+      f(\bar{x}_k) - f^* \le \frac{{(\D(x^*, x_0))}^{1/2} G}{\sqrt{k}},
     \end{equation}
+    where $\bar{x}_k$ denotes the averaged iterates, as usual.
   \end{theorem}
-
 \end{frame}
+
 
 \begin{frame}
   \frametitle{Convergence on the unit simplex}
@@ -271,18 +269,76 @@
     \end{equation}
 \end{frame}
 
+
 \begin{frame}
   \frametitle{Proof}
   In the Euclidian space we used
   \begin{align}
-    \langle x_{k+1}-x_k, x^* -x_{k+1} \rangle =\\
-    = \frac12 \Vert x^*-x_k \Vert^2 - \frac12 \Vert x^*-x_{k+1} \Vert^2 - \frac12 \Vert x_{k+1}-x_k \Vert^2.
+    \MoveEqLeft \langle x_{k+1}-x_k, x^* -x_{k+1} \rangle \\
+    &= \frac12 \Vert x^*-x_k \Vert^2 - \frac12 \Vert x^*-x_{k+1} \Vert^2 - \frac12 \Vert x_{k+1}-x_k \Vert^2.
   \end{align}
   Similar \textcolor{blue}{$3$-point identity} holds for Bregman distances:
+  \begin{align}
+    \MoveEqLeft \langle \nabla h(x_{k+1})-\nabla h(x_k), x^*-x_{k+1} \rangle =\\
+    &= D(x^*, x_k) - D(x^*, x_{k+1}) - D(x_{k+1}, x_k).
+  \end{align}
+  Therefore
   \begin{equation}
-    \langle \nabla h(x_{k+1})-\nabla h(x_k), x^*-x_{k+1} \rangle =\\
-    = D(x^*, x_k) - D(x^*, x_{k+1}) - D(x_{k+1}, x_k)
+    D(x^*, x_{k+1}) \le  D(x^*, x_k) - D(x_{k+1}, x_k) + \alpha \langle g_k, x^*-x_{k+1} \rangle.
   \end{equation}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Proof II}
+  \begin{equation}
+    D(x^*, x_{k+1}) \le  D(x^*, x_k) - D(x_{k+1}, x_k) + \alpha \langle g_k, x^*-x_{k+1} \rangle.
+  \end{equation}
+  Last term is not quite right.
+  \begin{align}
+    \langle g_k, x^*-x_{k+1} \rangle &= \langle g_k, x^*-x_k \rangle + \langle g_k, x_k-x_{k+1} \rangle \\
+                         &\le f(x^*)-f(x_k) + \Vert g_k \Vert_* \Vert x_k-x_{k+1} \Vert \\
+    &\le f(x^*)-f(x_k) + \frac{\alpha \Vert g_k \Vert_*^2}{2} + \frac{\Vert x_k-x_{k+1} \Vert^2}{2 \alpha}.
+  \end{align}
+  Combined we get that
+  \begin{align}
+    D(x^*, x_{k+1}) &\le  D(x^*, x_k) - D(x_{k+1}, x_k) + \alpha (f(x^*)-f(x_k)) \\
+    &\quad+ \frac{\alpha^2 \Vert g_k \Vert_*^2}{2} + \frac{\Vert x_k-x_{k+1} \Vert^2}{2}.
+  \end{align}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Proof III}
+  We assumed strong convexity of $h$:
+  \begin{align}
+    D(x_{k+1}, x_k) \ge \frac12 \Vert x_{k+1}-x_k \Vert^2.
+  \end{align}
+  Yields
+  \begin{align}
+    D(x^*, x_{k+1}) \le  D(x^*, x_k) + \alpha (f(x^*)-f(x_k))  + \frac{\alpha^2 \Vert g_k \Vert_*^2}{2} \\
+  \end{align}
+  Continue as always
+  \begin{align}
+    \frac{1}{k} \sum_{i=1}^{k} f(x_i) - f^* \le \frac{D(x^*, x_0)}{\alpha k}
+    \frac{\alpha G^2}{2} \\
+  \end{align}
+\end{frame}
+
+\begin{frame}
+  \frametitle{What about the smooth case}
+
+  \begin{itemize}
+    \item Talked about how to get better constants in the ``bounded subgradients'' setting
+    \item but can't make them bounded if they are not
+  \end{itemize}
+  However,
+  \begin{itemize}
+    \item Can also come up with a new notion of smoothness
+          \begin{align}
+            f(y) \le f(x) + \langle \nabla f(x), y-x \rangle + L D(y, x)
+          \end{align}
+    \item which might hold even if $f$ is not smooth in classical sense
+  \end{itemize}
 
 \end{frame}
 
