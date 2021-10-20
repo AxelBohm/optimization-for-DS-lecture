@@ -7,7 +7,19 @@
 
 \begin{document}
 \maketitle
-\frame{\tableofcontents}
+\frame{
+  \begin{minipage}{0.5\textwidth}
+    \tableofcontents
+  \end{minipage}
+  \begin{minipage}{0.45\textwidth}
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{sgd_meme}
+      % \caption{\label{fig:label} }
+    \end{figure}
+  \end{minipage}
+
+}
 
 \section{Introduction}%
 \label{sec:}
@@ -202,9 +214,19 @@
   \textcolor{blue}{However:} We have to use a different analysis to make use of this.
 \end{frame}
 
+
+\begin{frame}
+  \frametitle{Minibatch illustration}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{minibatch_comparison}
+    % \caption{\label{fig:label} }
+  \end{figure}
+\end{frame}
+
+
 \begin{frame}
   \frametitle{Stochastic Subgradient Method}
-
   If we go back to the proof: We did not use smoothness. If we choose \textcolor{blue}{unbiased estimate of subgradient} $\E[g_k|x_k] \in \partial f(x_k)$ and iterate
   \begin{block}{}
     \begin{align}
