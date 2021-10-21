@@ -49,10 +49,10 @@ What difference do you observe in the rate of convergence between the two proble
   \item We want to re-write the update~\eqref{fpi} as a step of gradient descent. To do this, we need to find a function $f$
         such that the gradient descent update is identical to~\eqref{fpi}:
         \begin{equation}
-          x_{k+1} = x_k - \alpha f′(x_k) = g(x_k) .
+          x_{k+1} = x_k - \alpha f'(x_k) = g(x_k) .
         \end{equation}
         Derive such a function $f$.
-  \item Give sufficient conditions on $g$ to ensure convergence of procedure (2). What $\alpha$ would you need to pick?
+  \item Give sufficient conditions on $g$ to ensure convergence of procedure~\eqref{fpi}. What $\alpha$ would you need to pick?
         Hint: We know that gradient descent on f with fixed step-size converges if $f$ is convex and smooth. What
         does this mean in terms of $g$?
   \item What condition does $g$ need to satisfy to ensure linear convergence? Are these satisfied for the problems in~\eqref{log}
