@@ -83,4 +83,4 @@ addresses the following points.
 Clearly describe your used methods, state your conclusions, and argue that the results you obtained make (or do
 not make) sense and the reasons behind it. Keep the report short and to the point, with a strict limit of 3 pages.
 References and additional technical do not count towards this page limit.
-Use [this LATEXtemplate](https://github.com/AxelBohm/optimization-for-DS-lecture/blob/main/project/latex-example-paper/latex-template.pdf)to get started with the report. The file also contains some more helpful information on how to write a scientific report or paper.
+Use [this LATEXtemplate](https://github.com/AxelBohm/optimization-for-DS-lecture/blob/main/project/latex-example-paper/latex-template.pdf) to get started with the report. The file also contains some more helpful information on how to write a scientific report or paper.
