@@ -13,7 +13,7 @@ long as they concern optimization and as long as you study them for any ML/DS-re
 
 - **coordinate descent** vs **proximal gradient** for _Lasso_. 
 
-- compare variance reduction methods
+- compare **variance reduction** methods
   + for example on an arbitrary logistic regression problem
   + convex vs nonconvex
   + (hard) on nonconvex problems if one starts close to a bad local minimum then sgd is more likely to escape. Can you find such an example.
@@ -22,22 +22,22 @@ long as they concern optimization and as long as you study them for any ML/DS-re
 
 - Meta-Learning: Can you learn the learning rate? The direction or curvature? See also the larger field of AutoML.
 
-- How well do *zero-order* optimization methods do for ML applications, compared to standard first-order
+- How well do **zero-order** optimization methods do for ML applications, compared to standard first-order
 methods?
 
-- Explore the *role of momentum* for convex and nonconvex problems: SGD with or without momentum vs ADAM.
+- Explore the **role of momentum** for convex and nonconvex problems: SGD with or without momentum vs ADAM.
   What about heavy ball vs Nesterov?
 
-- Explore the practical *differences of first and second order* methods. Can you see a difference in the generalization error (for nonconvex models)? 
+- Explore the practical **differences of first and second order** methods. Can you see a difference in the generalization error (for nonconvex models)? 
 
-- The role of *duality* in optimization. Pick a problem which is generally solved by considering its dual - such as support vector machines - and explore the difference.
+- The role of **duality** in optimization. Pick a problem which is generally solved by considering its dual - such as support vector machines - and explore the difference.
 
-- Explore the role of different optimizers in *adversarial learning*, see [[the cleverhans repo on github][https://github.com/cleverhans-lab/cleverhans]]. It should have all the relevant code available.
+- Explore the role of different optimizers in **adversarial learning**, see [the cleverhans repo on github](https://github.com/cleverhans-lab/cleverhans). It should have all the relevant code available.
 
-- Difference between *SGD and random reshuffling*.
+- Difference between **SGD and random reshuffling**.
   The way we presented SGD in the lecture, a sample is picked uniformly at random. This means that the same sample could be chosen multiple times in a row (or at least more frequently than others). Random reshuffling, as the name suggests, shuffles all samples and loops through them resulting in every sample being selected at the same frequency as others.
 
-- *Line search*: if the smoothness constant is not known there ways to find a good step size (or step length) by means of line search, most notably Armijo. Test the perfomance of these methods on a problems of your choice.
+- **Line search**: if the smoothness constant is not known there ways to find a good step size (or step length) by means of line search, most notably Armijo. Test the perfomance of these methods on a problems of your choice.
 
 - ...
 
@@ -83,4 +83,4 @@ addresses the following points.
 Clearly describe your used methods, state your conclusions, and argue that the results you obtained make (or do
 not make) sense and the reasons behind it. Keep the report short and to the point, with a strict limit of 3 pages.
 References and additional technical do not count towards this page limit.
-Use [[this LATEXtemplate][https://github.com/AxelBohm/optimization-for-DS-lecture/blob/main/project/latex-example-paper/latex-template.pdf]]to get started with the report. The file also contains some more helpful information on how to write a scientific report or paper.
+Use [this LATEXtemplate](https://github.com/AxelBohm/optimization-for-DS-lecture/blob/main/project/latex-example-paper/latex-template.pdf)to get started with the report. The file also contains some more helpful information on how to write a scientific report or paper.
