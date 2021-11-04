@@ -4,7 +4,7 @@
 
 The mini-project focuses on practical implementation. You are encouraged to investigate an optimization algorithm for a real-life machine learning / data science  application and gain insight into that algorithm. You should provide empirical evidence for some property of your chosen optimization algorithm. This property could be discussed in class or not and could be desirable or undesirable. The optimization algorithms can be anything of your choice. Don’t be scared to try variants not seen in class, as the project’s focus is not on theory. You can also choose any relevant ML/DS application. It does not matter if it is deep learning, linear models, random forests or less ML in flavor such as inverse problems, signal processing, imaging (denoising, deblurring) or something else.
 
-- Grading. The project is mandatory and should be done in groups of 2-3 students. Project reports (3 page PDF) and code are due June 18th.
+- Grading. The project is mandatory and should be done in groups of 2-3 students. Project reports (3 page PDF) and code are due February 28th.
 
 ## List of possible topics
 
