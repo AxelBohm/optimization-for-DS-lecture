@@ -11,7 +11,7 @@ The mini-project focuses on practical implementation. You are encouraged to inve
 The list below is by no means exhaustive. You are encouraged to freely chose very different aspects and topics as
 long as they concern optimization and as long as you study them for any ML/DS-relevant application.
 
-- **coordinate descent** vs _proximal gradient_ for ~Lasso~. 
+- **coordinate descent** vs **proximal gradient** for _Lasso_. 
 
 - compare variance reduction methods
   + for example on an arbitrary logistic regression problem
