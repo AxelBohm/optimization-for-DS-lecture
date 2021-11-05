@@ -25,6 +25,8 @@ long as they concern optimization and as long as you study them for any ML/DS-re
 - How well do **zero-order** optimization methods do for ML applications, compared to standard first-order
 methods?
 
+- What happens when you train deep nets with very **large batch sizes**. Is this influenced by the properties of the optimizer (SGD with or without momentum / Adam). What about the objective function value and what about generalization.
+
 - Explore the **role of momentum** for convex and nonconvex problems: SGD with or without momentum vs ADAM.
   What about heavy ball vs Nesterov?
 
