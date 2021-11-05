@@ -20,7 +20,7 @@ long as they concern optimization and as long as you study them for any ML/DS-re
   
 - How do different optimization variants affect generalization (test error)?
 
-- Meta-Learning: Can you learn the learning rate? The direction or curvature? See also the larger field of AutoML.
+- **Meta-Learning**: Can you learn the learning rate? The direction or curvature? See also the larger field of AutoML.
 
 - How well do **zero-order** optimization methods do for ML applications, compared to standard first-order
 methods?
@@ -60,19 +60,21 @@ use unlimited addition pages for references and for an appendix. The main paper 
 We will grade you on the scientific contribution you made, that is on the insights gained compared to standard
 baseline methods. This is only possible based on a rigorous and fair empirical comparison. The criteria are
 
-- Solid comparison baselines supporting your claims Quantify the benefits of your method by providing clear quality measurements of the most important aspects and additions you chose for your model. Start with a very basic baseline, and demonstrate what improvements your contributions yield.
+- Solid comparison baselines supporting your claims 
+Quantify the benefits of your method by providing clear quality measurements of the most important aspects and additions you chose for your model. Start with a very basic baseline, and demonstrate what improvements your contributions yield.
 
-- Reproducibility Your readers should be able to reproduce your results based on your report only. Describe what what hyper-parameters you selected and why, chose realistic and representative datasets, and clearly describe the overall pipeline you used.
+- Reproducibility 
+Your readers should be able to reproduce your results based on your report only. Describe what what hyper-parameters you selected and why, chose realistic and representative datasets, and clearly describe the overall pipeline you used.
 
-- Scientific novelty and creativity
-You will likely be using more than the standard methods we saw in the course. Make sure that your report
-addresses the following points.
+- Scientific novelty and creativity.
+You will likely be using more than the standard methods we saw in the course. Make sure that your report addresses the following points.
 
     + What is the specific aspect which you study, and why this is interesting and important.
     + Have similar experiments appeared in the literature? If yes, how are your experiments adding additional insight? Discuss the pros/cons of the existing studies compared to your approach.
     + How is the algorithm variant or the aspect of your choice helping for optimization speed, accuracy or generalization? For example, you should compare the optimization error with and without your object of study.
 
-- Writeup quality Some advice when writing a scientific report:
+- Writeup quality 
+Some advice when writing a scientific report:
     + Try to convey a clear story giving the most relevant aspects of your findings. Learning what has not worked can additionally help the reader (and help them better understand why you have made the many choices you did), but focus on what is most relevant and interesting.
     + Before the submission, have an external person proofread your report. Use a spell-checker.
     + Plots are an excellent way to share information that might be hard to convey by writing. Your plots should be understandable, have axis labels, appropriate axis ranges, and a self-contained caption.
