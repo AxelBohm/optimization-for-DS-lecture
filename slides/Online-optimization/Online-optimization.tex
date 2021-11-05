@@ -16,13 +16,11 @@
 
 \begin{frame}
   \frametitle{What is online Learning}
-Consider the following repeated game:
-
-In each round $t=1,\dots,T$
+Consider the repeated game: In each round $t=1,\dots,T$
 \begin{itemize}
-  \item An adversary choose a real number in $y_t \in [0,1]$ and he keeps it secret;
-  \item You try to guess the real number, choosing $x_t \in [0,1]$;
-  \item The adversary's number is revealed and you pay the squared difference ${(x_t-y_t)}^2$.
+  \item an adversary chooses a (secret) number in $y_t \in [0,1]$
+  \item you guess the real number, choosing $x_t \in [0,1]$;
+  \item you pay the squared difference ${(x_t-y_t)}^2$.
 \end{itemize}
 \textbf{Task:} guess a sequence of numbers as precisely as possible.
 To be a game, we now have to decide what is the ``winning condition''. Let's see what makes sense to consider as winning condition.
@@ -52,9 +50,15 @@ To be a game, we now have to decide what is the ``winning condition''. Let's see
   \[
     \E\left[\sum_{t=1}^T (x_t - Y)^2\right] - \min_{ x \in [0,1]} \ \E\left[\sum_{t=1}^T (x-Y)^2\right]~.
   \]
-  ($\sigma^2T$ was nothing other than the payoff of the best possible strategy)
+  ($\sigma^2T$ was just the payoff of the best possible strategy)
 
-  Finally: remove the assumption on how the data is generated, consider any arbitrary sequence of $y_t$ (we can remove the expectation because there is no stochasticity anymore).
+  Finally:
+  \begin{itemize}
+    \item remove the assumption on how the data is generated,
+    \item consider any arbitrary sequence of $y_t$
+   (we can remove the expectation).
+  \end{itemize}
+
   \[
     R_T:=\sum_{t=1}^T (x_t - y_t)^2 - \min_{x \in [0,1]} \ \sum_{t=1}^T (x - y_t)^2
   \]
@@ -70,7 +74,7 @@ To be a game, we now have to decide what is the ``winning condition''. Let's see
   \]
   Regret framework allows to
   \begin{itemize}
-    \item reformulate problems in machine learning and optimization as similar games.
+    \item reformulate problems in ML and optimization as similar games.
     \item analyze situations in which the data are not i.i.d.\, yet want to guarantee that the algorithm is ``learning'' something.
   \end{itemize}
 
@@ -78,7 +82,7 @@ To be a game, we now have to decide what is the ``winning condition''. Let's see
   \begin{itemize}
     \item Click prediction problems;
     \item Routing on a network;
-    \item Convergence to equilibrium of repeated games.
+    \item Convergence to equilibrium of \textit{repeated} games.
   \end{itemize}
   It can \emph{also} be used to analyze stochastic algorithms, e.g., Stochastic Gradient Descent, but the adversarial nature of the analysis might give you suboptimal results.
 \end{frame}

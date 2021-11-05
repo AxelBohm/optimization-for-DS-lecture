@@ -2,37 +2,38 @@
 \usepackage[utf8]{inputenc}
 % \usetheme{Warsaw}  %% Themenwahl
 
+\input{../../shared_slides.tex}
+
 \title{Minimum enclosing ball problem}
-\author{Max Mustermann}
 \date{\today}
 
 \begin{document}
 \maketitle
-\frame{\tableofcontents[currentsection]}
+\frame{\tableofcontents}
 
-\section{Abschnitt 1}
+\section{Intro}
 
 \begin{frame}
   \frametitle{Intro} %%Folientitel
-  \begin{Definition} %%Definition
+  \begin{definition} %%Definition
     Given a set of vectors $A = \{a_1, \dots, a_m\}\in \R^d$ we want to find the smallest ball containing all points of $A$.
     % A \subseteq B_{c,\rho} := \{x \in R^d : \Vert x - c \Vert \le \rho \}
     I.e.
-    \begin{equation}
-      \min_{c,\rho}  \rho
+    \begin{align}
+      \min_{c,\rho}\,  \rho \\
       s.t. \Vert a_i -c  \Vert \le \rho \quad \forall i=1, \dots, m
-    \end{equation}
-  \end{Definition}
+    \end{align}
+  \end{definition}
   Used in clustering, Data classification, facility location, computer graphics.
 \end{frame}
 
 \begin{frame}
   \frametitle{Rewriting the problem}
   Square constraints for smoothness
-    \begin{equation}
-      \min_{c,\rho}  \rho
+    \begin{align}
+      \min_{c,\rho} \, \rho \\
       s.t. \Vert a_i \Vert^2 - 2 a_i^T c + c^T c  \le \rho \quad \forall i=1, \dots, m
-    \end{equation}
+    \end{align}
 
     Build Lagrangian Dual:
     \begin{equation}
