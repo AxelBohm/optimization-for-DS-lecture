@@ -62,7 +62,7 @@ use unlimited addition pages for references and for an appendix. The main paper 
 We will grade you on the scientific contribution you made, that is on the insights gained compared to standard
 baseline methods. This is only possible based on a rigorous and fair empirical comparison. The criteria are
 
-- **Solid comparison baselines supporting your claims **
+- **Solid comparison baselines supporting your claims**
 
 Quantify the benefits of your method by providing clear quality measurements of the most important aspects and additions you chose for your model. Start with a very basic baseline, and demonstrate what improvements your contributions yield.
 
