@@ -186,7 +186,7 @@
 % yura mirror descent part 2 begins here
 
 \begin{frame}
-  \frametitle{Mirror Descent w.r.t. neg. entropy}
+  \frametitle{Mirror Descent w.r.t. negative entropy}
     \textcolor{blue}{Negative entropy}: $h(x) = \sum_{i=1}^{d} x_i \log(x_i)$ for $ x_i > 0$. \\
     We define $a := \alpha \nabla f(x_k) - \nabla h(x_k)$. Then
     \begin{equation}
@@ -266,7 +266,16 @@
 
 
 \begin{frame}
-  \frametitle{Convergence w.r.t. neg. entropy}
+  \frametitle{Convergence w.r.t. negative entropy}
+    It might occur that
+    \begin{equation}
+      \Vert g \Vert_\infty = (\Vert g \Vert_1)_* \le G
+    \end{equation}
+    but
+    \begin{equation}
+      \Vert g \Vert_2 \approx \sqrt{d} G.
+    \end{equation}
+    But is are all the bounds of the previous theorem dimension independent?\\
     \textbf{What about $\D(x^*, x_0) $?}
     Let $x_0 = (\frac{1}{n}, \cdots , \frac{1}{n})$, then
     \begin{equation}
@@ -274,14 +283,6 @@
     \end{equation}
     while $ \Vert x_0 - x^* \Vert^2 \le 2$.
 
-    But if
-    \begin{equation}
-      \Vert g \Vert_\infty = \Vert g \Vert_1^* \le G
-    \end{equation}
-    we can still have
-    \begin{equation}
-      \Vert g \Vert_2 \approx \sqrt{d} G.
-    \end{equation}
 \end{frame}
 
 
