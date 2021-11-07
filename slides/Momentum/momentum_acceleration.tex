@@ -1,0 +1,223 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+
+\input{../../shared_slides.tex}
+
+\newcounter{sauvegardeenumi}
+\newcommand{\asuivre}{\setcounter{sauvegardeenumi}{\theenumi}}
+\newcommand{\suite}{\setcounter{enumi}{\thesauvegardeenumi}}
+
+\title{Acceleration of GD via Momentum}
+\date{\today}
+
+\begin{document}
+\maketitle
+\frame{\tableofcontents}
+
+\section{}
+
+\begin{frame}
+  \frametitle{Smooth convex functions: less than $\mathcal{O}(\epsilon^{-1})$ steps?}
+  Given $L$ and $D=\Vert x_0 - x^* \Vert$ we know that
+  \begin{itemize}
+    \item GD converges with $\mathcal{O}(1/k)$
+    \item cannot go faster (``lower bound'')
+  \end{itemize}
+
+  Maybe gradient descent is not the best possible algorithm? \medskip
+
+  After all it is arguably the simplest possible method using the gradient.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Smooth convex functions: less than $\mathcal{O}(\epsilon^{-1})$ steps?}
+
+  So let's look at the following classes of methods:
+
+  First-order method:
+  \begin{itemize}
+    \item Access to the data only via an oracle which returns $f$ and $\nabla f$ at given points.
+    \item Clearly GD is a first order method.
+  \end{itemize}
+
+  \textbf{Q:} What is the \textcolor{blue}{best} first-order method for smooth convex functions.
+  By \textit{best} we mean: The one with the smallest upper bound on the number of oracle calls \textit{in the worst case}.
+
+  Nemirovski and Yudin 1979 proved that every first-order method needs at least $\Omega(1/\sqrt{\epsilon})$ iterations (no method can be faster than $\mathcal{O}(1/k^2)$).
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Acceleration to $\mathcal{O}(1/\sqrt{\epsilon})$ steps}
+
+  \begin{itemize}
+    \item Nesterov 1983 came up with a method that needs only $\mathcal{O}(1/\sqrt{\epsilon})$ iterations (and is therefore the \textit{best one}).
+    \item Known as \textcolor{blue}{\textbf{Nesterov's accelerated gradient}} method.
+    \item By now multiple similar algorithms with same complexity exist.
+    \item Proofs are generally not really instructive (some are computer assisted).
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Nesterov's accelerated gradient method}
+  \begin{algorithm}[H]
+    \caption{Nesterov's accelerated gradient method (NAG)}
+    \begin{algorithmic}[1]
+      \For{$ k = 0, 1, \dots$}
+      \State $x_{k+1} = y_k - \frac{1}{L} \nabla f(y_k)$
+      \State $z_{k+1} = z_k - \frac{t+1}{2L} \nabla f(y_k)$
+      \State $y_{k+1} = \frac{t+1}{t+3} x_{k+1} + \frac{2}{t+3} z_{k+1}$
+      \EndFor
+    \end{algorithmic}
+  \end{algorithm}
+
+  % \begin{align}
+  %   x_{k+1} &= y_k - \frac{1}{L} \nabla f(y_k) \\
+  %   z_{k+1} &= z_k - \frac{t+1}{2L} \nabla f(y_k) \\
+  %   y_{k+1} &= \frac{t+1}{t+3} x_{k+1} + \frac{2}{t+3} z_{k+1}
+  % \end{align}
+
+  \begin{itemize}
+    \item perform ``smooth step'' from $y_k$ to $x_{k+1}$
+    \item perform aggressive step from $z_k$ to $z_{k+1}$
+    \item form weighted average of the above two where we compensate for the more aggressive step by giving it less weight
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Nesterov's algorithm as a momentum method}
+  A different way to write the method is via \textcolor{blue}{momentum}
+  \begin{align}
+    y_{k} &= x_k + \frac{k-1}{k+2} (x_k - x_{k-1}) \\
+    x_{k+1} &= y_k - \frac{1}{L} \nabla f(y_k) \\
+  \end{align}
+
+  \begin{itemize}
+    \item differs from GD on in momentum/inertia term $\frac{k-1}{k+2}(x_k - x_{k-1})$
+    \item coefficient approaches $\frac{k-1}{k+2} \approx 1 - \frac{3}{k}$
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Nesterov's accelerated gradient method: convergence}
+
+  \begin{theorem}
+    Let $f: R^d \to \R$ be convex and $L$-smooth with minimum $x^*$, then NAG yields
+    \begin{equation}
+      f(x_k) - f(x^*) \le \frac{2L \Vert x_0-x^* \Vert^2}{k(k+1)}
+    \end{equation}
+  \end{theorem}
+
+  Recall that the gradient descent bound was
+  \begin{equation}
+      f(x_k) - f(x^*) \le \frac{L \Vert x_0-x^* \Vert^2}{2k}.
+  \end{equation}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Proof idea}
+  Potential function $\Phi$ that decreases along trajectory (standard technique).
+  Out of the blue: Use
+  \begin{equation}
+    \Phi(k) := k(k+1) (f(x_k) - f^*) + 2L \Vert z_k - x^* \Vert^2.
+  \end{equation}
+  Then show that
+  \begin{equation}
+    \Phi(k+1) \le \Phi(k)
+  \end{equation}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Why momentum?}
+  \begin{itemize}
+    \item GD has problems with \textbf{ravines}, i.e.\ areas where the surface curves much more steeply in one dimension than in another.
+    \item Results in zig-zagging.
+  \end{itemize}
+
+  \begin{minipage}{0.48\textwidth}
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{gd_zig_zag}
+      \caption{no momentum}
+    \end{figure}
+  \end{minipage}
+  \begin{minipage}{0.48\textwidth}
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{gd_zig_zag_momentum}
+      \caption{with momentum}
+    \end{figure}
+  \end{minipage}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Momentum in terms of velocity}
+  Consider a ball rolling down a slope.
+  \begin{align}
+    v_k &= \gamma v_{k-1} + \alpha \nabla f(x_k) \\
+    x_{k+1} &= x_k - v_k
+  \end{align}
+  Velocity of a ball rolling down a slope is
+  \begin{itemize}
+    \item a fraction $\gamma$ of the previous velocity (friction)
+    \item plus, how steep the slope is
+  \end{itemize}
+  In terms of iterates:
+  \begin{align}
+    x_{k+1} &= x_k - v_k \\
+            &= x_k - \alpha \nabla f(x_k) - \gamma v_{k-1} \\
+            &= x_k - \alpha \nabla f(x_k) + \gamma (x_k - x_{k-1})
+  \end{align}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Heavy ball:  Polyak 1964}
+  We derived
+  \begin{equation}
+    x_{k+1} = x_k - \alpha \nabla f(x_k) + \gamma (x_k - x_{k-1})
+  \end{equation}
+  while Nesterov's method was
+  \begin{align}
+    y_{k} &= x_k + \frac{k-1}{k+2} (x_k - x_{k-1}) \\
+    x_{k+1} &= y_k - \frac{1}{L} \nabla f(y_k) \\
+  \end{align}
+  However, \textbf{Polyak's} momentum provides no speedup over $\mathcal{O}(1/k)$.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{What's the difference?}
+  \begin{itemize}
+    \item Both types of momentum seem so similar.
+    \item Heavy ball does not care if do momentum or gradient first.
+    \item Nesterov momentum applies inertia first then gradient.
+          \begin{align}
+            v_k &= \gamma v_{k-1} + \alpha \nabla f(x_k - \gamma v_{k-1}) \\
+            x_{k+1} &= x_k - v_k
+          \end{align}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{}
+
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth,keepaspectratio]{nesterov-vs-polyak.png}
+    \caption{Nesterov vs Polyak momentum.}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{}
+
+\end{frame}
+
+
+\end{document}
