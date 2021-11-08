@@ -22,7 +22,7 @@
   \begin{itemize}
     \item When we used a norm $\Vert \cdot \Vert$ we meant the \emph{$2$-norm}, i.e.\
           \begin{equation}
-            \Vert x \Vert_2 = {\Big({\sum_{i=1}^{d} x_i^2} \Big)}^{1/2}.
+            \Vert x \Vert_2 = \sqrt{x_1^2 + x_2^2 + \dots + x_d^2 }. %{\Big({\sum_{i=1}^{d} x_i^2} \Big)}^{1/2}.
           \end{equation}
     \item In \textbf{gradient descent} we used Lipschitz continuity:
           \begin{equation}
@@ -30,17 +30,18 @@
           \end{equation}
           (Lead to a complexity of $\mathcal{O}(\frac{L}{k})$) \\
 
-  \onslide<2->{%
-    \item For \textbf{sub-gradient descent} we used $\Vert g \Vert \le G$ which
-    lead to a complexity of $\mathcal{O}(\frac{G}{\sqrt{k}})$.
-  }
+    \item \textbf{Sub-gradient descent}: used $\Vert g \Vert \le G$ which lead to $\mathcal{O}(\frac{G}{\sqrt{k}})$.
 
-  \onslide<3->{%
-    \item But there are \textcolor{blue}{other norms}
-    \begin{equation}
-      \Vert x \Vert_\infty \le \Vert x \Vert_2 \le \sqrt{d} \Vert x \Vert_\infty
-    \end{equation}
+  \onslide<2->{%
+    \item But there are \textcolor{blue}{other norms} $\Vert x \Vert_\infty \le \Vert x \Vert_2 \le \sqrt{d} \Vert x \Vert_\infty$.\\
+
     It can happen that $  \Vert g \Vert_\infty \le G \quad \text{but} \quad \Vert g \Vert_2 \approx \sqrt{d}G$.
+          \begin{block}{}
+            \begin{center}
+              we lose dimension independence
+            \end{center}
+
+          \end{block}
   }
   \end{itemize}
 \end{frame}
@@ -54,11 +55,11 @@
 
   \begin{block}{Gradient Descent}
     \begin{equation}
-      x_{k+1} = x_k - \alpha_k \nabla f(x_k)
+      x_{k+1} = x_k - \alpha \nabla f(x_k)
     \end{equation}
     equivalently
     \begin{equation}
-      x_{k+1} = \argmin_{x \in \R^d} \left\{ f(x_k) + \langle \nabla f(x_k), x-x_k \rangle + \frac{1}{2 \alpha_k} \Vert x-x_k  \Vert_2^2 \right\}
+      x_{k+1} = \argmin_{x \in \R^d} \left\{ f(x_k) + \langle \nabla f(x_k), x-x_k \rangle + \frac{1}{2 \alpha} \Vert x-x_k  \Vert_2^2 \right\}
     \end{equation}
   \end{block}
   We can replace the $2$-norm with a more general \textbf{distance}.
@@ -141,12 +142,12 @@
     Idea: replace squared Euclidian norm with more general object:
     \begin{equation}
       \begin{aligned}
-        x_{k+1} &= \argmin_{x \in \R^d} \{ f(x_k) + \langle \nabla f(x_k), x-x_k \rangle + \frac{1}{\alpha_k} \Dh(x,x_k)\} \\
+        x_{k+1} &= \argmin_{x \in \R^d} \{ f(x_k) + \langle \nabla f(x_k), x-x_k \rangle + \frac{1}{\alpha} \Dh(x,x_k)\} \\
         \onslide<2->{%
-          &= \argmin_{x \in \R^d} \{ \langle \nabla f(x_k), x \rangle + \frac{1}{\alpha_k} \Dh(x,x_k)\} \\
-          &= \argmin_{x \in \R^d} \{ \langle \nabla f(x_k), x \rangle + \frac{1}{\alpha_k} (h(x) - h(x_k) - \langle \nabla h(x_k), x-x_k \rangle)\} \\
-          &= \argmin_{x \in \R^d} \{ \langle \nabla f(x_k), x \rangle + \frac{1}{\alpha_k} (h(x) - \langle \nabla h(x_k), x \rangle)\} \\
-          &= \argmin_{x\in \R^d} \{ \langle \alpha_k \nabla f(x_k) - \nabla h(x_k), x \rangle + h(x) \} \\
+          &= \argmin_{x \in \R^d} \{ \langle \nabla f(x_k), x \rangle + \frac{1}{\alpha} \Dh(x,x_k)\} \\
+          &= \argmin_{x \in \R^d} \{ \langle \nabla f(x_k), x \rangle + \frac{1}{\alpha} (h(x) - h(x_k) - \langle \nabla h(x_k), x-x_k \rangle)\} \\
+          &= \argmin_{x \in \R^d} \{ \langle \nabla f(x_k), x \rangle + \frac{1}{\alpha} (h(x) - \langle \nabla h(x_k), x \rangle)\} \\
+          &= \argmin_{x\in \R^d} \{ \langle \alpha \nabla f(x_k) - \nabla h(x_k), x \rangle + h(x) \} \\
         }
       \end{aligned}
     \end{equation}
@@ -160,15 +161,15 @@
 \begin{frame}
   \frametitle{The Mirror part}
   \begin{equation}
-    x_{k+1} = \argmin_{x\in \R^d} \{ \langle \alpha_k \nabla f(x_k) - \nabla h(x_k), x \rangle + h(x) \}
+    x_{k+1} = \argmin_{x\in \R^d} \{ \langle \alpha \nabla f(x_k) - \nabla h(x_k), x \rangle + h(x) \}
   \end{equation}
   By optimality condition:
   \begin{equation}
-    0 = \alpha_k \nabla f(x_k) - \nabla h(x_k) + \nabla h(x_{k+1})
+    0 = \alpha \nabla f(x_k) - \nabla h(x_k) + \nabla h(x_{k+1})
   \end{equation}
   Therefore
   \begin{equation}
-    \nabla h(x_{k+1}) =  \nabla h(x_k)  - \alpha_k \nabla f(x_k)
+    \nabla h(x_{k+1}) =  \nabla h(x_k)  - \alpha \nabla f(x_k)
   \end{equation}
 \end{frame}
 
@@ -185,52 +186,67 @@
 % yura mirror descent part 2 begins here
 
 \begin{frame}
-  \frametitle{Mirror Descent on the unit simplex}
+  \frametitle{Mirror Descent w.r.t. negative entropy}
     \textcolor{blue}{Negative entropy}: $h(x) = \sum_{i=1}^{d} x_i \log(x_i)$ for $ x_i > 0$. \\
-    We define $a := \alpha_k \nabla f(x_k) - \nabla h(x_k)$. Then
+    We define $a := \alpha \nabla f(x_k) - \nabla h(x_k)$. Then
     \begin{equation}
       x_{k+1} = \argmin_{x \in \Delta} \{ \langle a, x \rangle + h(x)\}
     \end{equation}
-    with $x_i \ge 0$ and $\sum x_i = 1$.
-    \begin{block}{How to solve this?}
-      Via \textbf{Lagrange }
-      \begin{equation}
-        L(x,\mu) = \langle a, x \rangle + h(x) - \mu (x_1+\cdots+ x_d -1)
-      \end{equation}
-    \end{block}
+    Results in
+    \begin{equation}
+      x_{k+1} = x_k .* e^{- \alpha \nabla f(x_k)}
+    \end{equation}
+    in a pointwise sense.
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{Mirror Descent on the unit simplex [contd]}
-      Then,
-      \begin{equation}
-        \begin{aligned}
-          \partial_{x_i} L(x,\mu) &= a_i + \log(x_i) +1 - \mu \overset{!}{=} 0 \\
-          \log(x_i) &= \mu -1 - a_i  \\
-          x_i &= e^{\mu - 1 - a_i} = \beta e^{-a_i}
-        \end{aligned}
-      \end{equation}
-      with $\beta= e^{\mu-1}$.
+% includes bregman projections which I didn't plan on covering
 
-      \onslide<2->{%
-        Second constraint:
-        \begin{equation}
-          \begin{aligned}
-            \sum_{i=1}^{d} x_i \overset{!}{=} 1
-            &\Rightarrow \sum_{i=1}^{d} \beta e^{-a_i} = 1
-            \Rightarrow \beta = \frac{1}{\sum_{i=1}^{d} e^{-a_i}} \Rightarrow x_i = \frac{e^{-a_i}}{\sum_{j=1}^{d} e^{-a_j}}
-          \end{aligned}
-        \end{equation}
-      }
+% \begin{frame}
+%   \frametitle{Mirror Descent on the unit simplex}
+%     \textcolor{blue}{Negative entropy}: $h(x) = \sum_{i=1}^{d} x_i \log(x_i)$ for $ x_i > 0$. \\
+%     We define $a := \alpha \nabla f(x_k) - \nabla h(x_k)$. Then
+%     \begin{equation}
+%       x_{k+1} = \argmin_{x \in \Delta} \{ \langle a, x \rangle + h(x)\}
+%     \end{equation}
+%     with $x_i \ge 0$ and $\sum x_i = 1$.
+%     \begin{block}{How to solve this?}
+%       Via \textbf{Lagrange }
+%       \begin{equation}
+%         L(x,\mu) = \langle a, x \rangle + h(x) - \mu (x_1+\cdots+ x_d -1)
+%       \end{equation}
+%     \end{block}
+% \end{frame}
+% \begin{frame}
+%   \frametitle{Mirror Descent on the unit simplex [contd]}
+%       Then,
+%       \begin{equation}
+%         \begin{aligned}
+%           \partial_{x_i} L(x,\mu) &= a_i + \log(x_i) +1 - \mu \overset{!}{=} 0 \\
+%           \log(x_i) &= \mu -1 - a_i  \\
+%           x_i &= e^{\mu - 1 - a_i} = \beta e^{-a_i}
+%         \end{aligned}
+%       \end{equation}
+%       with $\beta= e^{\mu-1}$.
 
-      \onslide<3->{%
-        Final mirror descent update:
-        \begin{equation}
-          x_{k+1}(i) = \frac{x_k(i) e^{\alpha_k {[\nabla f(x_k)]}_i}}{\sum_{j=1}^{d}e^{\alpha_k {[\nabla f(x_k)]}_j}}
-        \end{equation}
-      }
-\end{frame}
+%       \onslide<2->{%
+%         Second constraint:
+%         \begin{equation}
+%           \begin{aligned}
+%             \sum_{i=1}^{d} x_i \overset{!}{=} 1
+%             &\Rightarrow \sum_{i=1}^{d} \beta e^{-a_i} = 1
+%             \Rightarrow \beta = \frac{1}{\sum_{i=1}^{d} e^{-a_i}} \Rightarrow x_i = \frac{e^{-a_i}}{\sum_{j=1}^{d} e^{-a_j}}
+%           \end{aligned}
+%         \end{equation}
+%       }
+
+%       \onslide<3->{%
+%         Final mirror descent update:
+%         \begin{equation}
+%           x_{k+1}(i) = \frac{x_k(i) e^{\alpha {[\nabla f(x_k)]}_i}}{\sum_{j=1}^{d}e^{\alpha {[\nabla f(x_k)]}_j}}
+%         \end{equation}
+%       }
+% \end{frame}
 
 
 \begin{frame}
@@ -250,22 +266,23 @@
 
 
 \begin{frame}
-  \frametitle{Convergence on the unit simplex}
-    \textbf{What about $\D(x^*, x_0) $?}
-    Let $x_0 = (\frac{1}{n}, \cdots , \frac{1}{n})$, then
+  \frametitle{Convergence w.r.t. negative entropy}
+    It might occur that
     \begin{equation}
-      \D(x, x_0) = \sum x_i \log\left(\frac{x_i}{\frac1n}\right) = \sum x_i \log(x_i) + \log(n) \le log(n)
+      \Vert g \Vert_\infty = (\Vert g \Vert_1)_* \le G
     \end{equation}
-    while $ \Vert x_0 - x^* \Vert^2 \le 2$.
-
-    But if
-    \begin{equation}
-      \Vert g \Vert_\infty = \Vert g \Vert_1^* \le G
-    \end{equation}
-    we can still have
+    but
     \begin{equation}
       \Vert g \Vert_2 \approx \sqrt{d} G.
     \end{equation}
+    But is are all the bounds of the previous theorem dimension independent?\\
+    \textbf{What about $\D(x^*, x_0) $?}
+    Let $x_0 = (\frac{1}{n}, \cdots , \frac{1}{n})$, then
+    \begin{equation}
+      \D(x, x_0) = \sum x_i \log\left(\frac{x_i}{\frac1n}\right) = \sum x_i \log(x_i) + \log(n) \le \log(n)
+    \end{equation}
+    while $ \Vert x_0 - x^* \Vert^2 \le 2$.
+
 \end{frame}
 
 
