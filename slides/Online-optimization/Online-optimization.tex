@@ -56,13 +56,13 @@ To be a game, we now have to decide what is the ``winning condition''. Let's see
   \begin{itemize}
     \item remove the assumption on how the data is generated,
     \item consider any arbitrary sequence of $y_t$
-   (we can remove the expectation).
+   (can remove the expectation).
   \end{itemize}
 
   \[
     R_T:=\sum_{t=1}^T (x_t - y_t)^2 - \min_{x \in [0,1]} \ \sum_{t=1}^T (x - y_t)^2
   \]
-  The quantity above is called the \emph{Regret}, because it measures how much the algorithm regrets for not sticking on all the rounds to the optimal choice in hindsight.
+  Called \textbf{Regret}, because it measures how much the algorithm regrets for not sticking on all the rounds to the optimal choice in hindsight.
 \end{frame}
 
 
