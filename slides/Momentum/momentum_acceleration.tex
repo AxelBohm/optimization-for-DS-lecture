@@ -1,4 +1,4 @@
-\documentclass{beamer}
+\documentclass[aspectration=169]{beamer}
 \usepackage[utf8]{inputenc}
 
 \input{../../shared_slides.tex}
@@ -14,7 +14,7 @@
 \maketitle
 \frame{\tableofcontents}
 
-\section{}
+\section{Optimal methods}
 
 \begin{frame}
   \frametitle{Smooth convex functions: less than $\mathcal{O}(\epsilon^{-1})$ steps?}
@@ -32,7 +32,6 @@
 
 \begin{frame}
   \frametitle{Smooth convex functions: less than $\mathcal{O}(\epsilon^{-1})$ steps?}
-
   So let's look at the following classes of methods:
 
   First-order method:
@@ -42,11 +41,15 @@
   \end{itemize}
 
   \textbf{Q:} What is the \textcolor{blue}{best} first-order method for smooth convex functions.
-  By \textit{best} we mean: The one with the smallest upper bound on the number of oracle calls \textit{in the worst case}.
+  \textcolor{gray}{\textit{best} means: smallest upper bound on the number of oracle calls \textit{in the worst case}.}
+
 
   Nemirovski and Yudin 1979 proved that every first-order method needs at least $\Omega(1/\sqrt{\epsilon})$ iterations (no method can be faster than $\mathcal{O}(1/k^2)$).
 \end{frame}
 
+
+\section{Nesterov momentum}%
+\label{sec:}
 
 \begin{frame}
   \frametitle{Acceleration to $\mathcal{O}(1/\sqrt{\epsilon})$ steps}
@@ -67,10 +70,10 @@
     \caption{Nesterov's accelerated gradient method (NAG)}
     \begin{algorithmic}[1]
       \For{$ k = 0, 1, \dots$}
-      \State $x_{k+1} = y_k - \frac{1}{L} \nabla f(y_k)$
-      \State $z_{k+1} = z_k - \frac{t+1}{2L} \nabla f(y_k)$
-      \State $y_{k+1} = \frac{t+1}{t+3} x_{k+1} + \frac{2}{t+3} z_{k+1}$
-      \EndFor
+      \State{$x_{k+1} = y_k - \frac{1}{L} \nabla f(y_k)$}
+      \State{$z_{k+1} = z_k - \frac{t+1}{2L} \nabla f(y_k)$}
+      \State{$y_{k+1} = \frac{t+1}{t+3} x_{k+1} + \frac{2}{t+3} z_{k+1}$}
+      \EndFor{}
     \end{algorithmic}
   \end{algorithm}
 
@@ -81,9 +84,10 @@
   % \end{align}
 
   \begin{itemize}
-    \item perform ``smooth step'' from $y_k$ to $x_{k+1}$
-    \item perform aggressive step from $z_k$ to $z_{k+1}$
-    \item form weighted average of the above two where we compensate for the more aggressive step by giving it less weight
+    \item perform ``\textbf{smooth step}'' from $y_k$ to $x_{k+1}$
+    \item perform \textbf{aggressive step} from $z_k$ to $z_{k+1}$
+    \item form \textbf{weighted average} of the two\\
+          compensate for the aggressive step by giving less weight
   \end{itemize}
 
 \end{frame}
@@ -92,12 +96,13 @@
   \frametitle{Nesterov's algorithm as a momentum method}
   A different way to write the method is via \textcolor{blue}{momentum}
   \begin{align}
-    y_{k} &= x_k + \frac{k-1}{k+2} (x_k - x_{k-1}) \\
-    x_{k+1} &= y_k - \frac{1}{L} \nabla f(y_k) \\
+    y_{k} &= x_k + \beta_k (x_k - x_{k-1}) \\
+    x_{k+1} &= y_k - \frac{1}{L} \nabla f(y_k).
   \end{align}
 
   \begin{itemize}
-    \item differs from GD on in momentum/inertia term $\frac{k-1}{k+2}(x_k - x_{k-1})$
+    \item differs from GD on in momentum/inertia term $\beta_k (x_k - x_{k-1})$
+    \item has to chosen carefully $\beta_k = \frac{k-1}{k+2}$
     \item coefficient approaches $\frac{k-1}{k+2} \approx 1 - \frac{3}{k}$
   \end{itemize}
 \end{frame}
@@ -128,7 +133,15 @@
   \end{equation}
   Then show that
   \begin{equation}
-    \Phi(k+1) \le \Phi(k)
+    \Phi(k+1) \le \Phi(k).
+  \end{equation}
+  Results in
+  \begin{equation}
+    \Phi(k+1) \le \Phi(k) \le \cdots \le \Phi(0)
+  \end{equation}
+  and therefore
+  \begin{equation}
+    k(k+1) (f(x_k) - f^*)  \le 2L \Vert z_0 - x^* \Vert^2.
   \end{equation}
 \end{frame}
 
@@ -157,21 +170,20 @@
 
 \begin{frame}
   \frametitle{Momentum in terms of velocity}
-  Consider a ball rolling down a slope.
+  Consider a ball rolling down a slope. Its \textbf{velocity} is
   \begin{align}
-    v_k &= \gamma v_{k-1} + \alpha \nabla f(x_k) \\
+    v_k &= \beta v_{k-1} + \alpha \nabla f(x_k) \\
     x_{k+1} &= x_k - v_k
   \end{align}
-  Velocity of a ball rolling down a slope is
   \begin{itemize}
-    \item a fraction $\gamma$ of the previous velocity (friction)
-    \item plus, how steep the slope is
+    \item a fraction $\beta$ of the \textbf{previous velocity} (friction)
+    \item plus, steepness of the \textbf{slope}
   \end{itemize}
   In terms of iterates:
   \begin{align}
     x_{k+1} &= x_k - v_k \\
-            &= x_k - \alpha \nabla f(x_k) - \gamma v_{k-1} \\
-            &= x_k - \alpha \nabla f(x_k) + \gamma (x_k - x_{k-1})
+            &= x_k - \alpha \nabla f(x_k) - \beta v_{k-1} \\
+            &= x_k - \alpha \nabla f(x_k) + \beta (x_k - x_{k-1})
   \end{align}
 \end{frame}
 
@@ -180,14 +192,14 @@
   \frametitle{Heavy ball:  Polyak 1964}
   We derived
   \begin{equation}
-    x_{k+1} = x_k - \alpha \nabla f(x_k) + \gamma (x_k - x_{k-1})
+    x_{k+1} = x_k - \alpha \nabla f(x_k) + \beta (x_k - x_{k-1}),
   \end{equation}
   while Nesterov's method was
   \begin{align}
-    y_{k} &= x_k + \frac{k-1}{k+2} (x_k - x_{k-1}) \\
-    x_{k+1} &= y_k - \frac{1}{L} \nabla f(y_k) \\
+    y_{k} &= x_k + \beta_k (x_k - x_{k-1}) \\
+    x_{k+1} &= y_k - \frac{1}{L} \nabla f(y_k).
   \end{align}
-  However, \textbf{Polyak's} momentum provides no speedup over $\mathcal{O}(1/k)$.
+  However, \textcolor{blue}{\textbf{Polyak's}} momentum provides no speedup over $\mathcal{O}(1/k)$ \textcolor{gray}{for smooth convex function}.
 \end{frame}
 
 
@@ -198,7 +210,7 @@
     \item Heavy ball does not care if do momentum or gradient first.
     \item Nesterov momentum applies inertia first then gradient.
           \begin{align}
-            v_k &= \gamma v_{k-1} + \alpha \nabla f(x_k - \gamma v_{k-1}) \\
+            v_k &= \beta v_{k-1} + \alpha \nabla f(x_k + \beta v_{k-1}) \\
             x_{k+1} &= x_k - v_k
           \end{align}
   \end{itemize}
@@ -215,7 +227,28 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{}
+  \frametitle{Momentum for strongly convex functions}
+
+  For smooth strongly convex we know that GD obtains
+  \begin{equation}
+    \Vert x_{k+1} - x^* \Vert^2 \le (1 - \frac{\mu}{L}) \Vert x_k -x^* \Vert^2
+  \end{equation}
+  and
+  \begin{equation}
+    f(x_k)-f^* \le {\left(1-\frac{\mu}{L}\right)}^k \, \frac{L \Vert x_0 -x^* \Vert^2}{2}.
+  \end{equation}
+  Performance depends heavily on the \textbf{condition number} $\kappa : = L/\mu$:
+  \begin{block}{}
+    Contraction coefficient is $(1-1/\kappa)$.
+  \end{block}
+
+  Nesterov \textbf{and Polyak} momentum improve this to $(1-1/\sqrt{\kappa})$
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Momentum for stochastic methods}
+  SGD analysis can be extended
 
 \end{frame}
 
