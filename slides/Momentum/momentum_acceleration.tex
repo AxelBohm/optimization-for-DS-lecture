@@ -1,4 +1,4 @@
-\documentclass[aspectration=169]{beamer}
+\documentclass[aspectratio=149]{beamer}
 \usepackage[utf8]{inputenc}
 
 \input{../../shared_slides.tex}
@@ -24,9 +24,13 @@
     \item cannot go faster (``lower bound'')
   \end{itemize}
 
-  Maybe gradient descent is not the best possible algorithm? \medskip
+  \begin{block}{}
+    \centering
+    Maybe gradient descent is not the best possible algorithm? \medskip
+  \end{block}
 
-  After all it is arguably the simplest possible method using the gradient.
+
+  After all, it is arguably the simplest possible method using the gradient.
 \end{frame}
 
 
@@ -40,8 +44,10 @@
     \item Clearly GD is a first order method.
   \end{itemize}
 
-  \textbf{Q:} What is the \textcolor{blue}{best} first-order method for smooth convex functions.\\
-  \textcolor{gray}{\textit{best} means: smallest upper bound on the number of oracle calls \textit{in the worst case}.}
+  \begin{block}{}
+    \textbf{Q:} What is the \textcolor{blue}{best} first-order method for smooth convex functions.\\
+  \end{block}
+  \textcolor{gray}{\textit{best}: smallest upper bound on the number of oracle calls \textit{in the worst case}.}
 
   \begin{itemize}
     \item Nemirovski and Yudin 1979 proved that every first-order method needs at least $\Omega(1/\sqrt{\epsilon})$ iterations (no method can be faster than $\mathcal{O}(1/k^2)$).
@@ -57,7 +63,7 @@
   \frametitle{Acceleration to $\mathcal{O}(1/\sqrt{\epsilon})$ steps}
 
   \begin{itemize}
-    \item Nesterov 1983 came up with a method that needs only $\mathcal{O}(1/\sqrt{\epsilon})$ iterations (and is therefore the \textit{best one}).
+    \item Nesterov 1983 proposed a method that needs only $\mathcal{O}(1/\sqrt{\epsilon})$ iterations (and is therefore the \textit{best one}).
     \item Known as \textcolor{blue}{\textbf{Nesterov's accelerated gradient}} method.
     \item By now multiple similar algorithms with same complexity exist.
     \item Proofs are generally not really instructive (some are computer assisted).
@@ -112,9 +118,9 @@
 
 \begin{frame}
   \frametitle{Nesterov's accelerated gradient method: convergence}
-
+  \textcolor{grey}{Minimum is $x^*$ }
   \begin{theorem}
-    Let $f: R^d \to \R$ be convex and $L$-smooth with minimum $x^*$, then NAG yields
+    Let $f: R^d \to \R$ be convex and $L$-smooth, then NAG yields
     \begin{equation}
       f(x_k) - f(x^*) \le \frac{2L \Vert x_0-x^* \Vert^2}{k(k+1)}
     \end{equation}
@@ -124,6 +130,18 @@
   \begin{equation}
       f(x_k) - f(x^*) \le \frac{L \Vert x_0-x^* \Vert^2}{2k}.
   \end{equation}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{$\mathcal{O}(1/k^2)$ vs $\mathcal{O}(1/k)$ in practice}
+
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth,keepaspectratio]{AGD}
+  \end{figure}
+
+
 \end{frame}
 
 \begin{frame}
@@ -204,7 +222,8 @@
     y_{k} &= x_k + \beta_k (x_k - x_{k-1}) \\
     x_{k+1} &= y_k - \frac{1}{L} \nabla f(y_k).
   \end{align}
-  However, \textcolor{blue}{\textbf{Polyak's}} momentum provides no speedup over $\mathcal{O}(1/k)$ \textcolor{gray}{for smooth convex function}.
+  However, \textcolor{blue}{\textbf{Polyak's}} momentum provides no speedup over $\mathcal{O}(1/k)$ \\
+  \textcolor{gray}{(for smooth convex function)}.
 \end{frame}
 
 
@@ -213,11 +232,12 @@
   \begin{itemize}
     \item Both types of momentum seem so similar.
     \item Heavy ball does not care if do momentum or gradient first.
-    \item Nesterov momentum applies inertia first then gradient.
+    \item Nesterov momentum applies \textbf{inertia first}, then gradient:
           \begin{align}
             v_k &= \beta v_{k-1} + \alpha \nabla f(x_k + \beta v_{k-1}) \\
-            x_{k+1} &= x_k - v_k
+            x_{k+1} &= x_k - v_k.
           \end{align}
+          Provides stabilization if inertia overshoots
   \end{itemize}
 \end{frame}
 
@@ -236,7 +256,7 @@
 
   For smooth strongly convex we know that GD obtains
   \begin{equation}
-    \Vert x_{k+1} - x^* \Vert^2 \le (1 - \frac{\mu}{L}) \Vert x_k -x^* \Vert^2
+    \Vert x_{k+1} - x^* \Vert^2 \le \left(1 - \frac{\mu}{L}\right) \Vert x_k -x^* \Vert^2
   \end{equation}
   and
   \begin{equation}
@@ -253,31 +273,43 @@
 
 \begin{frame}
   \frametitle{Momentum for stochastic methods}
-  SGD analysis can be extended to \textbf{smooth} functions with rate
+  \textbf{\textcolor{blue}{SGD}} analysis can be extended to \textbf{\textcolor{blue}{smooth}} functions with rate
   \begin{equation}
-    \mathcal{O}\left(\frac{L}{k} + \frac{\sigma^2}{\sqrt{k}}\right)
+    \mathcal{O}\left(\frac{L}{k} + \frac{\sigma^2}{\sqrt{k}}\right),
   \end{equation}
-  where $\sigma^2:= \E [ \Vert \nabla f(x) - g(x) \Vert^2 ]$ is the \textbf{variance} of the gradient estimator.
+  where $\sigma^2:= \E [ \Vert \nabla f(x) - g(x) \Vert^2 ]$ is the \textcolor{blue}{variance} of the gradient estimator.
 
+  \medskip
   This can be improved by momentum (and additional tricks) to
   \begin{equation}
-    \mathcal{O}\left(\frac{L}{k^2} + \frac{\sigma^2}{\sqrt{k}}\right).
+    \mathcal{O}\left(\frac{L}{k^{\textcolor{red}{2}}} + \frac{\sigma^2}{\sqrt{k}}\right).
   \end{equation}
 
   Improvement only in the ``\textbf{transient phase}'' before noise takes over.
 
-  For worst case rates, only the asymptotic phase matters.
+  \begin{block}{}
+    \centering
+    For worst case rates, only the asymptotic phase matters.
+  \end{block}
 
 \end{frame}
 
 \begin{frame}
   \frametitle{Momentum in the nonconvex world}
 
-  While it is extremely difficult to show a benefit of momentum in for nonconvex problems.
+  \begin{itemize}
+    \item difficult to show benefit of momentum in for nonconvex problems in theory.
+    \begin{itemize}
+      \item some statements under additional smoothness assumptions
+    \end{itemize}
+    \item Empirical evidence of usefulness is strong.
+        \begin{itemize}
+          \item especially in deep learning.
+        \end{itemize}
+    \item Theory is mostly limited to escaping of saddle points.
+  \end{itemize}
 
-  Empirical evidence (for many different problems) is strong.
 
-  Theory is mostly limited to escaping of saddle points.
 
 \end{frame}
 
