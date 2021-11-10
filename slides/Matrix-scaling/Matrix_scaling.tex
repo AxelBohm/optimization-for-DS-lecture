@@ -25,6 +25,7 @@
   \end{equation}
 
   \begin{block}{}
+    \centering
     In this case $A$ is called $(r,c)$-scalable.
   \end{block}
   \onslide<2->{%
@@ -81,7 +82,7 @@
       \end{bmatrix}
     \end{equation}
   \end{minipage}
-  \begin{minipage}{0.25\textwidth}
+  \begin{minipage}{0.35\textwidth}
     \begin{figure}[ht]
       \centering
       \includegraphics[width=\textwidth]{bipartite-graph.png}
@@ -89,17 +90,17 @@
     \end{figure}
   \end{minipage}
 
-  \onslide<2->{%
     \begin{definition}
-      A \textbf{matching} is a set of edges without common vertices.
+      \begin{itemize}
+        \item A \textbf{matching} is a set of edges without common vertices.
+        \item A \textbf{perfect matching} is a matching which covers all vertices.
+      \end{itemize}
     \end{definition}
-    % Say something about applications of matching like:
-    % - marriage theorem
-    % - hitchcock transport problem
-    \begin{definition}
-      A \textbf{perfect matching} is a matching which covers all vertices.
-    \end{definition}
-  }
+    Applications:
+    \begin{itemize}
+      \item marriage problem
+      \item hitchcock transport problem
+    \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -110,8 +111,8 @@
     Recall:
     \begin{equation}
       \begin{aligned}
-        \text{(determinant)} \quad \det A = \sum_{\sigma} \sign(\sigma) \prod_{i=1}^n a_i \sigma(i) \\
-        \text{(permanent)} \quad \perm A = \sum_{\sigma} \prod_{i=1}^n a_i \sigma(i)
+        &\text{(determinant)} \quad \det A = \sum_{\sigma} \sign(\sigma) \prod_{i=1}^n a_i \sigma(i) \\
+        &\text{(permanent)} \quad \perm A = \sum_{\sigma} \prod_{i=1}^n a_i \sigma(i)
       \end{aligned}
     \end{equation}
   \end{block}
@@ -150,17 +151,6 @@
   Proved independently by Jegortschow and Falikman in '80 / '81.
 \end{frame}
 
-
-% do we use this at all?
-\begin{frame}
-  \frametitle{Upper bounding the permanent}
-  \begin{block}{Bregman-Minc}
-    For $(0,1)$-matrices
-    \begin{equation}
-      \perm A \le \prod_{i=1}^n {(r_i !)}^{1/r_i} \quad \text{where $r_i := \Vert A_{i,:} \Vert$}
-    \end{equation}
-  \end{block}
-\end{frame}
 
 \begin{frame}
   \frametitle{Matrix scaling to approx.\ permanent}
@@ -241,8 +231,7 @@
   \begin{equation}
     g(x,y) = \langle x, A y \rangle - \langle r, \log x \rangle - \langle c, \log y \rangle
   \end{equation}
-  \onslide<2->{%
-    \begin{block}{alternating minimiziation}
+    \begin{block}{alternating minimization}
       Given a problem
       \begin{equation}
         \begin{aligned}
@@ -252,15 +241,11 @@
         \end{aligned}
       \end{equation}
     \end{block}
-    makes sense as long as the subproblems are easy (e.g. convex).
-  }
-  \begin{equation}
-    g(x,y) = \langle x, A y \rangle - \langle r, \log x \rangle - \langle c, \log y \rangle
-  \end{equation}
-  \begin{equation}
-    \text{opt. cond.\ for $x$} \quad Ay - \frac{r}{x} = 0
-    \text{opt. cond.\ for $y$} \quad Ay - \frac{c}{y} = 0
-  \end{equation}
+    Makes sense as long as the subproblems are easy (e.g. convex).
+  \begin{align}
+    &\text{opt. cond.\ for $x$} \quad Ay - \frac{r}{x} = 0 \\
+    &\text{opt. cond.\ for $y$} \quad Ay - \frac{c}{y} = 0
+  \end{align}
 \end{frame}
 
 
@@ -273,7 +258,7 @@
     \begin{equation}
       \begin{aligned}
         x_{k+1}&= \frac{r}{A y_k} \\
-        y_{k+1}&= \frac{r}{A x_{k+1}} \\
+        y_{k+1}&= \frac{c}{A x_{k+1}} \\
       \end{aligned}
     \end{equation}
   \end{block}
