@@ -13,8 +13,12 @@
 
 \begin{frame}
   \frametitle{Introduction}
-  \textbf{given:} a matrix $A \in \R^{m\times n}_+$, vectors $r \in \R_{++}^m$ and $c \in \R^n_{++}$\\
-  \textbf{find:} diagonal matrices $X$ and $Y$ such that for $B = XAY$ it holds:
+  \textbf{given:} a matrix $A \in \R^{m\times n}_{\ge0}$, vectors $r \in \R_{>0}^m$ and $c \in \R^n_{>0}$\\
+  \textbf{find:} nonneg.\ diagonal matrices $X$ and $Y$ such that for
+  \begin{equation}
+    B = XAY
+  \end{equation}
+  it holds that:
   \begin{equation}
     B \mathbbm{1}_n = r \quad \text{and} \quad B^T \mathbbm{1}_m = c
   \end{equation}
@@ -29,7 +33,7 @@
     In this case $A$ is called $(r,c)$-scalable.
   \end{block}
   \onslide<2->{%
-    If $\Vert r \Vert_1 \neq \Vert c \Vert_2$ this is not possible.
+    If $\Vert r \Vert_1 \neq \Vert c \Vert_1$ this is not possible.
   }
 \end{frame}
 
@@ -63,7 +67,7 @@
   \begin{block}{\textbf{Application:} Ill conditioned linear system $Az = b$.}
     Can multiply both sides by $X$  and substitute $z= Yv$ to get instead
     \begin{equation}
-      XAz = X
+      XAY v = X b
     \end{equation}
   \end{block}
 \end{frame}
@@ -111,8 +115,8 @@
     Recall:
     \begin{equation}
       \begin{aligned}
-        &\text{(determinant)} \quad \det A = \sum_{\sigma} \sign(\sigma) \prod_{i=1}^n a_i \sigma(i) \\
-        &\text{(permanent)} \quad \perm A = \sum_{\sigma} \prod_{i=1}^n a_i \sigma(i)
+        &\text{(determinant)} \quad \det A = \sum_{\sigma} \sign(\sigma) \prod_{i=1}^n a_{i,\sigma(i)}  \\
+        &\text{(permanent)} \quad \perm A = \sum_{\sigma} \prod_{i=1}^n a_{i,\sigma(i)}
       \end{aligned}
     \end{equation}
   \end{block}
@@ -132,7 +136,7 @@
   \frametitle{Lower bounding the permanent}
   % This notion also appears in optimal transport
   \begin{definition}
-    A matrix $A \in \R^{m\times n}_+$ is called \textbf{doubly stochastic}, if sum of every row and every column is $1$.
+    A matrix $A \in \R^{m\times n}_{\ge0}$ is called \textbf{doubly stochastic}, if sum of every row and every column is $1$.
   \end{definition}
 
   \begin{block}{van der Waerden (1926) conjectured}
@@ -142,7 +146,7 @@
     \end{equation}
   \end{block}
   \begin{equation}
-   \text{Is tight for} A = \begin{bmatrix}
+   \text{Is tight for } A = \begin{bmatrix}
       1/n & \cdots & 1/n \\
       \vdots & \ddots & 1/n \\
       1/n & \dots & 1/n
@@ -192,7 +196,7 @@
   \begin{equation}
     f(\xi, \eta) = \sum_{i,j} a_{i,j} e^{\xi_i + \eta_j} - \langle r, \xi \rangle - \langle c, \eta \rangle
   \end{equation}
-  which is \emph{convex}. It's gradient is given by
+  which is \textbf{\emph{convex}}. It's gradient is given by
   \begin{equation}
     \label{eq:grad-convex-reformulation}
     \frac{\partial f}{\partial \xi_i} = \sum_{j=1}^{n} a_{i,j} e^{\xi_i + \eta_j} - r_i
