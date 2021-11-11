@@ -99,7 +99,7 @@
     Applications:
     \begin{itemize}
       \item marriage problem
-      \item hitchcock transport problem
+      \item Hitchcock transport problem
     \end{itemize}
 \end{frame}
 
@@ -148,7 +148,7 @@
       1/n & \dots & 1/n
     \end{bmatrix}
   \end{equation}
-  Proved independently by Jegortschow and Falikman in '80 / '81.
+  Proved in 1980.
 \end{frame}
 
 
@@ -180,7 +180,7 @@
     \label{eq:grad-original-formulation}
     \begin{aligned}
       \nabla_x g(x,y) = Ay - \frac{r}{x} \\
-      \nabla_y g(x,y) = A^T x - \frac{c}{y}
+      \nabla_y g(x,y) = A^T x - \frac{c}{y}.
     \end{aligned}
   \end{equation}
 \end{frame}
@@ -197,8 +197,8 @@
     \label{eq:grad-convex-reformulation}
     \frac{\partial f}{\partial \xi_i} = \sum_{j=1}^{n} a_{i,j} e^{\xi_i + \eta_j} - r_i
   \end{equation}
-  Easy to see that the optimality condition of~\eqref{eq:grad-convex-reformulation} and~\eqref{eq:grad-original-formulation} agree.
-  Implies that even the nonconvex function only has \emph{global} minimizers.
+  Easy to see that the optimality condition of~\eqref{eq:grad-convex-reformulation} and~\eqref{eq:grad-original-formulation} agree.\\
+  $\Rightarrow$ the nonconvex function only has \emph{global} minimizers.
 \end{frame}
 
 \begin{frame}
@@ -231,27 +231,29 @@
   \begin{equation}
     g(x,y) = \langle x, A y \rangle - \langle r, \log x \rangle - \langle c, \log y \rangle
   \end{equation}
-    \begin{block}{alternating minimization}
-      Given a problem
-      \begin{equation}
-        \begin{aligned}
-          &\min_{x,y} \phi(x,y)\\
-          x_{k+1} &= \argmin_x \phi(x,y_k) \\
-          y_{k+1} &= \argmin_y \phi(x_{k+1}, y)
-        \end{aligned}
-      \end{equation}
-    \end{block}
-    Makes sense as long as the subproblems are easy (e.g. convex).
+  \vspace{-0.5cm}
+  \begin{block}{alternating minimization}
+    Given a problem
+    \begin{equation}
+      \min_{x,y} \phi(x,y)
+    \end{equation}
+    repeat:
+    \begin{align}
+      x_{k+1} &= \argmin_x \phi(x,y_k) \\
+      y_{k+1} &= \argmin_y \phi(x_{k+1}, y).
+    \end{align}
+  \end{block}
+    Makes sense as long as the \textcolor{blue}{subproblems are easy} (e.g. convex).
   \begin{align}
-    &\text{opt. cond.\ for $x$} \quad Ay - \frac{r}{x} = 0 \\
-    &\text{opt. cond.\ for $y$} \quad Ay - \frac{c}{y} = 0
+    &\text{opt. cond.\ for $x$:} \quad Ay - \frac{r}{x} = 0 \\
+    &\text{opt. cond.\ for $y$:} \quad A^T x - \frac{c}{y} = 0
   \end{align}
 \end{frame}
 
 
 % change this to algorithmx package
 \begin{frame}
-  \frametitle{}
+  \frametitle{Sinkhorn's Algorithm}
 
   \begin{block}{Sinkhorn '60}
     Given $(x_0, y_0)$, for $k=1,\dots$
