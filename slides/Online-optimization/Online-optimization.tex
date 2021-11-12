@@ -16,14 +16,14 @@
 
 \begin{frame}
   \frametitle{What is online Learning}
-Consider the repeated game: In each round $t=1,\dots,T$
+Consider the game: In each round $t=1,\dots,T$
 \begin{itemize}
-  \item an adversary chooses a (secret) number in $y_t \in [0,1]$
+  \item an \textit{adversary} chooses a (secret) number in $y_t \in [0,1]$
   \item you guess the real number, choosing $x_t \in [0,1]$;
   \item you pay the squared difference ${(x_t-y_t)}^2$.
 \end{itemize}
 \textbf{Task:} guess a sequence of numbers as precisely as possible.
-To be a game, we now have to decide what is the ``winning condition''. Let's see what makes sense to consider as winning condition.
+% To be a game, we now have to decide what is the ``winning condition''. Let's see what makes sense to consider as winning condition.
 \textbf{Question:} How to measure success?
 \end{frame}
 
@@ -68,7 +68,7 @@ To be a game, we now have to decide what is the ``winning condition''. Let's see
 
 \begin{frame}
   \frametitle{General loss functions}
-  Online Learning is the study of algorithms to minimize the \emph{regret} over a sequence of loss functions with respect to an arbitrary competitor $u \in V\subseteq \R^d$:
+  Online Learning is the study of algorithms to minimize the \emph{regret} over a sequence of loss functions w.r.t.\ a competitor $u \in \R^d$:
   \[
     R_T(u):=\sum_{t=1}^T \ell_t(x_t) - \sum_{t=1}^T \ell_t(u)~.
   \]
@@ -84,7 +84,7 @@ To be a game, we now have to decide what is the ``winning condition''. Let's see
     \item Routing on a network;
     \item Convergence to equilibrium of \textit{repeated} games.
   \end{itemize}
-  It can \emph{also} be used to analyze stochastic algorithms, e.g., Stochastic Gradient Descent, but the adversarial nature of the analysis might give you suboptimal results.
+  It can \emph{also} be used to analyze stochastic algorithms, e.g., SGD.
 \end{frame}
 
 
@@ -112,8 +112,8 @@ To be a game, we now have to decide what is the ``winning condition''. Let's see
   Now we show that this strategy will allow us to win the game.
   \begin{lemma}
     \label{lemma:be_leader}
-    Let $V \subseteq \R^d$ and $\ell_t :V \rightarrow \R$ an arbitrary sequence of loss functions.
-    Denote by $x^\star_t$ a minimizer of the cumulative losses over the previous $t$ rounds in $V$. Then, we have
+    Let  and $\ell_t :\R^d \rightarrow \R$ an arbitrary sequence of loss functions.
+    Denote by $x^\star_t$ a minimizer of the cumulative losses over the previous $t$ rounds. Then,
     \[
       \sum_{t=1}^T \ell_t(x^\star_{t}) \leq \sum_{t=1}^T \ell_t(x^\star_{T})~.
     \]
