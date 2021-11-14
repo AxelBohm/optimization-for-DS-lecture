@@ -70,24 +70,28 @@
 
 \begin{frame}
   \frametitle{Bregman distance}
-  $h: \R^d \to \R \cup \{+\infty\}$ is convex
+
   \begin{enumerate}
-    \item h is differentiable of the interior of $\dom h$
-    \item h is $1$-strongly convex w.r.t. $\Vert \cdot \Vert_2$
+    \item $h: \R^d \to \R \cup \{+\infty\}$ is convex
+    \item $h$ is differentiable on the interior of $\dom h$
+    \item $h$ is $1$-strongly convex (w.r.t. given norm $\Vert \cdot \Vert$)
   \end{enumerate}
-  Then
-  \begin{equation}
-    \Dh(x,y) := h(x) - h(y) - \langle \nabla h(y), x-y \rangle.
-  \end{equation}
+
+  \begin{block}{}
+    \begin{equation}
+      \Dh(x,y) := h(x) - h(y) - \langle \nabla h(y), x-y \rangle.
+    \end{equation}
+  \end{block}
 
   \onslide<2->{%
     \begin{block}{Properties}
       \begin{itemize}
-        \item $\Dh(x, y) \ge 0$
-        \item $\Dh(x, y) \neq \Dh(y, x)$
-        \item $\Dh(\cdot, y)$ is convex for all $y$
+        \item nonnegative: $\Dh(x, y) \ge 0$
+        \item not necessarily symmetric: $\Dh(x, y) \neq \Dh(y, x)$
+        % \item $\Dh(\cdot, y)$ is convex for all $y$
+        \item From Taylor expansion we see
               \begin{equation}
-                \Dh(x,y) \approx \frac12 \langle \nabla^2h(y)(x-y), x-y \rangle = \frac12 \Vert x-y \Vert_{\nabla^2h(y)}^2
+                \Dh(x,y) \approx \frac12 \langle \nabla^2h(y)(x-y), x-y \rangle = \frac12 \Vert x-y \Vert_{\nabla^2h(y)}^2.
               \end{equation}
         \item $\Dh(x, y) \ge \frac12 \Vert x-y \Vert^2$ ($1$-strong convexity)
       \end{itemize}
