@@ -115,8 +115,8 @@
   \end{align}
 
   \begin{itemize}
-    \item differs from GD on in momentum/inertia term $\beta_k (x_k - x_{k-1})$
-    \item has to chosen carefully $\beta_k = \frac{k-1}{k+2}$
+    \item differs from GD only in momentum/inertia term $\beta_k (x_k - x_{k-1})$
+    \item has to be chosen carefully $\beta_k = \frac{k-1}{k+2}$
     \item coefficient approaches $\frac{k-1}{k+2} \approx 1 - \frac{3}{k}$
   \end{itemize}
 \end{frame}
@@ -205,6 +205,10 @@
   \end{figure}
 \end{frame}
 
+
+\section{Heavy ball}%
+\label{sec:}
+
 \begin{frame}
   \frametitle{Momentum in terms of velocity}
   Consider a ball rolling down a slope. Its \textbf{velocity} is
@@ -223,10 +227,6 @@
             &= x_k - \alpha \nabla f(x_k) + \beta (x_k - x_{k-1})
   \end{align}
 \end{frame}
-
-
-\section{Heavy ball}%
-\label{sec:}
 
 \begin{frame}
   \frametitle{Heavy ball:  Polyak 1964}
@@ -248,7 +248,7 @@
   \frametitle{What's the difference?}
   \begin{itemize}
     \item Both types of momentum seem so similar.
-    \item Heavy ball does not care if do momentum or gradient first.
+    \item Heavy ball does not care if momentum or gradient first.
     \item Nesterov momentum applies \textbf{inertia first}, then gradient:
           \begin{align}
             v_k &= \beta v_{k-1} + \alpha \nabla f(x_k + \beta v_{k-1}) \\
@@ -281,7 +281,7 @@
   \begin{equation}
     f(x_k)-f^* \le {\left(1-\frac{1}{\kappa}\right)}^k \, \frac{L \Vert x_0 -x^* \Vert^2}{2}.
   \end{equation}
-  Performance depends heavily on the \textbf{\textcolor{blue}{condition number}} $\kappa : = L/\mu$:
+  Performance depends heavily on the \textbf{\textcolor{blue}{condition number}} $\kappa : = L/\mu$
   \begin{block}{}
     \center
     Contraction coefficient is $(1-1/\kappa)$.
@@ -308,11 +308,11 @@
     \mathcal{O}\left(\frac{L}{k^{\textcolor{red}{2}}} + \frac{\sigma^2}{\sqrt{k}}\right).
   \end{equation}
 
-  Improvement only in the ``\textbf{transient phase}'' before noise takes over.
+  Improvement only in the ``\textbf{early phase}'' before noise takes over.
 
   \begin{block}{}
     \centering
-    For worst case rates, only the asymptotic phase matters.
+    For worst case rates, only the asymptotic (``late'') phase matters.
   \end{block}
 \end{frame}
 
@@ -320,13 +320,20 @@
 \begin{frame}
   \frametitle{Momentum and nonsmoothness}
   \begin{itemize}
-    \item If $f$ is not differentiable and we have to use subgradients:
-          no way to improve the $\mathcal{O}(1/\sqrt{k})$ rate
-    \item If objective is \textbf{structured}: $f+g$ \textcolor{gray}{(smooth+nonsmooth)}
-          \begin{align}
-            y_{k} &= x_k + \beta_k (x_k - x_{k-1}) \\
-            x_{k+1} &= \prox{\alpha g}{y_k - \alpha \nabla f(y_k)}.
-          \end{align}
+    \item If $f$ is not differentiable and we have to use subgradients:\\
+          no way to improve the $\mathcal{O}(1/\sqrt{k})$ rate.
+    \item Works objective is \textbf{structured}: $f+g$ \textcolor{gray}{(smooth+nonsmooth)}
+          \begin{equation}
+            \text{FISTA:}\quad \begin{cases}
+              y_{k} &= x_k + \beta_k (x_k - x_{k-1}) \\
+              x_{k+1} &= \prox{\alpha g}{y_k - \alpha \nabla f(y_k)}.
+            \end{cases}
+          \end{equation}
+          % \begin{align}
+          %   y_{k} &= x_k + \beta_k (x_k - x_{k-1}) \\
+          %   x_{k+1} &= \prox{\alpha g}{y_k - \alpha \nabla f(y_k)}.
+          % \end{align}
+          Accelerates from $\mathcal{O}(1/k)$ of proximal-gradient method to $\mathcal{O}(1/k^2)$.
     \item In particular, also works in the \textbf{constrained setting}.
   \end{itemize}
 
@@ -336,11 +343,11 @@
 \begin{frame}
   \frametitle{Momentum in the nonconvex world}
   \begin{itemize}
-    \item In theory: difficult to show benefit of momentum in for nonconvex problems.
+    \item In theory: difficult to show benefit of momentum for nonconvex problems.
     \begin{itemize}
       \item some statements under additional smoothness assumptions
     \end{itemize}
-    \item Empirical evidence of usefulness is strong.
+    \item Strong empirical evidence of usefulness.
         \begin{itemize}
           \item especially in deep learning.
         \end{itemize}
