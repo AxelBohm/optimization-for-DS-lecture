@@ -18,15 +18,15 @@
 
 \begin{frame}
   \frametitle{Smooth convex functions: less than $\mathcal{O}(\epsilon^{-1})$ steps?}
-  Given $L$ and $D=\Vert x_0 - x^* \Vert$ we know that
+  Given $L$ and $D=\Vert x_0 - x^* \Vert$ we know that \textbf{gradient descent}
   \begin{itemize}
-    \item GD converges with $\mathcal{O}(1/k)$
+    \item converges with $\mathcal{O}(1/k)$
     \item cannot go faster (``lower bound'')
   \end{itemize}
 
   \begin{block}{}
     \centering
-    Maybe gradient descent is not the best possible algorithm? \medskip
+    Maybe GD is not the best possible algorithm? \medskip
   \end{block}
 
 
@@ -38,10 +38,10 @@
   \frametitle{Smooth convex functions: less than $\mathcal{O}(\epsilon^{-1})$ steps?}
   So let's look at the following classes of methods:
 
-  First-order method:
+  \textbf{First-order} method:
   \begin{itemize}
-    \item Access to the data only via an oracle which returns $f$ and $\nabla f$ at given points.
-    \item Clearly GD is a first order method.
+    \item Access to data only via an \textbf{oracle} returning $f$ and $\nabla f$ at given points.
+    \item Clearly, GD is a first order method.
   \end{itemize}
 
   \begin{block}{}
@@ -50,9 +50,14 @@
   \textcolor{gray}{\textit{best}: smallest upper bound on the number of oracle calls \textit{in the worst case}.}
 
   \begin{itemize}
-    \item Nemirovski and Yudin 1979 proved that every first-order method needs at least $\Omega(1/\sqrt{\epsilon})$ iterations (no method can be faster than $\mathcal{O}(1/k^2)$).
+    \item Nemirovski and Yudin 1979 proved that
+          \begin{block}{}
+            \center
+            every first-order method needs at least $\Omega(1/\sqrt{\epsilon})$ iterations\\
+          \textcolor{gray}{to find a point $\bar{x}$ with $f(\bar{x})-f^*\le \epsilon$}.
+          \end{block}
   \end{itemize}
-
+  $\Rightarrow$ no method can be faster than $\mathcal{O}(1/k^2)$
 \end{frame}
 
 
@@ -63,10 +68,11 @@
   \frametitle{Acceleration to $\mathcal{O}(1/\sqrt{\epsilon})$ steps}
 
   \begin{itemize}
-    \item Nesterov 1983 proposed a method that needs only $\mathcal{O}(1/\sqrt{\epsilon})$ iterations (and is therefore the \textit{best one}).
+    \item Nesterov 1983 proposed a method that needs only $\mathcal{O}(1/\sqrt{\epsilon})$ iterations \textcolor{gray}{(and is therefore the \textit{best one})}.
     \item Known as \textcolor{blue}{\textbf{Nesterov's accelerated gradient}} method.
     \item By now multiple similar algorithms with same complexity exist.
-    \item Proofs are generally not really instructive (some are computer assisted).
+    \item Proofs are generally not really instructive \\
+          \textcolor{gray}{(some are computer assisted)}.
   \end{itemize}
 
 \end{frame}
@@ -118,11 +124,11 @@
 
 \begin{frame}
   \frametitle{Nesterov's accelerated gradient method: convergence}
-  \textcolor{grey}{Minimum is $x^*$ }
+  \textcolor{gray}{Minimum is obtained for $x^*$.}
   \begin{theorem}
-    Let $f: R^d \to \R$ be convex and $L$-smooth, then NAG yields
+    Let $f: R^d \to \R$ be convex and $L$-smooth, then \textbf{NAG} yields
     \begin{equation}
-      f(x_k) - f(x^*) \le \frac{2L \Vert x_0-x^* \Vert^2}{k(k+1)}
+      f(x_k) - f(x^*) \le \frac{2L \Vert x_0-x^* \Vert^2}{\bm{k(k+1)}}
     \end{equation}
   \end{theorem}
 
@@ -165,6 +171,7 @@
   \end{equation}
 \end{frame}
 
+
 \begin{frame}
   \frametitle{Why momentum?}
   \begin{itemize}
@@ -186,6 +193,16 @@
       \caption{with momentum}
     \end{figure}
   \end{minipage}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Momentum and ravines}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[height=0.9\textheight,keepaspectratio]{ravine-momentum}
+    \caption{\label{fig:label} }
+  \end{figure}
 \end{frame}
 
 \begin{frame}
@@ -237,39 +254,45 @@
             v_k &= \beta v_{k-1} + \alpha \nabla f(x_k + \beta v_{k-1}) \\
             x_{k+1} &= x_k - v_k.
           \end{align}
-          Provides stabilization if inertia overshoots
+          \begin{block}{}
+            \center
+            Provides stabilization if inertia overshoots.
+          \end{block}
   \end{itemize}
 \end{frame}
 
 \begin{frame}
-  \frametitle{}
-
+  \frametitle{Nesterov vs Polyak momentum.}
+  \vspace{-0.2cm}
   \begin{figure}[ht]
     \centering
     \includegraphics[width=0.7\textwidth,keepaspectratio]{nesterov-vs-polyak.png}
-    \caption{Nesterov vs Polyak momentum.}
   \end{figure}
 \end{frame}
 
 \begin{frame}
   \frametitle{Momentum for strongly convex functions}
 
-  For smooth strongly convex we know that GD obtains
+  For $L$-smooth $\mu$-strongly convex we know that GD obtains
   \begin{equation}
-    \Vert x_{k+1} - x^* \Vert^2 \le \left(1 - \frac{\mu}{L}\right) \Vert x_k -x^* \Vert^2
+    \Vert x_{k+1} - x^* \Vert^2 \le \left(1 - \frac{1}{\kappa}\right) \Vert x_k -x^* \Vert^2
   \end{equation}
   and
   \begin{equation}
-    f(x_k)-f^* \le {\left(1-\frac{\mu}{L}\right)}^k \, \frac{L \Vert x_0 -x^* \Vert^2}{2}.
+    f(x_k)-f^* \le {\left(1-\frac{1}{\kappa}\right)}^k \, \frac{L \Vert x_0 -x^* \Vert^2}{2}.
   \end{equation}
-  Performance depends heavily on the \textbf{condition number} $\kappa : = L/\mu$:
+  Performance depends heavily on the \textbf{\textcolor{blue}{condition number}} $\kappa : = L/\mu$:
   \begin{block}{}
+    \center
     Contraction coefficient is $(1-1/\kappa)$.
   \end{block}
 
   Nesterov \textbf{and Polyak} momentum improve this to $(1-1/\sqrt{\kappa})$
 \end{frame}
 
+
+\section{when to use}%
+\label{sec:}
 
 \begin{frame}
   \frametitle{Momentum for stochastic methods}
@@ -291,14 +314,29 @@
     \centering
     For worst case rates, only the asymptotic phase matters.
   \end{block}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Momentum and nonsmoothness}
+  \begin{itemize}
+    \item If $f$ is not differentiable and we have to use subgradients:
+          no way to improve the $\mathcal{O}(1/\sqrt{k})$ rate
+    \item If objective is \textbf{structured}: $f+g$ \textcolor{gray}{(smooth+nonsmooth)}
+          \begin{align}
+            y_{k} &= x_k + \beta_k (x_k - x_{k-1}) \\
+            x_{k+1} &= \prox{\alpha g}{y_k - \alpha \nabla f(y_k)}.
+          \end{align}
+    \item In particular, also works in the \textbf{constrained setting}.
+  \end{itemize}
 
 \end{frame}
 
+
 \begin{frame}
   \frametitle{Momentum in the nonconvex world}
-
   \begin{itemize}
-    \item difficult to show benefit of momentum in for nonconvex problems in theory.
+    \item In theory: difficult to show benefit of momentum in for nonconvex problems.
     \begin{itemize}
       \item some statements under additional smoothness assumptions
     \end{itemize}
@@ -308,10 +346,24 @@
         \end{itemize}
     \item Theory is mostly limited to escaping of saddle points.
   \end{itemize}
+\end{frame}
 
 
+\begin{frame}
+  \frametitle{}
+
+  \begin{minipage}{0.3\textwidth}
+    \textbf{Momentum in DL:}
+  \end{minipage}
+  \begin{minipage}{0.6\textwidth}
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[height=\textheight,keepaspectratio]{sgd-momentum-torch}
+    \end{figure}
+  \end{minipage}
 
 \end{frame}
+
 
 
 \end{document}
