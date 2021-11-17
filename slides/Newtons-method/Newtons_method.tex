@@ -1,7 +1,7 @@
-\documentclass{beamer}
+\documentclass[aspectratio=149]{beamer}
 \usepackage[utf8]{inputenc}
 
-\input{../../shared.tex}
+\input{../../shared_slides.tex}
 
 \title{Newton's and Quasi-Newton Methods}
 \date{\today}
@@ -138,13 +138,13 @@
   \begin{equation}
     f(x) = \frac12 x^T M x + q^T x + c
   \end{equation}
-  is called \textit{nondegenerate} if $M \in \R^{d \times d}$ is invertible.
+  is called \textit{nondegenerate} if $M$ is invertible.
   \begin{itemize}
     \item $x^* := M^{-1}q$ is the unique solution of $\nabla f(x) = 0$
     \item $x^*$ is the unique global minimum if $f$ is convex
   \end{itemize}
-  \begin{lemma}%
-    On nondegenerate quadratic functions with arbitrary starting point $x_0$, Newtons method yields $x_1=x^*$
+  \begin{lemma}[\textcolor{gray}{arbitrary $x_0$}]%
+    On nondegenerate quadratic functions, Newtons method yields $x_1=x^*$.
   \end{lemma}
   \begin{proof}
     We have $\nabla f(x) = Mx -q$ and $\nabla^2 f(x) = M$. Therefore
@@ -187,12 +187,12 @@
 
 \begin{frame}
   \frametitle{Minimizing the second-order Taylor approximation}
-  Alternative interpretation of Newton's method:
+  Alternative interpretation of Newton's method:\\
   Minimize (local) \textcolor{blue}{quadratic model} of $f$.
   \begin{lemma}%
-    Let $f$ be conve, twice differentiable and $\nabla^2 f(x) \succ 0$. Then $x_{k+1}$ resulting from \textbf{Newton's step} satisfies
+    Let $f$ be convex, twice differentiable and $\nabla^2 f(x) \succ 0$. Then $x_{k+1}$ resulting from \textbf{Newton's step} satisfies
     \begin{equation}
-      x_{k+1} = \argmin_{x \in \R^d} f(x_k) + \langle \nabla f(x_k), x-x_k \rangle + \frac12 \langle x-x_k, \nabla^2 f(x_k) (x-x_k)  \rangle
+      x_{k+1} = \argmin_{x \in \R^d} \left\{f(x_k) + \langle \nabla f(x_k), x-x_k \rangle + \frac12 \big \langle x-x_k, \nabla^2 f(x_k) (x-x_k)  \big\rangle \right\}
     \end{equation}
   \end{lemma}
 \end{frame}
@@ -206,16 +206,18 @@
     \item much faster than anything so far..
     \item only locally
   \end{itemize}
-  We call this a \textcolor{blue}{local convergence} result.\\
+  \begin{block}{}
+    We call this a \textcolor{blue}{local convergence} result.\\
+  \end{block}
 
-  \textcolor{blue}{Global convergence} statements are more difficult to obtain (some only recently).
+  \textcolor{blue}{Global convergence} statements are more difficult to obtain.
 \end{frame}
 
 
 \section{Convergence analysis}%
 
 \begin{frame}
-  \frametitle{Theorem + Technical conditions }
+  % \frametitle{Theorem + Technical conditions }
   \begin{theorem}
     Let $f$ be convex with unique global minimum $x^*$, and $X$ a ball around $x^*$ s.t.
     \begin{enumerate}
@@ -230,7 +232,7 @@
     \end{enumerate}
     Then, for $x_{k+1} = N_f(x_k)$ we have
     \begin{equation}
-      \Vert x_{k+1} -x^* \Vert \le \frac{B}{2 \mu} \Vert x_k - x^* \Vert^2
+      \Vert x_{k+1} -x^* \Vert \le \frac{B}{2 \mu} \Vert x_k - x^* \Vert^2.
     \end{equation}
   \end{theorem}
 \end{frame}
@@ -363,7 +365,7 @@
   \end{itemize}
   \vspace{1cm}
   Matrix has size $d\times d$, taking $\mathcal{O}(d^3)$ to invert.\\
-  In many applications the dimension $d$ is large (too large to even store Hessian).
+  In many applications the dimension $d$ is large (\textbf{too large} to even store Hessian).
 
   \vspace{1cm}
   When training a ML model $d$ is the \textit{number or parameters} of our ML model (number of features for linear model).
@@ -395,10 +397,11 @@
   \frametitle{The secant method II}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.7\textwidth,keepaspectratio]{secant_method}
+    \includegraphics[width=0.6\textwidth,keepaspectratio]{secant_method}
   \end{figure}
   Constructs the line through $(x_{k-1}, f(x_{k-1}))$ and $(x_k, f(x_k))$.
 \end{frame}
+
 
 \begin{frame}
   \frametitle{The secant method III}
@@ -415,7 +418,7 @@
 
   \onslide<2->{%
     \begin{center}
-      \textit{What abouthigher dimensions? Can't divide vectors..}
+      \textit{What about higher dimensions? Can't divide vectors..}
     \end{center}
   }
 \end{frame}
@@ -464,8 +467,9 @@
   \frametitle{Quasi-Newton methods II}
 
   \begin{itemize}
-    \item Newton’s method is a Quasi-Newton method if and only if f is a nondegenerate \textbf{quadratic} function.
-    \item Hence, Quasi-Newton methods \textit{do not generalize} Newton’s method but form a
+    \item Newton’s method is a Quasi-Newton method $\Leftrightarrow$
+          $f$ is a nondegenerate \textbf{quadratic} function.
+    \item $\Rightarrow$ Quasi-Newton methods \textit{do not generalize} Newton’s method but form a
           family of \textit{related} algorithms.
     \item First Quasi-Newton method by William Davidon in 1956
     \item But the paper got rejected for lacking a convergence analysis,
@@ -478,7 +482,7 @@
 \begin{frame}
   \frametitle{Developing a Quasi-Newton method}
   \begin{itemize}
-    \item We want to avoid matrix inversion
+    \item want to avoid matrix inversion
           $\Rightarrow$ directly deal with the inverse $H_k^{-1}$
     \item \textcolor{blue}{Given:} iterates $x_{k-1}, x_k$ and matrix $H_{k-1}^{-1}$
     \item \textcolor{blue}{Seeking:} next matrix $H_k^{-1}$ needed in next Quasi-Newton step
@@ -515,14 +519,13 @@
   \begin{itemize}
     \item special version of Greenstadt
     \item is named after Broyden, Fletcher, Goldfarb and Shanno
-          who all came up with it independently around 1970. Greenstadt’s name is
-          mostly forgotten.
-    \item Newton’s method needs to compute and invert
-          Hessians $\rightarrow$ cost of $\mathcal{O}(d^3)$ per iteration
-    \item Any method in Greenstadt’s family avoids computation of Hessian.
+          who all came up with it independently around 1970. Greenstadt mostly forgotten.
+    \item Newton’s method needs to compute and invert Hessians\\
+          $\Rightarrow$ cost of $\mathcal{O}(d^3)$ per iteration
+    \item Any method in Greenstadt's family avoids computation of Hessian.
           \textbf{Only gradients are needed}.
     \item In the BFGS method, the cost per iteration drops to $\mathcal{O}(d^2)$.
-    \item even this can be prohibitive $\rightarrow$ limited memory BFGS
+    \item even this can be prohibitive $\rightarrow$ \textbf{limited memory BFGS}
     \item uses observation that we do not need $H_{k}^{-1}$, only $H_{k}^{-1} \nabla f(x_k)$
   \end{itemize}
 
