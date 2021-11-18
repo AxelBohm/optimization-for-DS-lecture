@@ -2,6 +2,7 @@
 \usepackage[utf8]{inputenc}
 
 \input{../../shared_slides.tex}
+\DeclareMathOperator*{\rank}{rank}
 
 \newcounter{sauvegardeenumi}
 \newcommand{\asuivre}{\setcounter{sauvegardeenumi}{\theenumi}}
@@ -43,15 +44,19 @@
 \end{frame}
 
 
-% \begin{frame}
-%   \frametitle{Gradient Descent in the nonconvex world III}
-%   \begin{itemize}
-%     \item Often, we observe good behavior in practice.
-%     \item Theoretical explanations many times missing.
-%     \item This lecture: under favorable conditions, we sometimes can say something useful about
-%   the behavior of gradient descent, even on nonconvex functions
-%   \end{itemize}
-% \end{frame}
+\begin{frame}
+  \frametitle{Gradient Descent in the nonconvex world III}
+  \begin{itemize}
+    \item Often, we observe good behavior in practice.
+    \item Theoretical explanations many times missing.
+    \item This lecture: under favorable conditions, we sometimes can say something useful about
+  the behavior of gradient descent, even on nonconvex functions
+  \end{itemize}
+\end{frame}
+
+
+\section{Theory}%
+\label{sec:}
 
 \begin{frame}
   \frametitle{Smooth (but not necessarily convex) functions}
@@ -200,7 +205,7 @@
   \begin{itemize}
     \item $n$ inputs $x_1,\dots,x_n$, where each input $x_i \in \R^d$
     \item $n$ outputs $y_1,\dots,y_n \in \R$
-    \item Hypothesis (after centering):
+    \item Hypothesis (after centering / no bias):
           \begin{equation}
             y_i \approx w^T x_i ,
           \end{equation}
@@ -217,5 +222,265 @@
           for a weight matrix $W \in \R{m\times d}$ to be learned.
   \end{itemize}
 \end{frame}
+
+
+\begin{frame}
+  \frametitle{Minimizing the least squares error}
+
+  Compute
+  \begin{equation}
+    W^* = \argmin_{W\in \R^{m\times d}} \sum_{i=1}^{n} \Vert W x_i - y_i \Vert^2.
+  \end{equation}
+
+  \begin{itemize}
+    \item $X \in \R^{d \times n}$: matrix whose columns are the $x_i$
+    \item $Y \in \R^{m \times n}$: matrix whose columns are the $y_i$
+  \end{itemize}
+  Then
+  \begin{equation}
+    W^* = \argmin_{W\in \R^{m\times d}} \sum_{i=1}^{n} \Vert W x_i - y_i \Vert^2.
+  \end{equation}
+  where $\Vert A \Vert_F = \sqrt{\sum_{i,j} a_{i,j}}$ is the Frobenius norm of a matrix $A$.
+  Frobenius norm of A = Euclidean norm of \texttt{vec(A)} (``flattening'' of A).
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Minimizing the least squares error II}
+  \begin{equation}
+    W^* = \argmin_{W\in \R^{m\times d}} \Vert W X - Y \Vert_F^2
+  \end{equation}
+  is the global minimum of a convex quadratic function $f(W)$. \\
+  To find $W^*$, solve $\nabla f(W)=0$ (system of linear equations) \\
+  $\Leftrightarrow$ training a linear neural network with one layer under least squares loss.
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[height=0.6\textheight,keepaspectratio]{one-layer-linear-network}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Deep linear neural networks}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[height=0.6\textheight,keepaspectratio]{deep-linear-network}
+  \end{figure}
+  \textcolor{blue}{\textbf{Not more expressive}}:
+  \begin{equation}
+    x \mapsto W_3 W_2 W_1 x \Leftrightarrow x \mapsto Wx, \quad \text{for } W := W_3 W_2 W_1
+  \end{equation}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Training deep linear neural networks}
+  With $\ell$ layers:
+  \begin{equation}
+    W^* = \argmin_{W_1, W_2, \dots,  W_\ell} \Vert W_1 W_2 \cdots W_\ell X - Y \Vert_F^2
+  \end{equation}
+  \textcolor{blue}{\textbf{Nonconvex}} function for $\ell > 1$.
+
+  Playground to understand why training deep neural networks with gradient descent works.
+
+  Here: all matrices are $1 \times 1$, $W_i = x_i$, $X=1$, $Y = 1$, $\ell = d$
+  $\Rightarrow f: \R^d \to \R$,
+  \begin{equation}
+    f(x) := \frac12 {\left(\prod_{j=1}^d x_j - 1\right)}^2 .
+  \end{equation}
+
+  Toy example in our simple playground
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{A simple nonconvex function}
+  Nonconvex level sets: $f(x)= \frac12 {\left( \prod_j x_j \right)}$. \\
+  \textcolor{gray}{Dimensions is fixed so we ignore it}
+
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[height=0.6\textheight,keepaspectratio]{linear-network-toy}
+  \end{figure}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Gradient and critical points}
+
+  \begin{equation}
+    \nabla f(x) = \left( \prod_j x_j \right) \left( \prod_{j\neq1} x_j, \cdots, \prod_{j\neq d}x_j \right).
+  \end{equation}
+  \begin{minipage}{0.5\textwidth}
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=\textwidth,keepaspectratio]{linear-network-toy}
+    \end{figure}
+  \end{minipage}
+  \begin{minipage}{0.45\textwidth}
+    Critical points ($\nabla f(x) = 0$) are either:
+    \begin{itemize}
+      \item global minima: if $\prod_j x_j = 1$
+            \begin{itemize}
+              \item $d=2$: hyperbola
+            \end{itemize}
+      \item saddle point: if at least two of $x_j$ are zero
+            \begin{itemize}
+              \item $d=2$: only the origin $(0,0)$
+            \end{itemize}
+    \end{itemize}
+  \end{minipage}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Negative gradient directions}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[height=0.8\textheight,keepaspectratio]{toy-example-neg-grad-directions}
+  \end{figure}
+  Convergence to global minimum from almost everywhere.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Convergence analysis: Overview}
+  Convergence of GD holds for any $d>1$ and from anywhere in $X=\{x: x> 0, \prod_j x_j \le 1\}$.
+  \begin{itemize}
+    \item $f$ is not smooth over $X$.
+          But is smooth along the trajectory: For suitable $L$ we still get
+          \begin{equation}\tag{SD}
+            \label{eq:sd}
+            f(x_{k+1}) = f(x_k) - \frac{1}{2L} \Vert \nabla f(x_k) \Vert^2.
+          \end{equation}
+    \item saddle points have (at least two) zero entries $\Rightarrow$ function value $\ge$ $1/2$.
+    \item any starting $x_0 \in X$ has $f(x_0) < 1/2$
+    \item cannot converge to saddle points through~\eqref{eq:sd}
+  \end{itemize}
+
+  Still does not imply convergence to global minimum:
+  \begin{itemize}
+    \item Sublevel sets are unbounded: GD can run off to $\infty$
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Convergence analysis: Overview II}
+
+  For $x> 0, \prod_j x_j \ge 1$, we can also show convergence: \\
+  $\Rightarrow$ convergence anywhere in the interior of the positive orthant $\{x: x> 0\}$.
+
+  For this, recall that
+  \begin{equation}
+    \nabla f(x) = \left( \prod_j x_j \right) \left( \prod_{j\neq1} x_j, \cdots, \prod_{j\neq d}x_j \right).
+  \end{equation}
+
+  \begin{itemize}
+    \item if $\prod_j x_j \ge 1$ then $\nabla f(x) \ge 0$
+    \item which implies that $x_{1} \le x_0$ (componentwise)
+    \item iterates remain in a bounded set $\Rightarrow$ smoothness on this set
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{}
+  \begin{definition}
+    Let $x > 0$ (componentwise), and let $c \ge 1$. $x$ is called $c$-balanced if $x_i \le cx_j$ for all $1 \le i, j \le d$.
+  \end{definition}
+
+  \begin{theorem}
+    Let $c\ge 1$ and $\delta> 0$ such that $x^0 > 0$ is $c$-balanced with $\delta \le \prod_j x^0_j < 1$. Choosing the stepsize
+    \begin{equation}
+      \gamma = \frac{1}{3d c^2}
+    \end{equation}
+    gradient descent satisfies
+    \begin{equation}
+      f(x^k) \le {\left( 1- \frac{\delta^2}{3 c^4} \right)} f(x^0).
+    \end{equation}
+  \end{theorem}
+
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Discussion}
+
+  \begin{itemize}
+    \item Error converges to 0 exponentially fast.
+    \item But there's a catch: Consider $x^0 = (1/2, \dots, 1/2)$. Then $\delta \le \prod_j x^0_j = 2^{-d}$
+    \item Decrease in function value per step by factor
+          \begin{equation}
+            \left( 1- \frac{1}{3 4^d} \right).
+          \end{equation}
+    \item Contraction coefficient depends exponentially bad on dimension
+    \item for polynomial runtime must start at distance $\mathcal{O}(1/\sqrt{d})$ from optimality.
+  \end{itemize}
+\end{frame}
+
+
+\section{Matrix completion}%
+\label{sec:}
+
+\begin{frame}
+  \frametitle{Matrix completion}
+
+  Matrix completion is the problem of recovering a \textbf{low rank} ($r \ll d$) matrix $M^{d\times d}$ from \textbf{partially observed} entries:
+  \begin{block}{}
+    \textbf{Application: Netflix problem}
+  \end{block}
+  \begin{align}
+    \min_{X\in \R^{d\times d}} &\, \rank(X) \\
+    \text{subject to } & X_{i,j} = M_{i,j}, \quad \forall i,j \in \Omega
+  \end{align}
+  But rank is \textbf{not continuous}\ldots
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Convex matrix completion}
+
+  Typically \textbf{convex} reformulations are considered via the\\
+  \textbf{Nuclear norm} (sum of singular values)
+  \begin{align}
+    \min_{X\in \R^{d\times d}} &\, \Vert X \Vert_* := \sum_j \sigma_j(X) \\
+    \text{subject to } & X_{i,j} = M_{i,j}, \quad \forall i,j \in \Omega
+  \end{align}
+  \begin{itemize}
+    \item strong theoretical guarantees
+    \item can be expensive
+          \begin{itemize}
+            \item $\mathcal{O}(d^3)$ running time
+            \item $\mathcal{O}(d^2)$ memory.
+          \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Nonconvex matrix completion}
+  Can be cast in the bilinear $X \approx U V^T$ form which gives:
+  \begin{align}
+    \min_{U, V \in \R^{d\times r}} &\, \sum_{i,j \in \Omega} \Vert {(UV^T)}_{i,j} - M_{i,j} \Vert^2.
+  \end{align}
+  \begin{itemize}
+    \item many global minima
+    \item if $UV^T = M$ then $(UQ){(VQ)}^T = M$ for any orthonormal matrix $Q$ \\
+          \textcolor{gray}{orthonormal: $Q Q^T = \Id$}
+  \end{itemize}
+
+  \begin{block}{}
+    \center
+    No spurious local minima!
+  \end{block}
+  Can often be efficiently solved by GD or alternating minimization.
+
+\end{frame}
+
+
 
 \end{document}
