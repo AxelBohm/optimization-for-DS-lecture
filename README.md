@@ -39,3 +39,11 @@ as well as the team with
 <p align="center">
   <img src="memes/gradient_descent_meme.png" />
 </p>
+
+
+## Related Literature
+
+
+[Convex Optimization: Algorithms and Complexity](https://arxiv.org/pdf/1405.4980.pdf) by Sébastien Bubeck (free online)
+
+[Introductory Lectures on Convex Programming](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.693.855&rep=rep1&type=pdf)
