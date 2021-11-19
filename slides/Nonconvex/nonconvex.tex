@@ -49,8 +49,8 @@
   \begin{itemize}
     \item Often, we observe good behavior in practice.
     \item Theoretical explanations many times missing.
-    \item This lecture: under favorable conditions, we sometimes can say something useful about
-  the behavior of gradient descent, even on nonconvex functions
+    \item Under favorable conditions, we sometimes can say something useful about
+  the behavior of GD.
   \end{itemize}
 \end{frame}
 
@@ -91,22 +91,25 @@
 
 \begin{frame}
   \frametitle{Gradient descent on smooth functions}
-  Will prove: $\Vert \nabla f(x_k) \Vert^2 \to 0$ for $k\to \infty$ \ldots \\
-  \ldots at the same rate as $f(x_k) -f(x^*)$ →0 in the convex case.
+  \begin{minipage}{0.5\textwidth}
+  Will prove: $\Vert \nabla f(x_k) \Vert^2 \to 0$ \ldots \\
+  \ldots at the \textbf{same rate} as \\
+  $f(x_k) -f(x^*) \to 0$ in the convex case.
   \begin{itemize}
     \item $f(x_k) -f(x^*)$ itself may not converge to 0 in the nonconvex case:
   \end{itemize}
-  \begin{figure}[ht]
-    \centering
-    \includegraphics[height=0.7\textheight,keepaspectratio]{nonconvex_func}
-    \caption{\label{fig:label} }
-  \end{figure}
+  \end{minipage}
+  \begin{minipage}{0.45\textwidth}
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[height=0.7\textheight,keepaspectratio]{nonconvex_func}
+    \end{figure}
+  \end{minipage}
 \end{frame}
 
 
 \begin{frame}
   \frametitle{What does $\Vert \nabla f(x_k) \Vert^2\to 0$ mean?}
-
   \begin{itemize}
     \item May or \textcolor{blue}{may not} mean convergence to a critical point $\nabla f(y^*) =0$
     \item critical point might not be even local minimum
@@ -115,7 +118,6 @@
   \begin{figure}[ht]
     \centering
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{nonconvex2}
-    \caption{\label{fig:label} }
   \end{figure}
 \end{frame}
 
@@ -144,13 +146,13 @@
 \begin{frame}
   \frametitle{Gradient descent on smooth  functions II: Proof}
 
-  Smoothness gives:
+  \textbf{Smoothness} gives:
   \begin{equation}
     f(y) \le f(x) + \langle \nabla f(x), y- x \rangle + \frac{L}{2} \Vert y-x \Vert^2.
   \end{equation}
-  Use $y=x_{k+1}$ and $x=x_k$
+  Use $y=x_{k+1}$ and $x=x_k$ to obtain
   \begin{equation}
-    f(x_{k+1}) \le f(x_k) + \langle \nabla f(x_k), - \nabla \alpha f(x_k) \rangle + \frac{L \alpha^2}{2} \Vert \nabla f(x_k) \Vert^2
+    f(x_{k+1}) \le f(x_k) + \langle \nabla f(x_k), - \alpha \nabla f(x_k) \rangle + \frac{L \alpha^2}{2} \Vert \nabla f(x_k) \Vert^2.
   \end{equation}
   to obtain \textcolor{blue}{sufficient decrease:}
   \begin{equation}
@@ -161,9 +163,9 @@
 
 \begin{frame}
   \frametitle{Proof II}
-  \textcolor{blue}{sufficient decrease:}
+  \textbf{Sufficient decrease:}
   \begin{equation}
-    f(x_{k+1}) \le f(x_k) - \frac{1}{2L} \Vert \nabla f(x_k) \Vert^2.
+    \frac{1}{2L} \Vert \nabla f(x_k) \Vert^2 \le f(x_k) - f(x_{k+1}).
   \end{equation}
   Sum up from $k=0, 1, \dots, K-1$ to get
   \begin{equation}
@@ -175,7 +177,7 @@
 
 \begin{frame}
   \frametitle{No overshooting}
-  Under the \textbf{smoothness} assumption and appropriate stepsize $\alpha \le 1/L$,\\
+  Under the \textbf{smoothness} assumption and \textbf{appropriate stepsize} $\alpha \le 1/L$,\\
   GD cannot pass a critical point:
   \begin{figure}[ht]
     \centering
@@ -190,11 +192,13 @@
 \begin{frame}
   \frametitle{Trajectory Analysis}
 
-  Even if the “landscape” (graph) of a nonconvex function has local minima, saddle
+  Even if the ``landscape'' (graph) of a nonconvex function has local minima, saddle
   points, and flat parts, gradient descent may avoid them and still converge to a global
-  minimum.
-  For this, one needs a good starting point and some theoretical understanding of what
-  happens when we start there—this is trajectory analysis.
+  minimum.\medskip
+
+
+  For this, one needs a \textbf{good starting point} and some theoretical understanding of what
+  happens when we start there — this is trajectory analysis.
 
 \end{frame}
 
@@ -209,17 +213,17 @@
           \begin{equation}
             y_i \approx w^T x_i ,
           \end{equation}
-          for a weight vector $\bm{w} = (w_1,...,w_d) \in \R^d$ to be learned.
+          for a weight vector $w = (w_1,...,w_d) \in \R^d$ to be learned.
   \end{itemize}
 
   Now more than one output value:
   \begin{itemize}
-    \item $n$ outputs $y_1,...,y_n$, where each output $y_i \in \R^m$
+    \item $n$ outputs $y_1,\dots,y_n$, where each output $y_i \in \R^m$
     \item Hypothesis:
           \begin{equation}
             y_i \approx W x_i,
           \end{equation}
-          for a weight matrix $W \in \R{m\times d}$ to be learned.
+          for a weight matrix $W \in \R^{m\times d}$ to be learned.
   \end{itemize}
 \end{frame}
 
@@ -240,8 +244,9 @@
   \begin{equation}
     W^* = \argmin_{W\in \R^{m\times d}} \sum_{i=1}^{n} \Vert W x_i - y_i \Vert^2.
   \end{equation}
-  where $\Vert A \Vert_F = \sqrt{\sum_{i,j} a_{i,j}}$ is the Frobenius norm of a matrix $A$.
-  Frobenius norm of A = Euclidean norm of \texttt{vec(A)} (``flattening'' of A).
+  where $\Vert A \Vert_F = \sqrt{\sum_{i,j} a_{i,j}}$ is the Frobenius norm of a matrix $A$.\\
+  \textcolor{gray}{Frobenius norm of A = Euclidean norm of \texttt{vec(A)} (``flattening'' of A).}
+
 \end{frame}
 
 
@@ -250,13 +255,19 @@
   \begin{equation}
     W^* = \argmin_{W\in \R^{m\times d}} \Vert W X - Y \Vert_F^2
   \end{equation}
-  is the global minimum of a convex quadratic function $f(W)$. \\
-  To find $W^*$, solve $\nabla f(W)=0$ (system of linear equations) \\
-  $\Leftrightarrow$ training a linear neural network with one layer under least squares loss.
-  \begin{figure}[ht]
-    \centering
-    \includegraphics[height=0.6\textheight,keepaspectratio]{one-layer-linear-network}
-  \end{figure}
+  \begin{minipage}{0.5\textwidth}
+  \begin{itemize}
+    \item global minimum of a convex quadratic function $f(W)$.
+    \item To find $W^*$, solve $\nabla f(W)=0$ (system of linear equations)
+    \item $\Leftrightarrow$ training a linear neural network with \textbf{one layer} under least squares loss.
+  \end{itemize}
+  \end{minipage}
+  \begin{minipage}{0.45\textwidth}
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[height=0.6\textheight,keepaspectratio]{one-layer-linear-network}
+    \end{figure}
+  \end{minipage}
 \end{frame}
 
 \begin{frame}
@@ -295,13 +306,12 @@
 \begin{frame}
   \frametitle{A simple nonconvex function}
   Nonconvex level sets: $f(x)= \frac12 {\left( \prod_j x_j \right)}$. \\
-  \textcolor{gray}{Dimensions is fixed so we ignore it}
+  \textcolor{gray}{Dimensions is fixed so we ignore it.}
 
   \begin{figure}[ht]
     \centering
     \includegraphics[height=0.6\textheight,keepaspectratio]{linear-network-toy}
   \end{figure}
-
 \end{frame}
 
 
@@ -354,7 +364,7 @@
             f(x_{k+1}) = f(x_k) - \frac{1}{2L} \Vert \nabla f(x_k) \Vert^2.
           \end{equation}
     \item saddle points have (at least two) zero entries $\Rightarrow$ function value $\ge$ $1/2$.
-    \item any starting $x_0 \in X$ has $f(x_0) < 1/2$
+    \item any starting point $x_0 \in X$ has $f(x_0) < 1/2$
     \item cannot converge to saddle points through~\eqref{eq:sd}
   \end{itemize}
 
@@ -378,7 +388,7 @@
   \end{equation}
 
   \begin{itemize}
-    \item if $\prod_j x_j \ge 1$ then $\nabla f(x) \ge 0$
+    \item since $\prod_j x_j \ge 1$ then $\nabla f(x) \ge 0$
     \item which implies that $x_{1} \le x_0$ (componentwise)
     \item iterates remain in a bounded set $\Rightarrow$ smoothness on this set
   \end{itemize}
@@ -399,11 +409,9 @@
     \end{equation}
     gradient descent satisfies
     \begin{equation}
-      f(x^k) \le {\left( 1- \frac{\delta^2}{3 c^4} \right)} f(x^0).
+      f(x^k) \le {\left( 1- \frac{\delta^2}{3 c^4} \right)}^k f(x^0).
     \end{equation}
   \end{theorem}
-
-
 \end{frame}
 
 
@@ -417,8 +425,8 @@
           \begin{equation}
             \left( 1- \frac{1}{3 4^d} \right).
           \end{equation}
-    \item Contraction coefficient depends exponentially bad on dimension
-    \item for polynomial runtime must start at distance $\mathcal{O}(1/\sqrt{d})$ from optimality.
+    \item Contraction coefficient depends \textit{exponentially bad on dimension}
+    \item polynomial runtime: must start at distance $\mathcal{O}(1/\sqrt{d})$ from optimality.
   \end{itemize}
 \end{frame}
 
@@ -429,7 +437,8 @@
 \begin{frame}
   \frametitle{Matrix completion}
 
-  Matrix completion is the problem of recovering a \textbf{low rank} ($r \ll d$) matrix $M^{d\times d}$ from \textbf{partially observed} entries:
+  is the problem of recovering a \textbf{low rank} ($r \ll d$) matrix $M \in \R^{d\times d}$ \\
+  from \textcolor{blue}{partially observed entries}:
   \begin{block}{}
     \textbf{Application: Netflix problem}
   \end{block}
