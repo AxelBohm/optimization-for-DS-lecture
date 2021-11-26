@@ -5,43 +5,54 @@
 The mini-project focuses on practical implementation. You are encouraged to investigate an optimization algorithm for a real-life machine learning / data science  application and gain insight into that algorithm. You should provide empirical evidence for some property of your chosen optimization algorithm. This property could be discussed in class or not and could be desirable or undesirable. The optimization algorithms can be anything of your choice. Don’t be scared to try variants not seen in class, as the project’s focus is not on theory. You can also choose any relevant ML/DS application. It does not matter if it is deep learning, linear models, random forests or less ML in flavor such as inverse problems, signal processing, imaging (denoising, deblurring) or something else.
 
 - Grading. The project is mandatory and should be done in groups of 2-3 students. Project reports (3 page PDF) and code are due February 28th.
+- Please inform me about your team and topic decision by the end of December **at the latest**. Earlier is better. 
 
 ## List of possible topics
 
 The list below is by no means exhaustive. You are encouraged to freely chose very different aspects and topics as
 long as they concern optimization and as long as you study them for any ML/DS-relevant application.
 
-- **coordinate descent** vs **proximal gradient** for _Lasso_. 
+- **coordinate descent** vs **(accelerated) proximal gradient** for _Lasso_. 
+  tags: [difficulty:easy], [reading:little], convex, covered in the lecture
 
 - compare **variance reduction** methods
   + for example on an arbitrary logistic regression problem
   + convex vs nonconvex
-  + (hard) on nonconvex problems if one starts close to a bad local minimum then sgd is more likely to escape. Can you find such an example.
+  + (hard) on nonconvex problems if one starts close to a bad local minimum then SGD is more likely to escape. Can you find such an example.
+  tags: [difficulty:medium], [reading:little/medium], covered in the lecture
   
-- How do different optimization variants affect generalization (test error)?
-
-- **Meta-Learning**: Can you learn the learning rate? The direction or curvature? See also the larger field of AutoML.
+- **Meta-Learning**: Can you learn the learning rate? The direction or curvature? More formally: Can a ML predict good hyperparameters for another model. See also the larger field of AutoML.
+  tags: [medium/hard], [reading:medium], not covered in the lecture
 
 - How well do **zero-order** optimization methods do for ML applications, compared to standard first-order
 methods?
+  tags: [difficulty:medium/hard], [reading:medium/lots], briefly covered in lecture
 
 - What happens when you train deep nets with very **large batch sizes**. Is this influenced by the properties of the optimizer (SGD with or without momentum / Adam). What about the objective function value and what about generalization.
+  tags: [difficulty:medium], [reading:medium] easier if you have DL knowledge,
 
 - Explore the **role of momentum** for convex and nonconvex problems: SGD with or without momentum vs ADAM.
   What about heavy ball vs Nesterov?
+  tags: [difficulty:easy/medium], [reading:little/medium], covered in the lecture
 
 - Explore the practical **differences of first and second order** methods. Can you see a difference in the generalization error (for nonconvex models)? 
+  tags: [difficulty:medium], [reading:little/medium], covered mostly in the lecture (second order for nonconvex requires some reading)
 
 - The role of **duality** in optimization. Pick a problem which is generally solved by considering its dual - such as support vector machines - and explore the difference.
+  tags: [difficulty:medium/hard], [reading:medium/lots]most theoretical topic out of all the ones mentioned here.
 
 - Explore the role of different optimizers in **adversarial learning**, see [the cleverhans repo on github](https://github.com/cleverhans-lab/cleverhans). It should have all the relevant code available.
+  tags: [difficulty:hard], [reading:medium], requires DL knowledge and some reading, but super interesting, see (this paper)[https://arxiv.org/pdf/1706.06083.pdf%E4%B8%AD%E6%9C%89%E4%BD%93%E7%8E%B0%EF%BC%8C%E4%BB%A5%E5%90%8E%E8%AF%B4%E5%88%B0CW%E6%94%BB%E5%87%BB%E5%86%8D%E7%BB%86%E8%AF%B4%E3%80%82]
 
 - Difference between **SGD and random reshuffling**.
   The way we presented SGD in the lecture, a sample is picked uniformly at random. This means that the same sample could be chosen multiple times in a row (or at least more frequently than others). Random reshuffling, as the name suggests, shuffles all samples and loops through them resulting in every sample being selected at the same frequency as others.
+  tags: [difficulty:easy], [reading:little/medium], very relevant
 
-- **Line search**: if the smoothness constant is not known there ways to find a good step size (or step length) by means of line search, most notably Armijo. Test the perfomance of these methods on a problems of your choice.
+- **Line search**: if the smoothness constant is not known there ways to find a good step size (or step length) by means of line search, most notably Armijo (many others: backtracking, Barzilai-Borwein, exact line search, etc.). Test the performance of these methods on a problems of your choice.
+  tags: [difficulty:medium], [reading:medium/lots], not covered in the lecture
 
-- ...
+- **Matrix Factorization**: Many different versions: Recovering a low rank matrix. See Netflix problem. Compare convex and nonconvex formulations and different methods to solve them.
+  tags: [difficulty:medium], [reading:medium/lots], briefly covered in the lecture
 
 
 ## Deliverables
