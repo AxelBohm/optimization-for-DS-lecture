@@ -200,7 +200,11 @@
     \begin{equation}
       x_{k+1} = x_k .* e^{- \alpha \nabla f(x_k)}
     \end{equation}
-    in a pointwise sense.
+    in a componentwise sense.
+    \textcolor{gray}{
+    \begin{equation}
+      x_{k+1}[i] = x_k[i] e^{- \alpha {[\nabla f(x_k)]}_i}, \quad \forall i = 1, \dots, d.
+    \end{equation}}
 \end{frame}
 
 
