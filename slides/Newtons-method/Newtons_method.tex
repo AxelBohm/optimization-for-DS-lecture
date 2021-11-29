@@ -154,35 +154,35 @@
   \end{proof}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Affine Invariance}
-  Newton’s method is \textcolor{blue}{affine invariant}
-  (invariant under any invertible affine transformation):
-  Denote the Newton step for $h$ by
-  \begin{equation}
-    N_h(x) := x - {\nabla^2 h }^{-1} \nabla h(x).
-  \end{equation}
-  \begin{lemma}%
-    Let $f: \R^d \to \R$ be twice differentiable, $A \in \R^{d \times d}$ an invertible matrix and $b \in \R^d$.
-    \begin{equation}
-      g(x) = Ax + b.
-    \end{equation}
-    Then
-    \begin{equation}
-      N_{f \circ g} = g^{-1} \circ N_f \circ g
-    \end{equation}
-  \end{lemma}
-\end{frame}
+% \begin{frame}
+%   \frametitle{Affine Invariance}
+%   Newton’s method is \textcolor{blue}{affine invariant}
+%   (invariant under any invertible affine transformation):
+%   Denote the Newton step for $h$ by
+%   \begin{equation}
+%     N_h(x) := x - {\nabla^2 h }^{-1} \nabla h(x).
+%   \end{equation}
+%   \begin{lemma}%
+%     Let $f: \R^d \to \R$ be twice differentiable, $A \in \R^{d \times d}$ an invertible matrix and $b \in \R^d$.
+%     \begin{equation}
+%       g(x) = Ax + b.
+%     \end{equation}
+%     Then
+%     \begin{equation}
+%       N_{f \circ g} = g^{-1} \circ N_f \circ g
+%     \end{equation}
+%   \end{lemma}
+% \end{frame}
 
-\begin{frame}
-  \frametitle{}
-  \begin{figure}[ht]
-    \centering
-    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{newton_aff_invariance}
-    % \caption{\label{fig:label} }
-  \end{figure}
-  Gradient descent suffers if coordinates are at different scales; Newton's method doesn't.
-\end{frame}
+% \begin{frame}
+%   \frametitle{}
+%   \begin{figure}[ht]
+%     \centering
+%     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{newton_aff_invariance}
+%     % \caption{\label{fig:label} }
+%   \end{figure}
+%   Gradient descent suffers if coordinates are at different scales; Newton's method doesn't.
+% \end{frame}
 
 
 \begin{frame}
@@ -349,7 +349,7 @@
   \begin{lemma}%
     Let $f: \R^d \to \R$ be $C^2$ and \textbf{strongly convex} with parameter $\mu$, i.e.\
     \begin{equation}
-      f(y) \ge f(x) \langle \nabla f(x), y-x \rangle + \frac{\mu}{2} \Vert y-x \Vert^2, \quad \forall x,y.
+      f(y) \ge f(x) + \langle \nabla f(x), y-x \rangle + \frac{\mu}{2} \Vert y-x \Vert^2, \quad \forall x,y.
     \end{equation}
   Then, $\nabla^2 f(x)$ is invertible and $\Vert \nabla^2 f(x) \Vert^{-1} \le 1/\mu$ for all $x$.
   \end{lemma}
