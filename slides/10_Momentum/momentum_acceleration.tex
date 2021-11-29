@@ -249,7 +249,7 @@
   \begin{itemize}
     \item Both types of momentum seem so similar.
     \item Heavy ball does not care if momentum or gradient first.
-    \item Nesterov momentum applies \textbf{inertia first}, then gradient:
+    \item Nesterov momentum applies \textcolor{blue}{inertia first}, then gradient:
           \begin{align}
             v_k &= \beta v_{k-1} + \alpha \nabla f(x_k + \beta v_{k-1}) \\
             x_{k+1} &= x_k - v_k.
@@ -273,7 +273,7 @@
 \begin{frame}
   \frametitle{Momentum for strongly convex functions}
 
-  For $L$-smooth $\mu$-strongly convex we know that GD obtains
+  For $L$-smooth $\mu$-\textcolor{blue}{strongly convex} we know that GD obtains
   \begin{equation}
     \Vert x_{k+1} - x^* \Vert^2 \le \left(1 - \frac{1}{\kappa}\right) \Vert x_k -x^* \Vert^2
   \end{equation}
@@ -281,13 +281,13 @@
   \begin{equation}
     f(x_k)-f^* \le {\left(1-\frac{1}{\kappa}\right)}^k \, \frac{L \Vert x_0 -x^* \Vert^2}{2}.
   \end{equation}
-  Performance depends heavily on the \textbf{\textcolor{blue}{condition number}} $\kappa : = L/\mu$
+  Performance depends heavily on the \textbf{\textcolor{blue}{condition number}} $\kappa : = L/\mu$.
+  $\Rightarrow$ Contraction coefficient is $(1-1/\kappa)$.
   \begin{block}{}
     \center
-    Contraction coefficient is $(1-1/\kappa)$.
+  Nesterov \textbf{and Polyak} momentum improve this to $(1-1/\sqrt{\kappa})$.
   \end{block}
 
-  Nesterov \textbf{and Polyak} momentum improve this to $(1-1/\sqrt{\kappa})$
 \end{frame}
 
 
@@ -322,7 +322,7 @@
   \begin{itemize}
     \item If $f$ is not differentiable and we have to use subgradients:\\
           no way to improve the $\mathcal{O}(1/\sqrt{k})$ rate.
-    \item Works objective is \textbf{structured}: $f+g$ \textcolor{gray}{(smooth+nonsmooth)}
+    \item Works if objective is \textbf{structured}: $f+g$ \textcolor{gray}{(smooth+nonsmooth)}
           \begin{equation}
             \text{FISTA:}\quad \begin{cases}
               y_{k} &= x_k + \beta_k (x_k - x_{k-1}) \\
@@ -347,7 +347,7 @@
     \begin{itemize}
       \item some statements under additional smoothness assumptions
     \end{itemize}
-    \item Strong empirical evidence of usefulness.
+    \item \textbf{Strong empirical evidence} of usefulness.
         \begin{itemize}
           \item especially in deep learning.
         \end{itemize}
