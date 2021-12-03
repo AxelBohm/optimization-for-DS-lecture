@@ -1,12 +1,20 @@
 
-\documentclass{scrarticl}
+\documentclass{scrartcl}
 
 \input{../../shared.tex}
 
-\title{Exercises}
+\begin{document}
 
-Show that Newton's method applied to a nondegenerate quadratic function yields a Quasi-Newton method.
+\section*{Exercises on (quasi) Newton methods}
 
+\paragraph{Exercise (i)} (2P) Show that Newton's method applied to a nondegenerate quadratic function yields a Quasi-Newton method.\\
 \textbf{Bonus points:} Show that this is an \textit{if and only if}.
+
+\paragraph{Exercise (ii)} (2P) Consider a step of the secant method:
+        \begin{equation}
+          x_{k+1} = x_k - f(x_k)\frac{x_k-x_{k-1}}{f(x_k)-f(x_{k-1})}.
+        \end{equation}
+        Assuming that $x_k\neq x_{k-1}$ and $f(x_k)\neq f(x_{k-1})$, prove that the line through the two points $(x_{k-1}, f(x_{k-1}))$ and $(x_k, f(x_k))$ intersects the $x$-axis at the point $x=x_{k+1}$.
+\paragraph{Exercise (iii)} (6P) Complete the notebook.
 
 \end{document}
