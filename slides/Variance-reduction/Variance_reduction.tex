@@ -1,4 +1,4 @@
-\documentclass{beamer}
+\documentclass[aspectratio=149]{beamer}
 
 \input{../../shared_slides.tex}
 
@@ -27,7 +27,7 @@
     \item linear regression: $f_i(x) = {(a_i^T x -y_i)}^2$, and $\psi=0$
     \item logistic regression: $f_i(x) = \log(1+e^{-y_i a_i^T x})$, and $\psi=0$
           ``sigmoid function'' and logistic loss.
-    \item Lasso: $f_i$ as for linear regression but $\psi(x) = \Vert x \Vert_i$
+    \item Lasso: $f_i$ as for linear regression but $\psi(x) = \Vert x \Vert_1$
     \item SVM: $f_i(x) = \max \{0 , 1 - y_i a_i^T x\}$ and $\psi(x)= \Vert x \Vert^2$
   \end{itemize}
 \end{frame}
@@ -83,7 +83,7 @@
   \end{equation}
   \begin{itemize}
     \item $g_k$ is an unbiased estimator of the true gradient $\nabla F(x_k)$
-    \item convergence depends on \textbf{variance} $\E [ \Vert g_k - \nabla F(x_k) \Vert ] \le \sigma_g$
+    \item convergence depends on \textbf{variance} $\E [ \Vert g_k - \nabla F(x_k) \Vert ] \le \sigma_g$ \\
           (not strictly necessary)
     \item vanilla SGD uses $g_k = \nabla f_{i_k}(x_k)$ \\
           \textbf{issue:} $\sigma_g$ is non-negligible even close to the solution
@@ -110,7 +110,7 @@
           \begin{itemize}
             \item decrease variance
             \item increase cost only moderately,
-            \item but cannot improve theoretical guarantees
+            \item no improvement in the rate
           \end{itemize}
   \end{itemize}
 
@@ -181,7 +181,7 @@
     \begin{aligned}
       \text{SAG:}& \quad \frac{n}{k}(f(x^0)-f^*) + \frac{L}{k}D^2 \\
       \text{GD:}& \quad \frac{L}{k}D^2 \\
-      \text{SAG:}& \quad \frac{L}{\sqrt{k}}D^2 \\
+      \text{SGD:}& \quad \frac{L}{\sqrt{k}}D^2 \\
     \end{aligned}
   \end{equation}
   \begin{itemize}
@@ -291,6 +291,75 @@
     \item is an unbiased estimate of $\nabla f(x^k)$
     \item converges to $0$ (meaning reduced variability) if $x^k\approx x^{\text{old}} \approx x^*$
   \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{SVRG: Theorem}
+
+  \begin{theorem}
+    Assume each $f_i$ is convex and $L$-smooth, and $F$ is $\mu$-strongly convex.
+    Choose $m$ large enough s.t. $\rho = \frac{1}{\mu \alpha (1-2L \alpha)m} + \frac{2L \alpha}{1-2L \alpha}< 1$, then
+    \begin{equation}
+      \E[F(x_s^{old})- F(x^*)] \le \rho^s [F(x_0^{old})-F(x^*)]
+    \end{equation}
+  \end{theorem}
+  Computational cost:
+  \begin{itemize}
+    \item per epoch: $(m+n)$
+    \item complexity: $(n+ \kappa) \log(1/\epsilon)$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{SVRG: Convergence Proof}
+  Denote $g_s^k = \nabla f_{i_l}(x_s^k) - \nabla f_{i_l}(x_s^{old}) + \nabla F(x_s^{old})$. Conditioning on everythong prior to $x_s^{k+1}$ we get
+  \begin{equation}
+    \begin{aligned}
+      \MoveEqLeft \E [\Vert x_s^{k+1} - x^* \Vert^2] = \E [\Vert x_s^{k}- \alpha g_s^k - x^* \Vert^2] \\
+      &= \Vert x_s^k-x^* \Vert^2 - 2 \alpha {(x_s^k-x^* )}^T \E[g_s^t] + \alpha^2 \E[\Vert g_s^k \Vert^2] \\
+      &= \Vert x_s^k-x^* \Vert^2 - 2 \alpha {(x_s^k-x^* )}^T \textcolor{blue}{\nabla F(x_s^t)} + \alpha^2 \E[\Vert g_s^k \Vert^2] \\
+      &\le \Vert x_s^k-x^* \Vert^2 - 2 \alpha (F(x_s^k) - F(x^*))+ \alpha^2 \E[\Vert g_s^k \Vert^2]
+    \end{aligned}
+  \end{equation}
+
+  \begin{itemize}
+     \item \textbf{key step:} control $\E[\Vert g_s^k \Vert^2]$
+   \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{SVRG: convergence Proof}
+  \begin{lemma}%
+    \begin{equation}
+      \E[\Vert g_s^k \Vert^2] \le 4L [ F(x_s^k)- F(x^*) + F(x_s^{old}-F(x^*)) ]
+    \end{equation}
+
+  \end{lemma}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Comparison}
+
+  % \begin{tabular}{l | c}
+  %   SVRG & $(n + \kappa) \log(1/\epsilon)$\\
+  %   GD   & $n \kappa \log(1/\epsilon)$ \\
+  %   SGD  & $\kappa^2 / \epsilon$
+  % \end{tabular}
+
+  \begin{tabular}{c | c | c}
+    SVRG  & GD & SGD \\
+    \hline
+ $(n + \kappa) \log(1/\epsilon)$ & $n \kappa \log(1/\epsilon)$ & $\kappa^2 / \epsilon$
+  \end{tabular}
+
+  % \begin{itemize}
+  %   \item SVRG:\ $(n + \kappa) \log(1/\epsilon)$
+  %   \item GD:\ $n \kappa \log(1/\epsilon)$
+  %   \item SGD:\ $\kappa^2 / \epsilon$
+  % \end{itemize}
 
 \end{frame}
 
