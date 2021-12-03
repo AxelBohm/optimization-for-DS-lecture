@@ -129,7 +129,7 @@
  \begin{block}{}
   Newton's methods \textbf{adapts} to the local geometry of $f$ at $x_k$ \\
  \end{block}
-  $\rightarrow$ \textit{no need for choosing a stepsize}.
+  $\rightarrow$ \textit{no need to choose a stepsize}.
 \end{frame}
 
 \begin{frame}
@@ -140,8 +140,8 @@
   \end{equation}
   is called \textit{nondegenerate} if $M$ is invertible.
   \begin{itemize}
-    \item $x^* := M^{-1}q$ is the unique solution of $\nabla f(x) = 0$
-    \item $x^*$ is the unique global minimum if $f$ is convex
+    \item $x^* := M^{-1}q$ is the unique solution of $\nabla f(x) = 0$.
+    \item $x^*$ is the unique global minimum if $f$ is convex.
   \end{itemize}
   \begin{lemma}[\textcolor{gray}{arbitrary $x_0$}]%
     On nondegenerate quadratic functions, Newtons method yields $x_1=x^*$.
@@ -188,7 +188,10 @@
 \begin{frame}
   \frametitle{Minimizing the second-order Taylor approximation}
   Alternative interpretation of Newton's method:\\
-  Minimize (local) \textcolor{blue}{quadratic model} of $f$.
+  \begin{block}{}
+    \center
+    Minimize (local) \textcolor{blue}{quadratic model} of $f$.
+  \end{block}
   \begin{lemma}%
     Let $f$ be convex, twice differentiable and $\nabla^2 f(x) \succ 0$. Then $x_{k+1}$ resulting from \textbf{Newton's step} satisfies
     \begin{equation}
@@ -200,7 +203,7 @@
 
 \begin{frame}
   \frametitle{Local Convergence}
-  We will prove:\\
+  \textcolor{gray}{We will prove:}\\
   Under suitable conditions on $f$ and \textcolor{blue}{close to the minimum} Newton's method approximates solution up to an error $\epsilon$ in \textcolor{blue}{$\log \log (1/\epsilon)$} iterations.
   \begin{itemize}
     \item much faster than anything so far..
