@@ -108,7 +108,7 @@
 
     \item \textbf{$d$-dimensional case:} Newtons methods for minimizing convex $f: \R^d \to \R$:
           \begin{equation}
-            x_{k+1} = x_k - \nabla^2 f(x_k) \nabla f(x_k).
+            x_{k+1} = x_k - {\nabla^2 f(x_k)}^{-1} \nabla f(x_k).
           \end{equation}
   \end{itemize}
 \end{frame}
@@ -149,7 +149,7 @@
   \begin{proof}
     We have $\nabla f(x) = Mx -q$ and $\nabla^2 f(x) = M$. Therefore
     \begin{equation}
-      x_1 = x_0 - \nabla^2 f(x_0) \nabla f(x_0) = x_0 - M^{-1}(M x_0 - q) = M^{-1}q = x^*. \qed\qedhere
+      x_1 = x_0 - {\nabla^2 f(x_0)}^{-1} \nabla f(x_0) = x_0 - M^{-1}(M x_0 - q) = M^{-1}q = x^*. \qed\qedhere
     \end{equation}
   \end{proof}
 \end{frame}
@@ -253,9 +253,9 @@
       \Vert x_k -x^*  \Vert \le \frac{\mu}{B} {\left( \frac{1}{2} \right)}^{2^k-1}
     \end{equation}
   \end{corollary}
-  Close to the global minimum, we will reach distance to the minumum less than $\epsilon$ in at most $\log \log (1/\epsilon)$ steps.
+  Close to the global minimum, we will reach distance to the minimum less than $\epsilon$ in at most $\log \log (1/\epsilon)$ steps.
 
-  As for the last phase of Babylonian method.
+  \textcolor{gray}{As for the last phase of Babylonian method.}
 \end{frame}
 
 
