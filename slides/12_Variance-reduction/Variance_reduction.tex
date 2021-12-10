@@ -453,9 +453,9 @@
   \textbf{\textcolor{blue}{just convex}} problems: number gradient calls to compute $\E [f(x_k)] - f^* \le \epsilon$ is given by
   \begin{center}
   \begin{tabular}{c c c c c c}
-    lower bound & Katyusha & SVRG / SAGA  & GD & NAG & SGD \\
+    lower bound & Katyusha & SVRG & GD & NAG & SGD \\
     \midrule
-    $n + \sqrt{\frac{n L}{\epsilon}}$ & $n \log \frac{1}{\epsilon} + \sqrt{\frac{n L}{\epsilon}}$ &$\frac{L}{\epsilon}$ & $n \frac{L}{\epsilon}$ & $n \sqrt{\frac{L}{\epsilon}}$ & $ \frac{1}{\sqrt{\epsilon}}$
+    $n + \sqrt{\frac{n L}{\epsilon}}$ & $n \log \frac{1}{\epsilon} + \sqrt{\frac{n L}{\epsilon}}$ &$n + \sqrt{n}\frac{L}{\epsilon}$ & $n \frac{L}{\epsilon}$ & $n \sqrt{\frac{L}{\epsilon}}$ & $ \frac{1}{\sqrt{\epsilon}}$
   \end{tabular}
   \end{center}
   \vspace{1cm}
