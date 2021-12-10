@@ -3,6 +3,10 @@
 \input{../../shared_slides.tex}
 
 % reference: https://yuxinchen2020.github.io/ele522_optimization/lectures/variance_reduction.pdf
+% or
+% https://ieeexplore-ieee-org.uaccess.univie.ac.at/stamp/stamp.jsp?tp=&arnumber=9226504
+
+\usepackage{booktabs}
 
 \title{Variance reduction for stochastic gradient methods}
 \date{\today}
@@ -69,7 +73,8 @@
   We already noticed that:
   \begin{itemize}
     \item unbiased: $\E[\nabla f_{i_k}(x)] = \sum_{i=1}^{n} \P[i=i_k] \nabla f_i(x) = \sum_{i=1}^{n} \frac{1}{n} \nabla f_i(x)$
-    \item large stepsizes fail to suppress variability in the stoch.\ gradients $\rightarrow$ leads to oscillations
+    \item large stepsizes fail to suppress noise in the stoch.\ gradients \\
+          $\rightarrow$ leads to oscillations
     \item decreasing stepsizes mitigate this problem but \textbf{slows down} convergence (too \emph{conservative})
   \end{itemize}
 
@@ -77,10 +82,12 @@
 
 
 \begin{frame}
-  \frametitle{Recall SGD (template)}
-  \begin{equation}
-    x_{k+1} = x_k - \alpha_k g_k
-  \end{equation}
+  \frametitle{Recall SGD}
+  \begin{block}{template}
+    \begin{equation}
+      x_{k+1} = x_k - \alpha_k g_k
+    \end{equation}
+  \end{block}
   \begin{itemize}
     \item $g_k$ is an unbiased estimator of the true gradient $\nabla F(x_k)$
     \item convergence depends on \textbf{variance} $\E [ \Vert g_k - \nabla F(x_k) \Vert ] \le \sigma_g$ \\
@@ -122,14 +129,16 @@
   Consider
   \begin{itemize}
     \item estimator $X$ for parameter $\mu$ ($\E[X]=\mu$ and $\Var[X]=\sigma^2$)
-    \item want to keep unbiased but reduce variance
-    \item find $Y$ such that $\E[Y] = 0$ but $\Cov (X,Y)$ is large and $\tilde{X}=X-Y$
+    \item want to \textcolor{blue}{keep unbiased} but \textbf{\textcolor{blue}{reduce variance}}
+    \item find $Y$ such that $\E[Y] = 0$ but $\Cov (X,Y)$ \textbf{is large} and define
+          \begin{equation}
+            \tilde{X} := X-Y
+          \end{equation}
     \item remains unbiased
-
+    \item $\Var[\tilde{X}]$ can be much smaller than $\Var[X]$ if $X,Y$ are highly correlated
           \begin{equation}
             \Var[\tilde{X}] = \Var[X]+\Var[Y]-2\Cov[X,Y]
           \end{equation}
-    \item can be much smaller than $\Var[X]$ if $X,Y$ are highly correlated
   \end{itemize}
 \end{frame}
 
@@ -139,21 +148,21 @@
 \begin{frame}
   \frametitle{Stochastic average gradient (SAG), 2013}
   \begin{itemize}
-    \item maintain table containing gradients $g_i$ of $f_i$
-    \item at step $k = 1,2, \dots$ pick random $i_k \in [n]$ and
+    \item \textbf{maintain table} containing gradients $g_i$ of $f_i$
+    \item pick random $i_k \in [n]$ and
           \begin{equation}
-            g_i^k := \nabla f_{i_k}(x^{k})
+            g_{i_k}^k := \nabla f_{i_k}(x^{k})
           \end{equation}
           set $g_{i}^k = g_i^{k-1}$ for all $i\neq i_k$ (remain the same)
     \item Update
           \begin{equation}
-            x^{k+1} = x^k - \alpha_k \frac{1}{n} \sum_{i=1}^{n} g_i^k
+            x^{k+1} = x^k - \alpha_k \frac{1}{n} \sum_{i=1}^{n} g_i^k.
           \end{equation}
-    \item assuming gradients do not change too much along trajectory
+    % \item assuming gradients do not change too much along trajectory
     \item gradient estimator \textcolor{red}{no longer unbiased}
     \item Isn't it expensive to average these gradients?
           \begin{equation}
-            x^{k+1} = x^k -u \alpha_k  \Big( \frac{g_{i_k}^k}{n} - \frac{g_{i_k}^{k-1}}{n} + \underbrace{\frac{1}{n}\sum_{i=1}^{n} g_i^k}_{\text{old table average}} \Big)
+            x^{k+1} = x^k -u \alpha_k  \Big( \frac{g_{i_k}^k}{n} - \frac{g_{i_k}^{k-1}}{n} + \underbrace{\frac{1}{n}\sum_{i=1}^{n} g_i^{k-1}}_{\text{old table average}} \Big)
           \end{equation}
   \end{itemize}
 \end{frame}
@@ -163,13 +172,15 @@
   \frametitle{SAG variance reduction}
   Gradient estimator in SAG:
   \begin{equation}
-    x^{k+1} = x^k - \alpha_k \frac{1}{n} \Big( \underbrace{g_{i_k}^k}_X - \underbrace{g_{i_k}^{k-1} - \sum_{i=1}^{n} g_i^k}_{Y} \Big)
+    x^{k+1} = x^k - \alpha_k \frac{1}{n} \Big( \underbrace{g_{i_k}^k}_X - \underbrace{g_{i_k}^{k-1} - \sum_{i=1}^{n} g_i^{k-1}}_{Y} \Big)
   \end{equation}
   \begin{itemize}
-    \item While $\E[X] = \nabla f(x^k)$, but $\E[Y]\neq 0$ $\rightarrow $ biased estimator
-    \item $X$ and $Y$ are correlated as $X-Y \to 0$  as
-    \item $x^k$ and $x_{k-1}$ both converge to $x^*$ and
-    \item the last term converges to $\nabla f(x^*)= 0$
+    \item Indeed $\E[X] = \nabla f(x^k)$, but $\E[Y]\neq 0$ $\rightarrow $ is \textbf{biased estimator}
+    \item $X$ and $Y$ are correlated as $X-Y \to 0$:
+          \begin{itemize}
+            \item $x^k$ and $x_{k-1}$ both converge to $x^*$ $\Rightarrow$ $ \nabla f_i(x_k) - \nabla f_i(x_{k-1}) \to 0$
+            \item the last term converges to $\nabla f(x^*)= 0$
+          \end{itemize}
   \end{itemize}
 \end{frame}
 
@@ -185,7 +196,7 @@
     \end{aligned}
   \end{equation}
   \begin{itemize}
-    \item Achieves linear convergence in the \emph{strongly} convex setting.
+    \item Achieves \textcolor{blue}{linear convergence} in the \textbf{strongly} convex setting.
     \item proofs are difficult (and computer-aided)
   \end{itemize}
 
@@ -195,13 +206,36 @@
   \end{center}
 \end{frame}
 
+
 \begin{frame}
-  \frametitle{}
+  \frametitle{Experiments from the original paper}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{SAG.png}
-    \caption{\label{fig:label} }
+    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{SAG-experiments}
+    \caption{ Solving $\ell_2$-regularized logistic regression.}
   \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{More ``naive'' implementation}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth,height=0.9\textheight,keepaspectratio]{SAG}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{SAG experiments}
+  \begin{itemize}
+    \item does not work well out of the box
+    \item needs a \textcolor{blue}{warm up} to get good $(g_1^0, g_2^0, \dots, g_m^0)$
+          \begin{itemize}
+            \item achieved by running one full epoch of SGD
+          \end{itemize}
+    \item reguires hand tuned stepsize or line search
+  \end{itemize}
 
 \end{frame}
 
@@ -211,17 +245,17 @@
 
 \begin{frame}
   \frametitle{SAGA, 2014}
-  Very similar:
+  Very similar to SAG:
   \begin{itemize}
     \item maintain table containing gradients $g_i$ of $f_i$
-    \item at step $k = 1,2, \dots$ pick random $i_k \in [n]$ and
+    \item pick random $i_k \in [n]$ and
           \begin{equation}
-            g_i^k := \nabla f_{i_k}(x^{k})
+            g_{i_k}^k := \nabla f_{i_k}(x^{k})
           \end{equation}
           set $g_{i}^k = g_i^{k-1}$ for all $i\neq i_k$ (remain the same)
     \item Update
           \begin{equation}
-            x^{k+1} = x^k -u \alpha_k  \Big( g_{i_k}^k - g_{i_k}^{k-1} + \frac{1}{n}\sum_{i=1}^{n} g_i^k \Big)
+            x^{k+1} = x^k - \alpha_k  \Big( g_{i_k}^k - g_{i_k}^{k-1} + \frac{1}{n}\sum_{i=1}^{n} g_i^k \Big)
           \end{equation}
     \item estimator now \textbf{unbiased}!
   \end{itemize}
@@ -231,25 +265,34 @@
   \frametitle{For Comparison}
   SAGA gradient estimate:
   \begin{equation}
-    g_{i_k}^k - g_{i_k}^{k-1} + \frac{1}{n}\sum_{i=1}^{n} g_i^k
+    g_{i_k}^k - g_{i_k}^{k-1} + \frac{1}{n}\sum_{i=1}^{n} g_i^k.
   \end{equation}
 
-  SAGA gradient estimate:
+  SAG gradient estimate:
   \begin{equation}
-    \frac{1}{n}g_{i_k}^k - \frac{1}{n}g_{i_k}^{k-1} + \frac{1}{n}\sum_{i=1}^{n} g_i^k
+    \frac{1}{n}g_{i_k}^k - \frac{1}{n}g_{i_k}^{k-1} + \frac{1}{n}\sum_{i=1}^{n} g_i^k.
   \end{equation}
-
 \end{frame}
 
+
 \begin{frame}
-  \frametitle{}
+  \frametitle{Experiments from the original paper}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{SAGA-experiments}
+    \caption{Solving regularized logistic regression. First row is $\ell_2$-regularized; second row is $\ell_1$.}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{More ``naive'' implementation}
 
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{SAGA.png}
-    % \caption{\label{fig:label} }
+    \includegraphics[width=\textwidth,height=0.9\textheight,keepaspectratio]{SAGA.png}
+    \caption{Highlights the low variance of SAG.}
   \end{figure}
-  Highlights the low variance of SAG.
 \end{frame}
 
 
@@ -272,9 +315,8 @@
       \EndFor{}
     \end{algorithmic}
   \end{algorithm}
-
   \begin{itemize}
-    \item Does \textbf{not} need to \textbf{store} full table of gradients.
+    \item Does \textbf{\textcolor{blue}{not need to store}} full table of gradients.
     \item requires \emph{batch} gradient computation every \emph{epoch}
     \item per iteration cost is comparable to that of SGD if $m \ge n$
     \item convergence rates similar to SAGA, but simpler analysis.
@@ -297,8 +339,9 @@
 \begin{frame}
   \frametitle{SVRG: Theorem}
 
+  \textcolor{gray}{Each $f_i$ is convex and $L$-smooth, and sum is $\mu$-strongly convex.}
+
   \begin{theorem}
-    Assume each $f_i$ is convex and $L$-smooth, and $F$ is $\mu$-strongly convex.
     Choose $m$ large enough s.t. $\rho = \frac{1}{\mu \alpha (1-2L \alpha)m} + \frac{2L \alpha}{1-2L \alpha}< 1$, then
     \begin{equation}
       \E[F(x_s^{old})- F(x^*)] \le \rho^s [F(x_0^{old})-F(x^*)]
@@ -307,13 +350,14 @@
   Computational cost:
   \begin{itemize}
     \item per epoch: $(m+n)$
-    \item complexity: $(n+ \kappa) \log(1/\epsilon)$
+    % \item complexity: $(n+ \kappa) \log(1/\epsilon)$
+    \item inner loop is annoying (has to choose $m$) $\rightarrow$ loopless variant
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{SVRG: Convergence Proof}
-  Denote $g_s^k = \nabla f_{i_l}(x_s^k) - \nabla f_{i_l}(x_s^{old}) + \nabla F(x_s^{old})$. Conditioning on everythong prior to $x_s^{k+1}$ we get
+  Denote $g_s^k = \nabla f_{i_l}(x_s^k) - \nabla f_{i_l}(x_s^{old}) + \nabla F(x_s^{old})$. Conditioning on everything prior to $x_s^{k+1}$ we get
   \begin{equation}
     \begin{aligned}
       \MoveEqLeft \E [\Vert x_s^{k+1} - x^* \Vert^2] = \E [\Vert x_s^{k}- \alpha g_s^k - x^* \Vert^2] \\
@@ -349,11 +393,25 @@
   %   SGD  & $\kappa^2 / \epsilon$
   % \end{tabular}
 
-  \begin{tabular}{c | c | c}
-    SVRG  & GD & SGD \\
-    \hline
- $(n + \kappa) \log(1/\epsilon)$ & $n \kappa \log(1/\epsilon)$ & $\kappa^2 / \epsilon$
-  \end{tabular}
+  % \textbf{\textcolor{blue}{Strongly convex}} problems: number gradient calls to compute:
+  % \begin{equation}
+  %   \E [f(x_k)] - f^* \le \epsilon
+  % \end{equation}
+  % is given by
+  \textbf{\textcolor{blue}{Strongly convex}} problems: number gradient calls to compute $\E [f(x_k)] - f^* \le \epsilon$ is given by
+  \begin{center}
+    \begin{tabular}{c c c}
+      SVRG / SAGA  & GD & SGD \\
+      \midrule
+      $(n + \kappa) \log \frac{1}{\epsilon}$ & $n \kappa \log \frac{1}{\epsilon}$ & $\kappa^2 / \epsilon$
+    \end{tabular}
+  \end{center}
+  \vspace{1cm}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{SAGA-table-comparison}
+    \caption{Summary of other relevant properties.}
+  \end{figure}
 
   % \begin{itemize}
   %   \item SVRG:\ $(n + \kappa) \log(1/\epsilon)$
@@ -363,8 +421,66 @@
 
 \end{frame}
 
-% talk about \sqrt{n} improvement
-% talk about loopless svrg?
+\section{Katyusha}%
+\label{sec:}
+
+\begin{frame}
+  \frametitle{Variance reduction + momentum/acceleration}
+  \begin{block}{}
+    \centering
+    \textbf{Katyusha}
+  \end{block}
+
+  \textbf{\textcolor{blue}{Strongly convex}} problems: number gradient calls to compute $\E [f(x_k)] - f^* \le \epsilon$ is given by
+  \begin{center}
+  \begin{tabular}{c c c c c}
+    Katyusha & SVRG / SAGA  & GD & NAG & SGD \\
+    \midrule
+    $(n + \sqrt{n \kappa}) \log \frac{1}{\epsilon}$ &$(n + \kappa) \log \frac{1}{\epsilon}$ & $n \kappa \log \frac{1}{\epsilon}$ & $n \sqrt{\kappa} \log \frac{1}{\epsilon}$ & $\kappa^2 / \epsilon$
+  \end{tabular}
+  \end{center}
+  \vspace{1cm}
+  \begin{itemize}
+    \item Improvement critical for \textbf{\textcolor{blue}{ill conditioned}} ($\kappa \gg n$) problems.
+  \end{itemize}
+
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Katyusha in the non-strongly convex setting}
+  \textbf{\textcolor{blue}{just convex}} problems: number gradient calls to compute $\E [f(x_k)] - f^* \le \epsilon$ is given by
+  \begin{center}
+  \begin{tabular}{c c c c c c}
+    lower bound & Katyusha & SVRG / SAGA  & GD & NAG & SGD \\
+    \midrule
+    $n + \sqrt{\frac{n L}{\epsilon}}$ & $n \log \frac{1}{\epsilon} + \sqrt{\frac{n L}{\epsilon}}$ &$\frac{L}{\epsilon}$ & $n \frac{L}{\epsilon}$ & $n \sqrt{\frac{L}{\epsilon}}$ & $ \frac{1}{\sqrt{\epsilon}}$
+  \end{tabular}
+  \end{center}
+  \vspace{1cm}
+  \textcolor{gray}{Almost matches lower bound.}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Summary}
+
+  \begin{itemize}
+    \item Variance reduction recovers the rates of batch (deterministic methods)
+    \item but (more or less) keeps number of gradient calls of SGD
+    \item still require batch gradient computations sometimes
+    \item requires offline setting (multiple passes through data)
+    \item requires knowledge of (multiple) parameters to get good stepsize
+  \end{itemize}
+
+  \textcolor{gray}{
+  Check out this fantastic review paper:
+  https://ieeexplore-ieee-org.uaccess.univie.ac.at/stamp/stamp.jsp?tp=&arnumber=9226504}
+
+\end{frame}
+
 
 
 \end{document}
