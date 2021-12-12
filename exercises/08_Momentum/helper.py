@@ -13,6 +13,7 @@ SEED = 0
 
 # Disable printing while visualization
 def disable_print():
+    sys.__stdout__ = sys.stdout
     sys.stdout = open(os.devnull, 'w')
 
 # Restore printing
