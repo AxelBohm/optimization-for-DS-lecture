@@ -162,7 +162,7 @@
     \item gradient estimator \textcolor{red}{no longer unbiased}
     \item Isn't it expensive to average these gradients?
           \begin{equation}
-            x^{k+1} = x^k -u \alpha_k  \Big( \frac{g_{i_k}^k}{n} - \frac{g_{i_k}^{k-1}}{n} + \underbrace{\frac{1}{n}\sum_{i=1}^{n} g_i^{k-1}}_{\text{old table average}} \Big)
+            x^{k+1} = x^k - \alpha_k  \Big( \frac{g_{i_k}^k}{n} - \frac{g_{i_k}^{k-1}}{n} + \underbrace{\frac{1}{n}\sum_{i=1}^{n} g_i^{k-1}}_{\text{old table average}} \Big)
           \end{equation}
   \end{itemize}
 \end{frame}
@@ -398,6 +398,8 @@
   %   \E [f(x_k)] - f^* \le \epsilon
   % \end{equation}
   % is given by
+
+  \textcolor{gray}{$f$ is $L$-smooth and $\mu$-strongly convex. Condition number: $\kappa = L/\mu$.}\\
   \textbf{\textcolor{blue}{Strongly convex}} problems: number gradient calls to compute $\E [f(x_k)] - f^* \le \epsilon$ is given by
   \begin{center}
     \begin{tabular}{c c c}
