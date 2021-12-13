@@ -1,6 +1,9 @@
-\documentclass{beamer}
+\documentclass[aspectratio=149]{beamer}
 
 \input{../../shared_slides.tex}
+\usepackage{bbm}
+\newcommand{\G}{\mathcal{G}}
+\renewcommand{\D}{\mathcal{D}}
 
 \title{Matrix games}
 \date{\today}
@@ -53,10 +56,10 @@
 
   \begin{itemize}
     \item if Alice chooses strategy $i$ she gets (at least): $\min_{j\in [n]} a_{i,j}$
-    \onslide<2->{\item Alice can ensure payoff $\max_{i\in [m]} \min_{j\in [n]} a_{i,j}$}
-    \onslide<3->{\item Bob pays (at most) $\min_{j\in [n]} \max_{i\in [m]} a_{i,j}$}
+    \item Alice can ensure payoff $\max_{i\in [m]} \min_{j\in [n]} a_{i,j}$
+    \item Bob pays (at most) $\min_{j\in [n]} \max_{i\in [m]} a_{i,j}$
   \end{itemize}
-  \onslide<4->{%
+  \onslide<2->{%
     We claim:
     \begin{equation}
       \max_i \min_j a_{i,j} \le \min_{j} \max_i a_{i,j}
@@ -73,11 +76,11 @@
   \begin{equation}
     \begin{aligned}
       a_{ij} &\le a_{ij} & \forall i,j \\
-      \onslide<2->{a_{ij} &\le \max_i a_{ij} & \forall i,j }\\
-      \onslide<3->{\min_j a_{ij} &\le \min_j \max_i a_{ij} & \forall i}\\
+      a_{ij} &\le \max_i a_{ij} & \forall i,j\\
+      \min_j a_{ij} &\le \min_j \max_i a_{ij} & \forall i\\
     \end{aligned}
   \end{equation}
-  \onslide<4->{%
+  \onslide<2->{%
   \begin{definition}
     We call $(i^*, j^*)$ a saddle point (or \emph{Nash equilibrium}) if
     \begin{equation}
@@ -118,7 +121,7 @@
     \end{equation}
   \end{block}
   \onslide<2->{%
-    \begin{theorem}{Saddle point exists}
+    \begin{theorem}[Saddle point exists]
       Expected gain of Alice $=$ expected loss of Bob
       \begin{equation}
         \max_{x \in \Delta} \min_{y \in \Delta} \langle x, Ay \rangle = \min_{y \in \Delta} \max_{x \in \Delta} \langle x, Ay \rangle.
@@ -135,8 +138,7 @@
   \frametitle{Stopping criteria}
   \begin{equation}
     \begin{aligned}
-      \min_{x \in \Delta} \max_{y \in \Delta} \langle x, Ay \rangle =: v \\
-      \max_{y \in \Delta} \min_{x \in \Delta} \langle x, Ay \rangle = v
+      \min_{x \in \Delta} \,\underbrace{\max_{y \in \Delta} \langle x, Ay \rangle}_{f_p(x)} =: \bm{v}  = \max_{y \in \Delta} \, \underbrace{\min_{x \in \Delta} \langle x, Ay \rangle}_{f_d(y)}
     \end{aligned}
   \end{equation}
   \begin{block}{stopping criterion}
@@ -144,7 +146,7 @@
       \begin{aligned}
         f_p(x) - f_p(x^*) &= f_p(x) - v \onslide<2->{\textcolor{red}{\, \le \epsilon/2}}\\
         f_d(y^*) - f_d(y) &= v - f_d(y) \onslide<2->{\textcolor{red}{\, \le \epsilon/2}} \\
-        \onslide<3->{\Rightarrow f_p(x) - f_d(y) \le \epsilon}
+        \onslide<2->{\Rightarrow f_p(x) - f_d(y) \le \epsilon}
       \end{aligned}
     \end{equation}
   \end{block}
@@ -278,13 +280,17 @@
   \end{proof}
   \begin{itemize}
     \item should remind us of (projected) gradient descent
-          \item when you see a fixed point equation: iterate!
+          \item when you see a \textbf{\textcolor{blue}{fixed point equation: iterate!}}
   \end{itemize}
 \end{frame}
 
 
 \begin{frame}
   \frametitle{But is it any good?}
+  Consider the \textbf{unconstrained case}
+  \begin{equation}
+    \langle F(z^*), z-z^* \rangle \ge 0 , \, \forall z  \quad \Leftrightarrow \quad F(z^*) = 0.
+  \end{equation}
   \begin{equation}
     z_{k+1} = z_k - \alpha F(z_k)
   \end{equation}
@@ -307,7 +313,10 @@
 
 We can still show
   \begin{theorem}
-    complexity of $\mathcal{O}(1/\sqrt{k})$ for \textbf{averaged iterates} in terms of $f_p(x) - f_d(y)$.
+    Convergence rate for \textbf{averaged iterates} in terms of \textbf{primal-dual gap}
+    \begin{equation}
+      f_p(\bar{x}_k) - f_d(\bar{y}_k) \le \frac{C}{ \sqrt{k}}.
+    \end{equation}
   \end{theorem}
 
   \begin{itemize}
@@ -327,6 +336,220 @@ We can still show
   But now $\langle g_k, x^* - x_k \rangle = [f_d(y_k) - f_p(x_k)]$.
   Rest of the proof is left as an exercise.
 \end{frame}
+
+
+\begin{frame}
+  \frametitle{A better method}
+
+  \begin{algorithm}[H]
+    \caption{Extragradient Method [1976]}
+    \begin{algorithmic}[1]
+      \For{$k = 1,2, \dots$}
+      \State{ $w_{k+1} = z_k  - \alpha_k F(z_k)$}
+      \State{ $z_{k+1} = z_k  - \alpha_k F(w_k)$}
+      \EndFor{}
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{itemize}
+    \item more conservative
+    \item works for general min-max problems
+          \begin{equation}
+            \min_x \max_y \, \Phi(x,y) \quad \Rightarrow F(x,y) = {(\nabla_x \Phi(x,y), - \nabla_y \Phi(x,y))}^T
+          \end{equation}
+    \item can even improve behavior of pure minimization ($F = \nabla f$)
+    \item improved rate of $\mathcal{O}(1/k)$ for averaged iterates
+  \end{itemize}
+\end{frame}
+
+\section{More min-max problems}%
+\label{sec:}
+
+\begin{frame}
+  \frametitle{Robust Optimization}
+  \begin{itemize}
+    \item uncertainty in the \textbf{objective} ($u \in U$ \text{ \textcolor{blue}{uncertainty set}})
+          \begin{equation}
+            \min_x f(x, u)
+          \end{equation}
+    \item bound the \textbf{worst case}
+          \begin{equation}
+            \min_x \max_{u \in U}\, f(x, u)
+          \end{equation}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Vulnerability of Neural Networks}
+  \begin{minipage}{0.45\textwidth}
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=\textwidth,keepaspectratio]{vulnerable3}
+      % \caption{\label{fig:label} }
+    \end{figure}
+  \end{minipage}
+  \begin{minipage}{0.5\textwidth}
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=\textwidth,keepaspectratio]{vulnerable4}
+    \end{figure}
+  \end{minipage}
+
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{adversarial-example}
+    \caption{$\epsilon=0.007$}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Vulnerability in ``real life''}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{washer}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Generation of adversarial examples}
+  \begin{block}{Training objective}
+    \begin{equation}
+      \min_\theta J(\theta, x, y)
+    \end{equation}
+    \begin{itemize}
+      \item $\theta$ parameters (weights, biases)
+      \item $x$ images
+      \item $y$ corresponding labels
+    \end{itemize}
+  \end{block}
+  \begin{block}{Attack direction (``white box'')}
+    \begin{equation}
+      \nabla_x J(\theta, x, y)
+    \end{equation}
+  \end{block}
+  Typically only the sign is used.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Adversarial training}
+
+  \begin{block}{Augment training data with adversarial examples}
+    \begin{itemize}
+      \item grab a fresh training example $x$
+      \item perturb image: $\tilde{x} \leftarrow x - \epsilon \text{sign}(\nabla_x J(\theta, x, y))$
+      \item update weights:  $\theta \leftarrow \theta - \nabla_\theta J(\theta, \tilde{x}, y)$
+    \end{itemize}
+  \end{block}
+
+  Corresponds to solving the robust \textcolor{blue}{min-max} problem
+  \begin{align}
+    &\min_\theta \max_{\tilde{x}} \, J(\theta, \tilde{x}, y) \\
+    &\text{s.t. } \Vert \tilde{x}-x \Vert_\infty \le \epsilon
+  \end{align}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{GANs}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{GAN_quote.png}
+    % \caption{\label{fig:label} }
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{What do they \emph{generate}?}
+    \begin{figure}[ht]
+      \centering
+      \begin{subfigure}[c]{.45\textwidth}
+        \includegraphics[width=\linewidth]{one_does_not_simply.jpg}
+      \end{subfigure}
+      \begin{subfigure}[c]{.52\textwidth}
+        \includegraphics[width=\linewidth]{paper_generating_memes.png}
+      \end{subfigure}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+  \frametitle{How did they do?}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{generated_memes.jpg}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{More serious applications (inpainting)}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[scale=0.4]{inpainting}
+    % \caption{\label{fig:label} }
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Or less serious...}
+
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=\textwidth]{inpainting_beach}
+      % \caption{\label{fig:label} }
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Creating Art}
+
+    \begin{figure}[ht]
+      \centering
+      \begin{subfigure}[c]{.47\textwidth}
+        \includegraphics[width=\linewidth]{GAN_price}
+      \end{subfigure}
+      \begin{subfigure}[c]{.47\textwidth}
+        \includegraphics[width=\linewidth]{expensive_GAN}
+      \end{subfigure}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Why Adversarial?}
+  Two NNs trained at the same time.
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=.95\textwidth]{GAN}
+    % \caption{\label{fig:label} }
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{GANs mathematically}
+  Given by the \textcolor{blue}{\emph{two-player game}}.
+  \begin{equation}
+    \min_{\G} \max_{\D} \, \E_{x\sim p_{data}} [\log(\D(x))] + \E_{z\sim p_{noise}}
+    [\log(1- \D(\G(z)))]
+  \end{equation}
+  where
+  \begin{itemize}
+    \item $p_{z}(z)$ is the input noise variable,
+    \item $\G$ is the \emph{generator},
+    \item $\D$ is the \emph{discriminator}.
+  \end{itemize}
+  \begin{block}{}
+    Discriminator gives probability that $x$ came from the data rather than
+    from the generator.
+  \end{block}
+\end{frame}
+
 
 
 \end{document}
