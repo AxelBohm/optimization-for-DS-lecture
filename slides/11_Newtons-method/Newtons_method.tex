@@ -451,7 +451,7 @@
   We therefore hope that $H_k \approx \nabla^2 f(x_k)$.
 
   \begin{equation}
-    \text{Secant:} \quad x_{k+1} = x_k = H_k^{-1} \nabla f(x_k)
+    \text{Secant Method:} \quad x_{k+1} = x_k - H_k^{-1} \nabla f(x_k)
   \end{equation}
 
   \begin{itemize}
@@ -490,7 +490,7 @@
     \item \textcolor{blue}{Given:} iterates $x_{k-1}, x_k$ and matrix $H_{k-1}^{-1}$
     \item \textcolor{blue}{Seeking:} next matrix $H_k^{-1}$ needed in next Quasi-Newton step
           \begin{equation}
-            x_{k+1} = x_k = H_k^{-1} \nabla f(x_k)
+            x_{k+1} = x_k - H_k^{-1} \nabla f(x_k)
           \end{equation}
     \item How to choose $H_k^{-1}$?
     \item Newton’s method: $\nabla^2 f(x_k)$ fluctuates only very little in the region of very fast convergence.
