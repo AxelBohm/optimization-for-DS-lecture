@@ -6,6 +6,7 @@
 \renewcommand{\D}{\mathcal{D}}
 
 \title{Matrix games}
+\subtitle{and more general min-max problems}
 \date{\today}
 
 \begin{document}
@@ -24,7 +25,7 @@
   \end{itemize}
   Every round
   \begin{enumerate}
-    \item Alice picks (row) strategy $i\in [m]:= \{1,\dots, m\}$
+    \item Alice picks (row) strategy $i\in [m]:= \{1,\dots, m\}$\\
           Bob picks (col) strategy $j\in [n]$
     \item Bob pays Alice the amount $a_{i,j}$
   \end{enumerate}
@@ -47,7 +48,7 @@
   \begin{figure}[ht]
     \centering
     \includegraphics[width=0.5\textwidth]{prison}
-    \caption{prisoners dilemma}
+    \caption{prisoners dilemma (not zero-sum)}
   \end{figure}
 \end{frame}
 
@@ -104,27 +105,33 @@
       S & -1 & 1 & 0
     \end{array}
   \end{equation}
+  \begin{center}
+    \textbf{No saddle-point!}
+  \end{center}
+  \vspace{1cm}
+  \onslide<2->{%
+    \center\textit{With pure strategies we do not always have a saddle point.}
+  }
+
 \end{frame}
 
 \begin{frame}
   \frametitle{Mixed Strategies}
-  \textit{With pure strategies we do not always have a saddle point.}
-
   \begin{block}{von Neumann (1928) --- Mixed strategies}
     \begin{itemize}
       \item Alice picks strategies $1, \dots, m$ \emph{with probabilities} $x\in \Delta_m$
-      \item Bob picks strategies $1, \dots, n$ \emph{with probabilities} $x\in \Delta_n$
+      \item Bob picks strategies $1, \dots, n$ \emph{with probabilities} $y\in \Delta_n$
     \end{itemize}
     Expected gain of Alice is
     \begin{equation}
-      \langle x, Ay \rangle = \sum_{i,j} a_{ij} x_i y_j
+      \langle Ax, y \rangle = \sum_{i,j} a_{ij} x_i y_j
     \end{equation}
   \end{block}
   \onslide<2->{%
     \begin{theorem}[Saddle point exists]
       Expected gain of Alice $=$ expected loss of Bob
       \begin{equation}
-        \max_{x \in \Delta} \min_{y \in \Delta} \langle x, Ay \rangle = \min_{y \in \Delta} \max_{x \in \Delta} \langle x, Ay \rangle.
+        \max_{x \in \Delta} \min_{y \in \Delta} \langle Ax, y \rangle = \min_{y \in \Delta} \max_{x \in \Delta} \langle Ax, y \rangle.
       \end{equation}
 
     \end{theorem}
@@ -138,7 +145,7 @@
   \frametitle{Stopping criteria}
   \begin{equation}
     \begin{aligned}
-      \min_{x \in \Delta} \,\underbrace{\max_{y \in \Delta} \langle x, Ay \rangle}_{f_p(x)} =: \bm{v}  = \max_{y \in \Delta} \, \underbrace{\min_{x \in \Delta} \langle x, Ay \rangle}_{f_d(y)}
+      \min_{x \in \Delta} \,\underbrace{\max_{y \in \Delta} \langle Ax, y \rangle}_{f_p(x)} =: \bm{v}  = \max_{y \in \Delta} \, \underbrace{\min_{x \in \Delta} \langle Ax, y \rangle}_{f_d(y)}
     \end{aligned}
   \end{equation}
   \begin{block}{stopping criterion}
@@ -150,14 +157,17 @@
       \end{aligned}
     \end{equation}
   \end{block}
+  \onslide<2->{%
+
   \begin{center}
     Before we never had the optimal value!
   \end{center}
-  % how does this fit in?
-  Solution will always be on the boundary:
+  \textcolor{gray}{
+  $f_p$ and $f_d$ is easy to compute (solution is on the boundary):
   \begin{equation}
-    f_p(x) = \max_{y \in \Delta} \langle A^T x, y \rangle = \max_{j} \langle A^T x, e_j \rangle
-  \end{equation}
+    f_p(x) = \max_{y \in \Delta} \, \langle A x, y \rangle = \max_{j} \, \langle A x, e_j \rangle
+  \end{equation}}
+  }
 \end{frame}
 
 
@@ -165,15 +175,15 @@
   \frametitle{}
   Consider
   \begin{equation}
-      \min_{x \in \Delta} \max_{y \in \Delta} \langle x, Ay \rangle
+      \min_{x \in \Delta}\,  \max_{y \in \Delta} \, \langle Ax, y \rangle
   \end{equation}
   as a minimization problem
   \begin{equation}
-      \min_{x \in \Delta}  f_p(x) = \langle x, A y^* \rangle .
+      \min_{x \in \Delta}\,   f_p(x) = \langle x, A^T y^* \rangle .
   \end{equation}
   Then, by the \textbf{first-order optimality condition}
   \begin{equation}
-    x^* \in \argmin_{x \in \Delta} f_p(x)  \Leftrightarrow \langle \nabla f_p(x^*), x-x^* \rangle \ge 0 \quad \forall x \in \Delta
+    x^* \in \argmin_{x \in \Delta}\,  f_p(x)  \Leftrightarrow \langle \nabla f_p(x^*), x-x^* \rangle \ge 0 \quad \forall x \in \Delta
   \end{equation}
   Thus
   \begin{equation}
@@ -194,12 +204,12 @@
     \left(\begin{array}{c}
       x \\ y
     \end{array}  \right)
-    -
+    - % chktex 8
     \left(\begin{array}{c}
       x^* \\
       y^*
     \end{array} \right)
- \right\rangle \ge 0.
+ \right\rangle \ge 0. % chktex 1
   \end{equation}
 \end{frame}
 
@@ -217,14 +227,14 @@
     \left(\begin{array}{c}
       x \\ y
     \end{array}  \right)
-    -
+    - % chktex 8
     \left(\begin{array}{c}
       x^* \\
       y^*
     \end{array} \right)
- \right\rangle \ge 0.
+ \right\rangle \ge 0. % chktex 1
   \end{equation}
-  By rewriting $z=(x,y)$ and $F(z) = [A^T y; Ax]$, then
+  By rewriting $z=(x,y)$ and $F(z) = [A^T y; -Ax]$, then
   \begin{equation}\tag{VI}
     \label{eq:VI}
     \langle F(z^*), z-z^* \rangle \ge 0 \quad \forall z \in \Delta_n \times \Delta_m =: C
@@ -242,7 +252,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Potential - integrability}
+  \frametitle{Potential --- integrability}
 
   \textbf{Question:} Does there exist a potential $\phi$ for $F$, such that $F = \nabla \phi$
 
@@ -254,8 +264,15 @@
   \end{block}
   But
   \begin{equation}
-    \frac{\partial F_1}{\partial y} = A^T \neq - A = \frac{\partial F_2}{\partial x}
+    \frac{\partial F_1}{\partial y} = \frac{\partial}{\partial y} A^T y = A^T \neq - A = \frac{\partial}{\partial x} -Ax =\frac{\partial F_2}{\partial x}.
   \end{equation}
+  \textcolor{gray}{Recall
+    \begin{equation}
+      F = \begin{bmatrix}
+      0 & A^T \\
+      -A & 0
+    \end{bmatrix}.
+    \end{equation}}
 \end{frame}
 
 
@@ -315,8 +332,9 @@ We can still show
   \begin{theorem}
     Convergence rate for \textbf{averaged iterates} in terms of \textbf{primal-dual gap}
     \begin{equation}
-      f_p(\bar{x}_k) - f_d(\bar{y}_k) \le \frac{C}{ \sqrt{k}}.
+      f_p(\bar{x}_k) - f_d(\bar{y}_k) \le \frac{C}{ \sqrt{k}},
     \end{equation}
+    where $\bar{x}_k = \frac{1}{k} \sum_{i=0}^{k-1} x_i $
   \end{theorem}
 
   \begin{itemize}
@@ -333,8 +351,8 @@ We can still show
       &= \Vert x_k-x^* \Vert^2 + 2 \alpha_k \langle g_k, x^*-x_k \rangle + \alpha^2 \Vert g_k \Vert^2.
     \end{aligned}
   \end{equation}
-  But now $\langle g_k, x^* - x_k \rangle = [f_d(y_k) - f_p(x_k)]$.
-  Rest of the proof is left as an exercise.
+  But this time $\langle g_k, x^* - x_k \rangle = [f_d(y_k) - f_p(x_k)]$.
+  % Rest of the proof is left as an exercise.
 \end{frame}
 
 
@@ -496,7 +514,7 @@ We can still show
 
 
 \begin{frame}
-  \frametitle{Or less serious...}
+  \frametitle{Or less serious\ldots}
 
     \begin{figure}[ht]
       \centering
@@ -545,7 +563,7 @@ We can still show
     \item $\D$ is the \emph{discriminator}.
   \end{itemize}
   \begin{block}{}
-    Discriminator gives probability that $x$ came from the data rather than
+    Discriminator gives probability that $x$ came from the (true) data rather than
     from the generator.
   \end{block}
 \end{frame}
