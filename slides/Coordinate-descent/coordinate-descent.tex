@@ -1,0 +1,93 @@
+\documentclass[aspectratio=149]{beamer}
+
+\input{../../shared_slides.tex}
+
+\usepackage{booktabs}
+
+\title{Coordinate descent}
+\date{\today}
+
+\begin{document}
+\maketitle
+\frame{\tableofcontents}
+
+
+\section{Introduction}%
+
+
+\begin{frame}
+  \frametitle{Coordinate Descent}
+  \textcolor{blue}{Goal:} Find $x^* \in \R^d$ minimizing $f(x)$.
+
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{coordinate_descent}
+    \caption{\label{fig:label} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Coordinate Descent}
+  Modify only one coordinate per step:
+  \begin{block}{}
+    \begin{center}
+      select $i_k \in \{1, \dots, d\}$\\
+      $x_{k+1} = x_k + \gamma e_{i_k}$
+    \end{center}
+  \end{block}
+  where $e_i$ is the $i$-th unit basis vector.
+  Two main variants:
+  \begin{itemize}
+    \item \textcolor{blue}{Gradient-based stepsize:}
+          \begin{equation}
+            x_{k+1} = x_k - \frac1L \nabla_{i_k}f(x_k) e_{i_k}
+          \end{equation}
+    \item \textcolor{blue}{Exact coordinate minimization:} \\
+          Solve the scalar problem $\argmin_{\gamma\in \R} f(x_k + \gamma e_{i_k})$.
+          \begin{itemize}
+            \item \textit{hyperparameter free}
+          \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Randomized Coordinate Descent}
+
+  \textit{How to choose the coordinate?}
+
+  \begin{block}{}
+    \begin{center}
+      select $i_k \in \{1, \dots, d\}$ uniformly at random\\
+      $x_{k+1} = x_k + \gamma e_{i_k}$
+    \end{center}
+  \end{block}
+  \vspace{1cm}
+  \begin{itemize}
+    \item \textcolor{blue}{Faster convergence} than gradient descent\\
+          (if coordinate step is $d$ times cheaper than full gradient step)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Technical assumptions}
+
+  \begin{block}{}
+    \textcolor{blue}{Coordinate-wise smoothness:}
+    \begin{equation}
+      f(x + \gamma e_i) \le f(x) + \gamma \nabla_i f(x) + \frac{L}{2}\gamma^2, \quad \forall x \in \R^d, \forall \gamma \in \R, \forall i \in [d]
+    \end{equation}
+  \end{block}
+  Is equivalent to coordinate-wise Lipschitz gradient:
+  \begin{equation}
+
+  \end{equation}
+
+  \begin{itemize}
+    \item
+    \item
+  \end{itemize}
+
+\end{frame}
+
+
+\end{document}
