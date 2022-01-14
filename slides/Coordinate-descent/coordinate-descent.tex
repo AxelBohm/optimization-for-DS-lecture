@@ -79,15 +79,150 @@
   \end{block}
   Is equivalent to coordinate-wise Lipschitz gradient:
   \begin{equation}
-
+    \vert \nabla_i f(x+ \gamma e_i) - \nabla_i f(x) \vert \le L \vert \gamma \vert
   \end{equation}
 
   \begin{itemize}
-    \item
-    \item
+    \item Additionally we assume \textcolor{blue}{strong convexity}
   \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Convergence: Linear rate}
+  \begin{theorem}
+    \label{thm:}
+    Let $f$ be coordinate-wise smooth with constant $L$ and $\mu$-strongly convex, Then \textrm{coordinate descent} with stepsize $1/L$
+    \begin{equation}
+      x_{k+1} = x_k - \frac{1}{L} \nabla_{i_k} f(x_k) e_{i_k}
+    \end{equation}
+    where $i_k \sim Unif(1, \dots, d)$
+    \begin{equation}
+      \E [f(x_k)- f^*] \le {\left(1 - \frac{\mu}{d L}\right)}^k (f(x_0)-f^*)
+    \end{equation}
+  \end{theorem}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Proof}
+  By using smoothness we obtain
+  \begin{equation}
+    f(x_{k+1}) \le f(x_k) - \frac{1}{2L} \Vert \nabla_{i_k} f(x_k) \Vert^2
+  \end{equation}
+  Taking the expectation w.r.t.\ $i$
+  \begin{equation}
+    \begin{aligned}
+      \E [f(x_{k+1})] &\le f(x_k) - \frac{1}{2L} \E[\vert \nabla_{i_k} f(x_k) \vert^2] \\
+      &= f(x_k) - \frac{1}{2L}\frac{1}{d} \sum_{i} \vert \nabla_i f(x_k) \vert^2 \\
+      &= f(x_k) - \frac{1}{2 d L} \Vert \nabla f(x_k) \Vert^2.
+    \end{aligned}
+  \end{equation}
+  \textcolor{blue}{Lemma} strong convexity implies PL: $\frac12 \Vert \nabla f(x) \Vert^2 \ge \mu (f(x)-f^*)$
+  Therefore, by subtracting $f^*$ on both sides we get the statement of the theorem.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Polyak-Lojasiewicz (PL) Condition}
+  \begin{definition}
+    $f$ satisfies the PL condition if the following holds for some $\mu>0$
+    \begin{equation}
+      \frac12 \Vert \nabla f(x) \Vert^2 \ge \mu (f(x)-f^*)
+    \end{equation}
+  \end{definition}
+
+  \begin{lemma}%
+    Strong convexity implies PL.
+  \end{lemma}
+  \textcolor{blue}{Proof}
+    Strong convexity gives
+    \begin{equation}
+      f(y) \ge f(x) + \langle \nabla f(x), y-x \rangle + \frac{\mu}{2} \Vert x-y \Vert^2.
+    \end{equation}
+    Minimizing each side w.r.t. $y$ gives
+    \begin{equation}
+      f(x^*) \ge f(x) - \frac{1}{2 \mu} \Vert \nabla f(x) \Vert^2
+    \end{equation}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Linear convergence without strong convexity}
+  \begin{block}{Examples satisfying PL}
+    $f := g\circ A$ for strongly convex $g$ and \emph{arbitrary} matrix $A$, see least squares regression.
+  \end{block}
+
+  \begin{corollary}[Linear convergence for PL]%
+    Same conditions as before but PL instead of strong convexity yields:
+    \begin{equation}
+      \E [f(x_k)- f^*] \le {\left(1 - \frac{\mu}{d L}\right)}^k (f(x_0)-f^*)
+    \end{equation}
+  \end{corollary}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Importance sampling}
+  \begin{center}
+    Uniform random selection is not always the best!
+  \end{center}
+  \begin{itemize}
+    \item Individual smoothness constants $L_i$ for each coordinate $i$
+  \end{itemize}
+  \begin{equation}
+    f(x+ \gamma e_i) \le f(x) + \gamma \nabla_i f(x) + \frac{L_i}{2} \gamma^2
+  \end{equation}
+  Coordinate descent using this modified selection probabilities $P[i_k=i] = \frac{L_i}{\sum_i L_i}$ with stepsize
+  $1/L_{i_k}$ converges with the faster rate
+  \begin{equation}
+      \E [f(x_k)- f^*] \le {\left(1 - \frac{\mu}{d \bar{L}}\right)}^k (f(x_0)-f^*)
+  \end{equation}
+  where $\bar{L}= \frac{1}{d} \sum_{i=1}^{d}L_i$.\\
+  \hfill\textcolor{gray}{Often $\bar{L} \ll L = \max_i L_i$}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Steepest Coordinate Descent}
+  Selection rule given by
+  \begin{equation}
+    i_k = \argmax_{i\in [d]} \vert \nabla_i f(x_k) \vert
+  \end{equation}
+  \emph{``Greedy''} or steepest coordinate descent.\\
+  Drawback: requires computation of full gradient if you do not have additional knowledge.
 
 \end{frame}
 
+\begin{frame}
+  \frametitle{Convergence of Steepest Coordinate Descent}
+  Has same convergence rate as for random coordinate descent!
+  Use the fact that \emph{max} is larger than \emph{average}
+  \begin{equation}
+    \max_i \vert \nabla_i f(x) \vert^2 \ge  \frac{1}{d} \sum_{i=1}^{d} \vert \nabla_i f(x) \vert^2,
+  \end{equation}
+  \begin{corollary}%
+    Steepest Coordinate Descent with stepsize $1/L$
+  \begin{equation}
+      f(x_k)- f^* \le {\left(1 - \frac{\mu}{d \bar{L}}\right)}^k (f(x_0)-f^*)
+  \end{equation}
+  \end{corollary}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Faster Convergence of Steepest Coordinate Descent}
+  Faster convergence when measuring strong convexity of $f$ w.r.t $1$-norm instead of the standard Euclidean norm, i.e.
+  \begin{equation}
+      f(y) \ge f(x) + \langle \nabla f(x), y-x \rangle + \frac{\mu_1}{2} \Vert x-y \Vert_1^2.
+  \end{equation}
+
+  \begin{theorem}
+    Let $f$ be coordinate-wise smooth with constant $L$ and $\mu_1$-strongly convex, w.r.t. the $1$-norm.
+    Then \textrm{steepest coordinate descent} with stepsize $1/L$
+    \begin{equation}
+      f(x_k)- f^* \le {\left(1 - \frac{\mu}{L}\right)}^k (f(x_0)-f^*)
+    \end{equation}
+  \end{theorem}
+  \textcolor{gray}{Contraction factor i $d$ times larger.}
+  But only in the extreme
+  \begin{equation}
+    \frac{\mu}{d} \le \mu_1 \le \mu
+  \end{equation}
+  May also yield no gain.
+\end{frame}
 
 \end{document}
