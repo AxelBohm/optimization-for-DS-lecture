@@ -21,9 +21,10 @@
 
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{coordinate_descent}
-    \caption{\label{fig:label} }
+    \includegraphics[height=0.7\textheight,keepaspectratio]{coordinate_descent}
+    % \caption{\label{fig:label} }
   \end{figure}
+  \textcolor{blue}{Observation:} Decrease in function value, but not in distance to solution.
 \end{frame}
 
 \begin{frame}
@@ -43,12 +44,14 @@
             x_{k+1} = x_k - \frac1L \nabla_{i_k}f(x_k) e_{i_k}
           \end{equation}
     \item \textcolor{blue}{Exact coordinate minimization:} \\
-          Solve the scalar problem $\argmin_{\gamma\in \R} f(x_k + \gamma e_{i_k})$.
+          Solve the \textbf{scalar} problem $\argmin_{\gamma\in \R} f(x_k + \gamma e_{i_k})$.
           \begin{itemize}
             \item \textit{hyperparameter free}
           \end{itemize}
   \end{itemize}
 \end{frame}
+
+\section{Randomized coordinate selection}%
 
 \begin{frame}
   \frametitle{Randomized Coordinate Descent}
@@ -91,7 +94,7 @@
   \frametitle{Convergence: Linear rate}
   \begin{theorem}
     \label{thm:}
-    Let $f$ be coordinate-wise smooth with constant $L$ and $\mu$-strongly convex, Then \textrm{coordinate descent} with stepsize $1/L$
+    Let $f$ be coordinate-wise smooth with constant $L$ and $\mu$-strongly convex, then \colorbox{grey!30}{\textup{\texttt{randomized coordinate descent}}} with stepsize $1/L$
     \begin{equation}
       x_{k+1} = x_k - \frac{1}{L} \nabla_{i_k} f(x_k) e_{i_k}
     \end{equation}
@@ -100,6 +103,7 @@
       \E [f(x_k)- f^*] \le {\left(1 - \frac{\mu}{d L}\right)}^k (f(x_0)-f^*)
     \end{equation}
   \end{theorem}
+  \textcolor{gray}{Compare to rate of gradient descent.}
 \end{frame}
 
 \begin{frame}
@@ -113,19 +117,19 @@
     \begin{aligned}
       \E [f(x_{k+1})] &\le f(x_k) - \frac{1}{2L} \E[\vert \nabla_{i_k} f(x_k) \vert^2] \\
       &= f(x_k) - \frac{1}{2L}\frac{1}{d} \sum_{i} \vert \nabla_i f(x_k) \vert^2 \\
-      &= f(x_k) - \frac{1}{2 d L} \Vert \nabla f(x_k) \Vert^2.
+      &= f(x_k) - \frac{1}{2 d L} \Vert \nabla f(x_k) \Vert^2.\qed
     \end{aligned}
   \end{equation}
-  \textcolor{blue}{Lemma} strong convexity implies PL: $\frac12 \Vert \nabla f(x) \Vert^2 \ge \mu (f(x)-f^*)$
+  \textcolor{blue}{Lemma:} Strong convexity implies \textcolor{blue}{\textbf{PL}}: $\frac12 \Vert \nabla f(x) \Vert^2 \ge \mu (f(x)-f^*)$
   Therefore, by subtracting $f^*$ on both sides we get the statement of the theorem.
 \end{frame}
 
 \begin{frame}
-  \frametitle{Polyak-Lojasiewicz (PL) Condition}
+  \frametitle{Polyak-{\L}ojasiewicz (PL) Condition}
   \begin{definition}
     $f$ satisfies the PL condition if the following holds for some $\mu>0$
     \begin{equation}
-      \frac12 \Vert \nabla f(x) \Vert^2 \ge \mu (f(x)-f^*)
+      \frac12 \Vert \nabla f(x) \Vert^2 \ge \mu (f(x)-f^*).
     \end{equation}
   \end{definition}
 
@@ -139,14 +143,17 @@
     \end{equation}
     Minimizing each side w.r.t. $y$ gives
     \begin{equation}
-      f(x^*) \ge f(x) - \frac{1}{2 \mu} \Vert \nabla f(x) \Vert^2
+      f(x^*) \ge f(x) - \frac{1}{2 \mu} \Vert \nabla f(x) \Vert^2. \qed
     \end{equation}
 \end{frame}
 
+
 \begin{frame}
   \frametitle{Linear convergence without strong convexity}
+  PL is weaker than strong convexity (doesn't even imply convexity).
   \begin{block}{Examples satisfying PL}
-    $f := g\circ A$ for strongly convex $g$ and \emph{arbitrary} matrix $A$, see least squares regression.
+    Let $f := g\circ A$ for strongly convex $g$ and \emph{arbitrary} matrix $A$, \\
+    see \textbf{least squares regression}.
   \end{block}
 
   \begin{corollary}[Linear convergence for PL]%
@@ -157,10 +164,14 @@
   \end{corollary}
 \end{frame}
 
+
+\section{Other selection rules}%
+\label{sec:}
+
 \begin{frame}
   \frametitle{Importance sampling}
   \begin{center}
-    Uniform random selection is not always the best!
+    \textit{Uniform random selection is not always the best!}
   \end{center}
   \begin{itemize}
     \item Individual smoothness constants $L_i$ for each coordinate $i$
@@ -168,14 +179,14 @@
   \begin{equation}
     f(x+ \gamma e_i) \le f(x) + \gamma \nabla_i f(x) + \frac{L_i}{2} \gamma^2
   \end{equation}
-  Coordinate descent using this modified selection probabilities $P[i_k=i] = \frac{L_i}{\sum_i L_i}$ with stepsize
+  Coordinate descent with selection probabilities $P[i_k=i] = \frac{L_i}{\sum_i L_i}$ and stepsize
   $1/L_{i_k}$ converges with the faster rate
   \begin{equation}
-      \E [f(x_k)- f^*] \le {\left(1 - \frac{\mu}{d \bar{L}}\right)}^k (f(x_0)-f^*)
+      \E [f(x_k)- f^*] \le {\left(1 - \frac{\mu}{d \bar{L}}\right)}^k (f(x_0)-f^*),
   \end{equation}
-  where $\bar{L}= \frac{1}{d} \sum_{i=1}^{d}L_i$.\\
-  \hfill\textcolor{gray}{Often $\bar{L} \ll L = \max_i L_i$}
+  where $\bar{L}= \frac{1}{d} \sum_{i=1}^{d}L_i$. \hfill \textcolor{blue}{Often $\bar{L} \ll L = \max_i L_i$!}
 \end{frame}
+
 
 \begin{frame}
   \frametitle{Steepest Coordinate Descent}
@@ -183,14 +194,14 @@
   \begin{equation}
     i_k = \argmax_{i\in [d]} \vert \nabla_i f(x_k) \vert
   \end{equation}
-  \emph{``Greedy''} or steepest coordinate descent.\\
-  Drawback: requires computation of full gradient if you do not have additional knowledge.
-
+  \emph{``Greedy''}, Gauss-Southwell or \textbf{steepest} coordinate descent.\\
+  \textcolor{blue}{Drawback}: requires computation of full gradient if you do not have additional knowledge.
 \end{frame}
+
 
 \begin{frame}
   \frametitle{Convergence of Steepest Coordinate Descent}
-  Has same convergence rate as for random coordinate descent!
+  Has same convergence rate as for random coordinate descent.\\
   Use the fact that \emph{max} is larger than \emph{average}
   \begin{equation}
     \max_i \vert \nabla_i f(x) \vert^2 \ge  \frac{1}{d} \sum_{i=1}^{d} \vert \nabla_i f(x) \vert^2,
@@ -198,10 +209,12 @@
   \begin{corollary}%
     Steepest Coordinate Descent with stepsize $1/L$
   \begin{equation}
-      f(x_k)- f^* \le {\left(1 - \frac{\mu}{d \bar{L}}\right)}^k (f(x_0)-f^*)
+      f(x_k)- f^* \le {\left(1 - \frac{\mu}{d L}\right)}^k (f(x_0)-f^*)
   \end{equation}
   \end{corollary}
+  \textcolor{gray}{Benefit is not clear: more expensive iterations but same bound.}
 \end{frame}
+
 
 \begin{frame}
   \frametitle{Faster Convergence of Steepest Coordinate Descent}
@@ -212,17 +225,78 @@
 
   \begin{theorem}
     Let $f$ be coordinate-wise smooth with constant $L$ and $\mu_1$-strongly convex, w.r.t. the $1$-norm.
-    Then \textrm{steepest coordinate descent} with stepsize $1/L$
+    Then \colorbox{grey!30}{\textup{\texttt{steepest coordinate descent}}} with stepsize $1/L$
     \begin{equation}
-      f(x_k)- f^* \le {\left(1 - \frac{\mu}{L}\right)}^k (f(x_0)-f^*)
+      f(x_k)- f^* \le {\left(1 - \frac{\mu_1}{L}\right)}^k (f(x_0)-f^*)
     \end{equation}
   \end{theorem}
-  \textcolor{gray}{Contraction factor i $d$ times larger.}
-  But only in the extreme
+  \textcolor{gray}{Compare this to previous contraction factor of $(1-\frac{\mu}{d L})$}.\\
+  We always have
   \begin{equation}
-    \frac{\mu}{d} \le \mu_1 \le \mu
+    \frac{\mu}{d} \le \mu_1 \le \mu.
   \end{equation}
-  May also yield no gain.
 \end{frame}
+
+
+\begin{frame}
+  \frametitle{Faster Convergence of Steepest Coordinate Descent II}
+  \textcolor{blue}{Proof of previous theorem} is same as before, but using the lemma
+
+  \begin{lemma}%
+    Let $f$ be $\mu_1$-strongly convex with respect to the $\ell_1$-norm, then
+    \begin{equation}
+      \frac12 \Vert \nabla f(x) \Vert^2_\infty \ge \mu_1 (f(x)-f^*)
+    \end{equation}
+
+  \end{lemma}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Non-smooth objectives}
+  Proved everything for smooth $f$. What about \textcolor{blue}{nonsmooth}?
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{smooth_function}
+    \caption{Example of a smooth function $f(x)= \Vert x \Vert^2$.}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Non-smooth objectives}
+  For general nonsmooth $f$ coordinate descent fails and gets stuck
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{nonsmooth_function}
+    \caption{Example of a nonsmooth function $f(x)= \Vert x \Vert^2 + \vert x_1 - x_2 \vert$.}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Non-smooth objectives}
+  If nonsmooth function is seperable over the coordinates we can get convergence:
+  \begin{equation}
+    f(x) = g(x) + h(x) \quad \text{with} \quad h(x)= \sum_{i} h_i(x_i)
+  \end{equation}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{nonsmooth_function}
+    \caption{A nonsmooth but separable function $f(x)= \Vert x \Vert^2 + \Vert x \Vert_1$.}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Other interesting ideas}
+  \begin{itemize}
+    \item cycle through coordinates
+    \item minimize all coordinates individually \textbf{in parallel})
+    \item can use blocks of coordinates instead of individual ones
+  \end{itemize}
+\end{frame}
+
+
 
 \end{document}
