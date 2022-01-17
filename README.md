@@ -44,6 +44,8 @@ as well as the team with
 ## Related Literature
 
 
-[Convex Optimization: Algorithms and Complexity](https://arxiv.org/pdf/1405.4980.pdf) by Sébastien Bubeck (free online)
+- [Convex Optimization: Algorithms and Complexity](https://arxiv.org/pdf/1405.4980.pdf) by Sébastien Bubeck (free online)
 
-[Introductory Lectures on Convex Programming](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.693.855&rep=rep1&type=pdf)
+- [Introductory Lectures on Convex Programming](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.693.855&rep=rep1&type=pdf) by Yurii Nesterov
+
+- [Poster](https://www.cs.ubc.ca/~schmidtm/Documents/2014_NIPSw_GaussSouthwell.pdf) and [paper](http://proceedings.mlr.press/v37/nutini15.pdf) on Coordinate Descent by Schmidt et al.
