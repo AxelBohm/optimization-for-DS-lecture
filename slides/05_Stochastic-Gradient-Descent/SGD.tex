@@ -1,4 +1,4 @@
-\documentclass{beamer}
+\documentclass[aspectratio=149]{beamer}
 
 \input{../../shared_slides.tex}
 \usepackage{changepage}
@@ -39,7 +39,7 @@
           \begin{equation}
             f(x) = \Vert Ax-b \Vert^2 = \sum_{i=1}^{n} {(a_i^T x -b_i)}^2
           \end{equation}
-    \item evaluating $\nabla f$ can be expensive if $n$ is large
+    \item evaluating $\nabla f$ can be \textbf{expensive} if $n$ is large
   \end{itemize}
   
 \end{frame}
@@ -52,7 +52,7 @@
     f(x) = \E_\xi [ f(x, \xi) ]
   \end{equation}
   \begin{itemize}
-    \item Typically no access to $f$
+    \item Typically \textbf{no access} to $f$
     \item most of what follows works in this more general setting
   \end{itemize}
 \end{frame}
