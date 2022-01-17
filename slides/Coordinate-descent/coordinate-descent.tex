@@ -94,7 +94,7 @@
   \frametitle{Convergence: Linear rate}
   \begin{theorem}
     \label{thm:}
-    Let $f$ be coordinate-wise smooth with constant $L$ and $\mu$-strongly convex, then \colorbox{grey!30}{\textup{\texttt{randomized coordinate descent}}} with stepsize $1/L$
+    Let $f$ be coordinate-wise smooth with constant $L$ and $\mu$-strongly convex, then \colorbox{gray!30}{\textup{\texttt{randomized coordinate descent}}} with stepsize $1/L$
     \begin{equation}
       x_{k+1} = x_k - \frac{1}{L} \nabla_{i_k} f(x_k) e_{i_k}
     \end{equation}
@@ -225,7 +225,7 @@
 
   \begin{theorem}
     Let $f$ be coordinate-wise smooth with constant $L$ and $\mu_1$-strongly convex, w.r.t. the $1$-norm.
-    Then \colorbox{grey!30}{\textup{\texttt{steepest coordinate descent}}} with stepsize $1/L$
+    Then \colorbox{gray!30}{\textup{\texttt{steepest coordinate descent}}} with stepsize $1/L$
     \begin{equation}
       f(x_k)- f^* \le {\left(1 - \frac{\mu_1}{L}\right)}^k (f(x_0)-f^*)
     \end{equation}
@@ -249,6 +249,29 @@
     \end{equation}
 
   \end{lemma}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Faster convergence on quadratics}
+  \begin{itemize}
+    \item If $f$ is a quadratic with diagonal Hessian, we can show
+          \begin{equation}
+            \mu = \min_i \lambda_i \quad \text{and} \quad \mu_1 = \frac{1}{\sum_{i}^{} \lambda_i}
+          \end{equation}
+    \item If all $\lambda_i$ are equal:
+          \begin{itemize}
+            \item No advantage to GS
+          \end{itemize}
+    \item One very large $\lambda_i$
+          \begin{itemize}
+            \item GS and random still similar
+          \end{itemize}
+    \item One very small $\lambda_i$
+          \begin{itemize}
+            \item GS bound can be much better $\mu_1 \approx \mu$
+          \end{itemize}
+  \end{itemize}
+
 \end{frame}
 
 
@@ -275,28 +298,64 @@
 
 
 \begin{frame}
-  \frametitle{Non-smooth objectives}
-  If nonsmooth function is seperable over the coordinates we can get convergence:
+  \frametitle{Non-smooth separable objectives}
+  If nonsmooth function is \textcolor{blue}{separable} we can get convergence:
   \begin{equation}
     f(x) = g(x) + h(x) \quad \text{with} \quad h(x)= \sum_{i} h_i(x_i)
   \end{equation}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{nonsmooth_function}
+    \includegraphics[height=0.5\textheight,keepaspectratio]{nonsmooth_separable}
+
     \caption{A nonsmooth but separable function $f(x)= \Vert x \Vert^2 + \Vert x \Vert_1$.}
   \end{figure}
 \end{frame}
 
 
+
+
 \begin{frame}
-  \frametitle{Other interesting ideas}
-  \begin{itemize}
-    \item cycle through coordinates
-    \item minimize all coordinates individually \textbf{in parallel})
-    \item can use blocks of coordinates instead of individual ones
-  \end{itemize}
+  \frametitle{Randomized coordinate descent on non-strongly objectives}
+  \begin{theorem}
+    Let $f$ be coordinate-wise smooth with constant $L$ and convex, then \colorbox{gray!30}{\textup{\texttt{randomized coordinate descent}}} with stepsize $1/L$ yields
+    \begin{equation}
+      \E [f(x_k)-f^*] \le \frac{2L d \Vert x_0-x^* \Vert^2}{k}
+    \end{equation}
+  \end{theorem}
+  \textcolor{gray}{same observation as in the strongly convex case.}
 \end{frame}
 
+
+\begin{frame}
+  \frametitle{Cyclic coordinate descent}
+  \begin{theorem}
+    Let $f$ be coordinate-wise smooth with constant $L$ then \colorbox{gray!30}{\textup{\texttt{cyclic coordinate descent}}} with stepsize $1/L$ achieves for
+    \begin{itemize}
+      \item convex objective
+            \begin{equation}
+              \E [f(x_k)-f^*] \le \frac{4L (d+1) \Vert x_0-x^* \Vert^2}{k}
+            \end{equation}
+      \item and for $\mu$-strongly convex objectives
+            \begin{equation}
+              \E [f(x_k)-f^*] \le {\left( 1- \frac{\mu}{2(d+1)L} \right)}^k (f(x_0)-f^*)
+            \end{equation}
+    \end{itemize}
+  \end{theorem}
+  \textcolor{gray}{Again, randomized version was better.}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Some more thoughts}
+  \begin{itemize}
+    \item minimize all coordinates individually (\textbf{in parallel})
+    \item can use blocks of coordinates instead of individual ones
+  \end{itemize}
+
+  \textcolor{blue}{State of the art} for generalized linear models $f(x) := g(Ax) + \sum_{i}^{d} h_i(x)$
+  \begin{itemize}
+    \item Regression, classification (with regularizers)
+  \end{itemize}
+\end{frame}
 
 
 \end{document}
