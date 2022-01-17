@@ -82,7 +82,7 @@
   \end{block}
   Is equivalent to coordinate-wise Lipschitz gradient:
   \begin{equation}
-    \vert \nabla_i f(x+ \gamma e_i) - \nabla_i f(x) \vert \le L \vert \gamma \vert
+    \vert \nabla_i f(x+ \gamma e_i) - \nabla_i f(x) \vert \le L \vert \gamma \vert.
   \end{equation}
 
   \begin{itemize}
@@ -96,11 +96,11 @@
     \label{thm:}
     Let $f$ be coordinate-wise smooth with constant $L$ and $\mu$-strongly convex, then \colorbox{gray!30}{\textup{\texttt{randomized coordinate descent}}} with stepsize $1/L$
     \begin{equation}
-      x_{k+1} = x_k - \frac{1}{L} \nabla_{i_k} f(x_k) e_{i_k}
+      x_{k+1} = x_k - \frac{1}{L} \nabla_{i_k} f(x_k) e_{i_k},
     \end{equation}
-    where $i_k \sim Unif(1, \dots, d)$
+    where $i_k \sim Unif(1, \dots, d)$, then
     \begin{equation}
-      \E [f(x_k)- f^*] \le {\left(1 - \frac{\mu}{d L}\right)}^k (f(x_0)-f^*)
+      \E [f(x_k)- f^*] \le {\left(1 - \frac{\mu}{d L}\right)}^k (f(x_0)-f^*).
     \end{equation}
   \end{theorem}
   \textcolor{gray}{Compare to rate of gradient descent.}
@@ -110,7 +110,7 @@
   \frametitle{Proof}
   By using smoothness we obtain
   \begin{equation}
-    f(x_{k+1}) \le f(x_k) - \frac{1}{2L} \Vert \nabla_{i_k} f(x_k) \Vert^2
+    f(x_{k+1}) \le f(x_k) - \frac{1}{2L} \Vert \nabla_{i_k} f(x_k) \Vert^2.
   \end{equation}
   Taking the expectation w.r.t.\ $i$
   \begin{equation}
@@ -159,7 +159,7 @@
   \begin{corollary}[Linear convergence for PL]%
     Same conditions as before but PL instead of strong convexity yields:
     \begin{equation}
-      \E [f(x_k)- f^*] \le {\left(1 - \frac{\mu}{d L}\right)}^k (f(x_0)-f^*)
+      \E [f(x_k)- f^*] \le {\left(1 - \frac{\mu}{d L}\right)}^k (f(x_0)-f^*).
     \end{equation}
   \end{corollary}
 \end{frame}
@@ -201,15 +201,15 @@
 
 \begin{frame}
   \frametitle{Convergence of Steepest Coordinate Descent}
-  Has same convergence rate as for random coordinate descent.\\
+  Has same convergence rate as for randomized coordinate descent.\\
   Use the fact that \emph{max} is larger than \emph{average}
   \begin{equation}
     \max_i \vert \nabla_i f(x) \vert^2 \ge  \frac{1}{d} \sum_{i=1}^{d} \vert \nabla_i f(x) \vert^2,
   \end{equation}
   \begin{corollary}%
-    Steepest Coordinate Descent with stepsize $1/L$
+    \colorbox{gray!30}{\textup{\texttt{steepest coordinate descent}}} with stepsize $1/L$ gives
   \begin{equation}
-      f(x_k)- f^* \le {\left(1 - \frac{\mu}{d L}\right)}^k (f(x_0)-f^*)
+      f(x_k)- f^* \le {\left(1 - \frac{\mu}{d L}\right)}^k (f(x_0)-f^*).
   \end{equation}
   \end{corollary}
   \textcolor{gray}{Benefit is not clear: more expensive iterations but same bound.}
@@ -225,9 +225,9 @@
 
   \begin{theorem}
     Let $f$ be coordinate-wise smooth with constant $L$ and $\mu_1$-strongly convex, w.r.t. the $1$-norm.
-    Then \colorbox{gray!30}{\textup{\texttt{steepest coordinate descent}}} with stepsize $1/L$
+    Then \colorbox{gray!30}{\textup{\texttt{steepest coordinate descent}}} with stepsize $1/L$ yields
     \begin{equation}
-      f(x_k)- f^* \le {\left(1 - \frac{\mu_1}{L}\right)}^k (f(x_0)-f^*)
+      f(x_k)- f^* \le {\left(1 - \frac{\mu_1}{L}\right)}^k (f(x_0)-f^*).
     \end{equation}
   \end{theorem}
   \textcolor{gray}{Compare this to previous contraction factor of $(1-\frac{\mu}{d L})$}.\\
@@ -245,7 +245,7 @@
   \begin{lemma}%
     Let $f$ be $\mu_1$-strongly convex with respect to the $\ell_1$-norm, then
     \begin{equation}
-      \frac12 \Vert \nabla f(x) \Vert^2_\infty \ge \mu_1 (f(x)-f^*)
+      \frac12 \Vert \nabla f(x) \Vert^2_\infty \ge \mu_1 (f(x)-f^*).
     \end{equation}
 
   \end{lemma}
@@ -276,7 +276,7 @@
 
 
 \begin{frame}
-  \frametitle{Non-smooth objectives}
+  \frametitle{Nonsmooth objectives}
   Proved everything for smooth $f$. What about \textcolor{blue}{nonsmooth}?
   \begin{figure}[ht]
     \centering
@@ -287,7 +287,7 @@
 
 
 \begin{frame}
-  \frametitle{Non-smooth objectives}
+  \frametitle{Nonsmooth objectives}
   For general nonsmooth $f$ coordinate descent fails and gets stuck
   \begin{figure}[ht]
     \centering
@@ -298,7 +298,7 @@
 
 
 \begin{frame}
-  \frametitle{Non-smooth separable objectives}
+  \frametitle{Nonsmooth separable objectives}
   If nonsmooth function is \textcolor{blue}{separable} we can get convergence:
   \begin{equation}
     f(x) = g(x) + h(x) \quad \text{with} \quad h(x)= \sum_{i} h_i(x_i)
@@ -315,7 +315,7 @@
 
 
 \begin{frame}
-  \frametitle{Randomized coordinate descent on non-strongly objectives}
+  \frametitle{Randomized coordinate descent on non-strongly convex objectives}
   \begin{theorem}
     Let $f$ be coordinate-wise smooth with constant $L$ and convex, then \colorbox{gray!30}{\textup{\texttt{randomized coordinate descent}}} with stepsize $1/L$ yields
     \begin{equation}
