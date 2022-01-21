@@ -1,0 +1,238 @@
+\documentclass[aspectratio=149]{beamer}
+
+\input{../../shared_slides.tex}
+
+% reference: https://yuxinchen2020.github.io/ele522_optimization/lectures/variance_reduction.pdf
+% or
+% https://ieeexplore-ieee-org.uaccess.univie.ac.at/stamp/stamp.jsp?tp=&arnumber=9226504
+
+\usepackage{booktabs}
+
+\title{Duality, Gradient-free, in Application}
+\date{\today}
+
+\begin{document}
+\maketitle
+\frame{\tableofcontents}
+
+
+\section{Duality}%
+
+\begin{frame}
+  \frametitle{Duality}
+  \begin{center}
+    Establishes some relation between two classes of objects.
+  \end{center}
+  \begin{definition}[``Legendre transform'' or ``Fenchel conjugate'']
+    Given a function $f: \R^d \to \R \cup \{+\infty\}$, we define its \textcolor{blue}{\textbf{conjugate}} $f^*:\R^d \to \R \cup\{+\infty\}$ by
+    \begin{equation}
+      f^*(y) = \sup_x \{\langle y,x \rangle - f(x)\}
+    \end{equation}
+  \end{definition}
+  \begin{minipage}{0.48\textwidth}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth,keepaspectratio]{conjugate}
+  \end{figure}
+  \end{minipage}
+  \begin{minipage}{0.48\textwidth}
+    \vspace{2cm}
+    \textcolor{blue}{Figure:} maximum gap between linear function $x \mapsto \langle y, x \rangle$ and $f$
+  \end{minipage}
+
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Properties}
+
+  \begin{itemize}
+    \item $f^*$ is always convex. \hfill{\textcolor{gray}{point-wise max of affine function}}
+    \item \textcolor{blue}{Fenchel's inequality:}
+          \begin{equation}
+            f(x) + f^*(y) \ge \langle x, y \rangle.
+          \end{equation}
+    \item Hence the biconjugate $f^{**}:={(f^*)}^*$ satisfies $f^{**}\le f$.
+    \item If f is convex an lsc. then $f^{**}=f$.
+    \item etc.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Examples}
+  \begin{itemize}
+    \item \textcolor{blue}{Norm:} If $f(x) = \Vert x \Vert$, then
+          \begin{equation}
+            f^*(y) = \mathbbm{1}(\Vert y \Vert_* \le 1),
+          \end{equation}
+          i.e.\ the indicator of the dual norm ball.
+          Recall the definition of the dual norm:
+          \begin{equation}
+            \Vert y \Vert_* :=  \max_{\Vert x \Vert \le 1} \{\langle y, x \rangle\}.
+          \end{equation}
+          In particular: $\Vert \cdot \Vert_1 \leftrightarrow \Vert \cdot \Vert_\infty$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{More examples}
+    \textcolor{blue}{Generalized linear models}
+    \begin{equation}
+      \min_{x\in \R^d} \, f(Ax) + g(x).
+    \end{equation}
+    Two approaches to reformulate:
+    \begin{equation}
+      \min_x \max_y \, \langle y, Ax \rangle - f^*(y) + g(x)
+    \end{equation}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Generalized linear models continued}
+  Or reformulate
+    \begin{equation}
+      \min_{x\in \R^d} \, f(Ax) + g(x)
+    \end{equation}
+    as
+    \begin{equation}
+      \min_{x\in\R^d, w\in \R^m} \, f(w)+ g(x) \quad \text{s.t.} w = Ax
+    \end{equation}
+    Use Lagrange function
+    \begin{equation}
+      \mathcal{L}(x,w, u) :=  \, f(w)+ g(x) \langle u, w - Ax \rangle
+    \end{equation}
+    the dual function is given by
+    \begin{equation}
+      \varphi(u) = \min_{x\in\R^d, w\in \R^m} \mathcal{L}(x,w,u)
+    \end{equation}
+    Dual problem
+    \begin{equation}
+      \max_{u \in \R^m} \varphi(u)
+    \end{equation}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Example: Lasso}
+  $\ell_1$ regularized regression
+  \begin{equation}
+    \min_{x\in \R^d}\, \frac12 \Vert Ax-b \Vert^2 + \lambda \Vert x \Vert_1
+  \end{equation}
+  fits this template with
+  \begin{equation}
+    f(w) = \frac12 \Vert w-b \Vert^2 \quad \text{and} \quad g(x) = \lambda \Vert x \Vert_1
+  \end{equation}
+  Computation gives
+  \begin{equation}
+    f^*(u) = \frac12 \Vert b \Vert^2 - \frac12 \Vert b-u \Vert^2 \quad \text{and} \quad g^*(v)= \mathbbm{1}(\Vert v/\lambda \Vert_\infty \le 1).
+  \end{equation}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Dual of Lasso}
+  We had
+  \begin{equation}
+    f^*(u) = \frac12 \Vert b \Vert^2 - \frac12 \Vert b-u \Vert^2 \quad \text{and} \quad g^*(v)= \mathbbm{1}(\Vert v/\lambda \Vert_\infty \le 1).
+  \end{equation}
+  So the dual is
+  \begin{equation}
+    \begin{aligned}
+      &\max_{u\in \R^m} - f^*(-u) - g^*(A^T u) \\
+      \Leftrightarrow& \min_{u\in\R^m} \Vert b+u \Vert^2 \quad \text{s.t.} \quad \Vert A^T u \Vert_{\infty} \le \lambda
+    \end{aligned}
+  \end{equation}
+
+  Similarly, for least squares, ridge/logistic regression, SVM, etc.
+\end{frame}
+
+\begin{frame}
+  \frametitle{But why?}
+  \begin{itemize}
+    \item Duality gap gives a \textcolor{blue}{certificate} of current optimization quality
+          \begin{equation}
+            \begin{aligned}
+              f(A \bar{x}) + g(\bar{x}) &\ge \min_{x\in\R^d} \, f(Ax) + g(x) \\
+              & \ge \max_{u\in\R^m} - f^*(-u) - g^*(A^T u) \\
+              &\ge -f^*(-\bar{u}) - g^*(A^T \bar{u})
+            \end{aligned}
+          \end{equation}
+    \item Stopping criterion
+    \item Dual problem is sometimes easier to solve
+  \end{itemize}
+\end{frame}
+
+
+\section{Derivative free}%
+\label{sec:}
+
+\begin{frame}
+  \frametitle{Look, no gradients!}
+  Can we solve $\min_{x\in \R^d}\, f(x)$ without access to gradients?
+
+  \begin{algorithm}[H]
+    \caption{Random search}
+    \begin{algorithmic}[1]
+      \For{$k = 1,2, \dots$}
+      \For{pick a random direction $d_k \in \R^d$}
+      \State{$\gamma_k:= \argmin_{\gamma\in \R} f(x_k+ \gamma d_k)$}
+      \State{$x_{k+1} := x_k+ \gamma_k d_k$}
+      \EndFor{}
+    \end{algorithmic}
+  \end{algorithm}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Convergence rate for derivative-free random search}
+  Converges same as gradient descent - up to a slow-down factor $d$.
+
+  \textcolor{blue}{Proof.}
+  \begin{equation}
+    f(x_k+ \gamma d_k ) \le f(x_k) + \gamma \langle d_k, \nabla f(x_k) \rangle + \frac{\gamma^2L}{2} \Vert d_k \Vert^2
+  \end{equation}
+  Minimizing the upper bound (RHS), there exists a step $\bar{\gamma}$ for which
+  \begin{equation}
+    f(x_k + \bar{\gamma}d_k) \le f(x_k) - \frac{1}{L} \left\langle \frac{d_k}{\Vert d_k \Vert^2}, \nabla f(x_k)\right\rangle.
+  \end{equation}
+  So our (exact line-search) step can only be better
+  \begin{equation}
+    f(x_k + \gamma_k d_k) \le f(x_k + \bar{\gamma}d_k)
+  \end{equation}
+  Taking expectation and using $\E_r \langle r, g \rangle^2 = 1/d \Vert g \Vert^2$ for $r \sim$ sphere, gives
+  \begin{equation}
+    \E [f(x_k+ \gamma_k d_k)] \le E[f(x_k)] - \frac{1}{L d} \E\left[ \Vert \nabla f(x_k) \Vert^2\right].
+  \end{equation}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Convergence rate for derivative-free random search}
+  Same as what we obtained for \textcolor{blue}{gradient descent},
+  now with an \textcolor{blue}{extra factor of $d$}. $d$ can be huge!!!
+
+  Similarly for other function classes
+  \begin{itemize}
+    \item For convex functions, we get a rate of $\mathcal{O}(\frac{d L}{\epsilon})$.
+    \item For $\mu$-strongly convex functions, we get a rate of $\mathcal{O}(d \kappa \log(1/\epsilon))$.
+  \end{itemize}
+  Always $d$ times the complexity of gradient descent on the function class.
+  But assumed differentiability. Can also approximate the gradient.
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Applications for derivative-free random search}
+
+  \textcolor{blue}{Applications}
+  \begin{itemize}
+    \item competitive method for \textcolor{blue}{reeinforcement learning}
+    \item No need to store a gradient
+    \item hyperparameter optimization, and other difficult e.g. discrete optimization
+problems, black-box, noisy
+    \item
+  \end{itemize}
+
+\end{frame}
+
+
+\end{document}
