@@ -29,6 +29,16 @@
       f^*(y) = \sup_x \{\langle y,x \rangle - f(x)\}
     \end{equation}
   \end{definition}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Convex conjugate}
+
+  \begin{block}{}
+    \begin{equation}
+      f^*(y) = \sup_x \{\langle y,x \rangle - f(x)\}
+    \end{equation}
+  \end{block}
   \begin{minipage}{0.48\textwidth}
   \begin{figure}[ht]
     \centering
@@ -39,8 +49,6 @@
     \vspace{2cm}
     \textcolor{blue}{Figure:} maximum gap between linear function $x \mapsto \langle y, x \rangle$ and $f$
   \end{minipage}
-
-
 \end{frame}
 
 \begin{frame}
@@ -76,39 +84,45 @@
 
 \begin{frame}
   \frametitle{More examples}
-    \textcolor{blue}{Generalized linear models}
     \begin{equation}
-      \min_{x\in \R^d} \, f(Ax) + g(x).
+      \hspace{-4cm}\text{\textcolor{blue}{Generalized linear models:}}  \qquad \min_{x\in \R^d} \, f(Ax) + g(x).
     \end{equation}
     Two approaches to reformulate:
     \begin{equation}
-      \min_x \max_y \, \langle y, Ax \rangle - f^*(y) + g(x)
+      \min_x \underbrace{\max_y \, \langle y, Ax \rangle - f^*(y)}_{= f(Ax)} + g(x).
+    \end{equation}
+    Switch min and max
+    \begin{equation}
+      \min_x \max_y \, - f^*(y) + \langle y, Ax \rangle + g(x).
+    \end{equation}
+    Change sign to go from max to min
+    \begin{equation}
+      \min_x \, - f^*(y) - \min_y \underbrace{-\langle y, Ax \rangle - g(x)}_{= g^*(-A^T y)}.
     \end{equation}
 \end{frame}
 
 \begin{frame}
   \frametitle{Generalized linear models continued}
   Or reformulate
-    \begin{equation}
-      \min_{x\in \R^d} \, f(Ax) + g(x)
-    \end{equation}
-    as
-    \begin{equation}
-      \min_{x\in\R^d, w\in \R^m} \, f(w)+ g(x) \quad \text{s.t.} w = Ax
-    \end{equation}
-    Use Lagrange function
-    \begin{equation}
-      \mathcal{L}(x,w, u) :=  \, f(w)+ g(x) \langle u, w - Ax \rangle
-    \end{equation}
-    the dual function is given by
-    \begin{equation}
-      \varphi(u) = \min_{x\in\R^d, w\in \R^m} \mathcal{L}(x,w,u)
-    \end{equation}
-    Dual problem
-    \begin{equation}
-      \max_{u \in \R^m} \varphi(u)
-    \end{equation}
-
+  \begin{equation}
+    \min_{x\in \R^d} \, f(Ax) + g(x)
+  \end{equation}
+  as
+  \begin{equation}
+    \min_{x\in\R^d, w\in \R^m} \, f(w)+ g(x) \quad \text{s.t.} w = Ax
+  \end{equation}
+  Use Lagrange function
+  \begin{equation}
+    \mathcal{L}(x,w, u) :=  \, f(w)+ g(x) \langle u, w - Ax \rangle,
+  \end{equation}
+  then the dual function is given by
+  \begin{equation}
+    \varphi(u) = \min_{x\in\R^d, w\in \R^m} \mathcal{L}(x,w,u).
+  \end{equation}
+  Dual problem
+  \begin{equation}
+    \max_{u \in \R^m} [\varphi(u) = - f^*(-u) - g^*(A^T u)].
+  \end{equation}
 \end{frame}
 
 
@@ -165,6 +179,19 @@
 \section{Derivative free}%
 \label{sec:}
 
+
+\begin{frame}
+  \frametitle{}
+
+  \begin{center}
+    \Huge\textcolor{blue}{Zero-order Optimization}\\
+    $\Leftrightarrow$ \textcolor{blue}{Derivative-Free}\\
+    $\Leftrightarrow$ \textcolor{blue}{Blackbox}
+  \end{center}
+
+
+\end{frame}
+
 \begin{frame}
   \frametitle{Look, no gradients!}
   Can we solve $\min_{x\in \R^d}\, f(x)$ without access to gradients?
@@ -207,15 +234,16 @@
 
 \begin{frame}
   \frametitle{Convergence rate for derivative-free random search}
-  Same as what we obtained for \textcolor{blue}{gradient descent},
-  now with an \textcolor{blue}{extra factor of $d$}. $d$ can be huge!!!
-
+  Same as what we obtained for \textcolor{blue}{gradient descent},\\
+  now with an \textcolor{blue}{extra factor of $d$}. $d$ can be huge!!!\\
+  \bigskip
   Similarly for other function classes
   \begin{itemize}
     \item For convex functions, we get a rate of $\mathcal{O}(\frac{d L}{\epsilon})$.
     \item For $\mu$-strongly convex functions, we get a rate of $\mathcal{O}(d \kappa \log(1/\epsilon))$.
   \end{itemize}
-  Always $d$ times the complexity of gradient descent on the function class.
+  Always $d$ times the complexity of gradient descent on the function class.\\
+  \bigskip
   But assumed differentiability. Can also approximate the gradient.
 
 \end{frame}
@@ -225,12 +253,65 @@
 
   \textcolor{blue}{Applications}
   \begin{itemize}
-    \item competitive method for \textcolor{blue}{reeinforcement learning}
+    \item competitive method for \textcolor{blue}{reinforcement learning}
     \item No need to store a gradient
     \item hyperparameter optimization, and other difficult e.g. discrete optimization
 problems, black-box, noisy
-    \item
   \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Reinforcement learning}
+  \begin{equation}
+    s_{k+1} = f(s_k, a_k, e_k),
+  \end{equation}
+  where $s_k$ is the \textcolor{blue}{state} of the system, $a_k$ is the control \textcolor{blue}{action}, and $e_t$ is some random \textcolor{blue}{noise}. We assume existence of $f$, but it is unknown.\\
+  \medskip
+  We search for a ``policy''
+  \begin{equation}
+    a_k := \pi(a_1, \dots, a_{k-1}, s_0, \dots, s_k)
+  \end{equation}
+
+  \medskip
+  \textcolor{blue}{Goal:} Maximize reward
+  \begin{equation}
+    \begin{aligned}
+       \max_{a_k}\, &\E_{e_k} \left[ \sum_{k=1}^N R_k(s_k, a_k)\right]\\
+       \text{s.t.} & s_{k+1}=f(s_k, a_k, e_k)
+    \end{aligned}
+  \end{equation}
+\end{frame}
+
+\section{methods in practice}%
+\label{sec:}
+
+\begin{frame}
+  \frametitle{}
+  \begin{center}
+    \Huge\textcolor{blue}{Adaptive \& other SGD methods}\\
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Adagrad}
+  An adaptive variant of SGD
+  \begin{algorithm}[H]
+    \caption{Adagrad}\label{label:}
+    \begin{algorithmic}[1]
+      \For{$k = 1, \dots$}
+      \State{pick stochastic gradient $g_k$}
+      \State{update $[G_k]_i = \sum_{l=}^{k}([g_k]_i)^2, \quad \forall i$}
+      \State{update $[x_{k+1}]_i =[x_{k}]_i - \frac{\gamma}{\sqrt{[G_k]_i}}[g_k]_i,  \quad \forall i$}
+      \Endfor
+    \end{algorithmic}
+  \end{algorithm}
+  \begin{itemize}
+    \item chooses an \textcolor{blue}{adaptive, coordinate-wise} learning rate
+    \item strong performance in practice
+    \item many variants: Adadelta, Adam, RMSprop
+  \end{itemize}
+
 
 \end{frame}
 
