@@ -242,7 +242,7 @@
   \end{itemize}
   Then
   \begin{equation}
-    W^* = \argmin_{W\in \R^{m\times d}} \sum_{i=1}^{n} \Vert W x_i - y_i \Vert^2.
+    W^* = \argmin_{W\in \R^{m\times d}} \sum_{i=1}^{n} \Vert W x_i - y_i \Vert_F^2.
   \end{equation}
   where $\Vert A \Vert_F = \sqrt{\sum_{i,j} a_{i,j}}$ is the Frobenius norm of a matrix $A$.\\
   \textcolor{gray}{Frobenius norm of A = Euclidean norm of \texttt{vec(A)} (``flattening'' of A).}
