@@ -283,7 +283,7 @@ problems, black-box, noisy
   \end{equation}
 \end{frame}
 
-\section{methods in practice}%
+\section{Methods in practice}%
 \label{sec:}
 
 \begin{frame}
@@ -301,8 +301,8 @@ problems, black-box, noisy
     \begin{algorithmic}[1]
       \For{$k = 1, \dots$}
       \State{pick stochastic gradient $g_k$}
-      \State{update $[G_k]_i = \sum_{l=}^{k}([g_k]_i)^2, \quad \forall i$}
-      \State{update $[x_{k+1}]_i =[x_{k}]_i - \frac{\gamma}{\sqrt{[G_k]_i}}[g_k]_i,  \quad \forall i$}
+      \State{$[G_k]_i = \sum_{l=}^{k}([g_k]_i)^2, \quad \forall i$}
+      \State{$[x_{k+1}]_i =[x_{k}]_i - \frac{\gamma}{\sqrt{[G_k]_i}}[g_k]_i,  \quad \forall i$}
       \Endfor
     \end{algorithmic}
   \end{algorithm}
@@ -310,6 +310,48 @@ problems, black-box, noisy
     \item chooses an \textcolor{blue}{adaptive, coordinate-wise} learning rate
     \item strong performance in practice
     \item many variants: Adadelta, Adam, RMSprop
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Adam}
+  A \textcolor{blue}{momentum} variant of \textcolor{blue}{Adagrad}
+  \begin{algorithm}[H]
+    \caption{Adam}\label{label:}
+    \begin{algorithmic}[1]
+      \For{$k = 1, \dots$}
+      \State{pick stochastic gradient $g_k$}
+      \State{$m_k = \beta_1 m_{k-1} + (1-\beta_1)g_k$ \hfill \texttt{momentum}}
+      \State{$[v_k]_i = \beta_2 [v_{k-1}]_i + (1-\beta_2){([g_k]_i)}^2$ \hfill \texttt{2nd-order statistics}}
+      \State{$[x_{k+1}]_i =[x_{k}]_i - \frac{\gamma}{\sqrt{[v_k]_i}}[m_k]_i,  \quad \forall i$}
+      \Endfor
+    \end{algorithmic}
+  \end{algorithm}
+  \begin{itemize}
+    \item forgetting of old weights
+    \item momentum (see lecture on acceleration)
+    \item strong performance for certain DL problems
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{SignSGD}
+  Only use the sign (one bit) of each gradient entry: \\
+  Yields a \textcolor{blue}{communication efficient} variant of SGD.
+  \begin{algorithm}[H]
+    \caption{SignSGD}\label{label:}
+    \begin{algorithmic}[1]
+      \For{$k = 1, \dots$}
+      \State{pick stochastic gradient $g_k$}
+      \State{$[x_{k+1}]_i =[x_{k}]_i - \gamma_k \sign([m_k]_i),  \quad \forall i$}
+      \Endfor
+    \end{algorithmic}
+  \end{algorithm}
+  \textcolor{gray}{(possible rescaling of $\gamma_k$ by $\Vert g_k \Vert_1$)}
+
+  \begin{itemize}
+    \item combats communication bottleneck for distributed training
+    \item convergence issues
   \end{itemize}
 
 
