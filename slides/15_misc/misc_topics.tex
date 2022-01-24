@@ -2,10 +2,6 @@
 
 \input{../../shared_slides.tex}
 
-% reference: https://yuxinchen2020.github.io/ele522_optimization/lectures/variance_reduction.pdf
-% or
-% https://ieeexplore-ieee-org.uaccess.univie.ac.at/stamp/stamp.jsp?tp=&arnumber=9226504
-
 \usepackage{booktabs}
 
 \title{Duality, Gradient-free, in Application}
@@ -93,11 +89,11 @@
     \end{equation}
     Switch min and max
     \begin{equation}
-      \min_x \max_y \, - f^*(y) + \langle y, Ax \rangle + g(x).
+       \max_y\min_x \, - f^*(y) + \langle y, Ax \rangle + g(x).
     \end{equation}
     Change sign to go from max to min
     \begin{equation}
-      \min_x \, - f^*(y) - \min_y \underbrace{-\langle y, Ax \rangle - g(x)}_{= g^*(-A^T y)}.
+      \max_y \, - f^*(y) - \max_x \underbrace{-\langle y, Ax \rangle - g(x)}_{= g^*(-A^T y)}.
     \end{equation}
 \end{frame}
 
@@ -113,7 +109,7 @@
   \end{equation}
   Use Lagrange function
   \begin{equation}
-    \mathcal{L}(x,w, u) :=  \, f(w)+ g(x) \langle u, w - Ax \rangle,
+    \mathcal{L}(x,w, u) :=  \, f(w)+ g(x) + \langle u, w - Ax \rangle,
   \end{equation}
   then the dual function is given by
   \begin{equation}
