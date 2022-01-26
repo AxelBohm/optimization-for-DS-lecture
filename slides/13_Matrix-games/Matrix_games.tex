@@ -328,17 +328,17 @@
 \begin{frame}
   \frametitle{}
 
-We can still show
+  We can still show:
   \begin{theorem}
     Convergence rate for \textbf{averaged iterates} in terms of \textbf{primal-dual gap}
     \begin{equation}
       f_p(\bar{x}_k) - f_d(\bar{y}_k) \le \frac{C}{ \sqrt{k}},
     \end{equation}
-    where $\bar{x}_k = \frac{1}{k} \sum_{i=0}^{k-1} x_i $
+    where $\bar{x}_k = \frac{1}{k} \sum_{i=0}^{k-1} x_i$.
   \end{theorem}
 
   \begin{itemize}
-    \item with the same analysis as for subgradient descent
+    \item with the same analysis as for the subgradient method
   \end{itemize}
 \end{frame}
 
@@ -347,12 +347,11 @@ We can still show
   With the notation $g_k = F(z_k)$ we get
   \begin{equation}
     \begin{aligned}
-      \Vert x_{k+1} - x^* \Vert^2 &\le \Vert x_k - \alpha_k g_k - x^* \Vert^2 \\
-      &= \Vert x_k-x^* \Vert^2 + 2 \alpha_k \langle g_k, x^*-x_k \rangle + \alpha^2 \Vert g_k \Vert^2.
+      \Vert z_{k+1} - z^* \Vert^2 &\le \Vert z_k - \alpha_k g_k - z^* \Vert^2 \\
+      &= \Vert z_k-z^* \Vert^2 + 2 \alpha_k \langle g_k, z^*-z_k \rangle + \alpha^2 \Vert g_k \Vert^2.
     \end{aligned}
   \end{equation}
-  But this time $\langle g_k, x^* - x_k \rangle = [f_d(y_k) - f_p(x_k)]$.
-  % Rest of the proof is left as an exercise.
+  But this time $\langle g_k, z^* - z_k \rangle = [f_d(y_k) - f_p(x_k)]$.
 \end{frame}
 
 
