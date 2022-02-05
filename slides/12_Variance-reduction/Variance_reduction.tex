@@ -178,7 +178,7 @@
     \item Indeed $\E[X] = \nabla f(x^k)$, but $\E[Y]\neq 0$ $\rightarrow $ is \textbf{biased estimator}
     \item $X$ and $Y$ are correlated as $X-Y \to 0$:
           \begin{itemize}
-            \item $x^k$ and $x_{k-1}$ both converge to $x^*$ $\Rightarrow$ $ \nabla f_i(x_k) - \nabla f_i(x_{k-1}) \to 0$
+            \item $x^k$ and $x^{k-1}$ both converge to $x^*$ $\Rightarrow$ $ \nabla f_i(x^k) - \nabla f_i(x^{k-1}) \to 0$
             \item the last term converges to $\nabla f(x^*)= 0$
           \end{itemize}
   \end{itemize}
@@ -327,7 +327,7 @@
   \frametitle{SVRG}
   \textbf{key idea:} by storing old point we can
   \begin{equation}
-    \underbrace{\nabla f_{i_k}(x^k) - \nabla f_{i_k}(x^{\text{old}})}_{\text{$\to 0$ if $x\approx x^{\text{old}}$}} + \underbrace{\nabla f(x^{\text{old}})}_{\text{$\to 0$ if $x^{\text{old}}$}}
+    \underbrace{\nabla f_{i_k}(x^k) - \nabla f_{i_k}(x^{\text{old}})}_{\text{$\to 0$ if $x\approx x^{\text{old}}$}} + \underbrace{\nabla f(x^{\text{old}})}_{\text{$\to 0$ if $x^{\text{old}}\approx x^*$}}
   \end{equation}
   \begin{itemize}
     \item is an unbiased estimate of $\nabla f(x^k)$
