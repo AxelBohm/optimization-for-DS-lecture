@@ -193,7 +193,7 @@
     Minimize (local) \textcolor{blue}{quadratic model} of $f$.
   \end{block}
   \begin{lemma}%
-    Let $f$ be convex, twice differentiable and $\nabla^2 f(x) \succ 0$. Then $x_{k+1}$ resulting from \textbf{Newton's step} satisfies
+    Let $f$ be convex, twice differentiable and $\nabla^2 f(x_k) \succ 0$. Then $x_{k+1}$ resulting from \textbf{Newton's step} satisfies
     \begin{equation}
       x_{k+1} = \argmin_{x \in \R^d} \left\{f(x_k) + \langle \nabla f(x_k), x-x_k \rangle + \frac12 \big \langle x-x_k, \nabla^2 f(x_k) (x-x_k)  \big\rangle \right\}
     \end{equation}
@@ -246,7 +246,7 @@
   \begin{corollary}%
     In the setting of previous theorem, if
     \begin{equation}
-      \Vert x_k - x^* \Vert \le \frac{\mu}{B},
+      \Vert x_0 - x^* \Vert \le \frac{\mu}{B},
     \end{equation}
     then
     \begin{equation}
