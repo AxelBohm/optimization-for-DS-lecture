@@ -119,8 +119,8 @@
   \frametitle{Mixed Strategies}
   \begin{block}{von Neumann (1928) --- Mixed strategies}
     \begin{itemize}
-      \item Alice picks strategies $1, \dots, m$ \emph{with probabilities} $x\in \Delta_m$
-      \item Bob picks strategies $1, \dots, n$ \emph{with probabilities} $y\in \Delta_n$
+      \item Alice picks strategies $1, \dots, m$ \emph{with probabilities} $y\in \Delta_m$
+      \item Bob picks strategies $1, \dots, n$ \emph{with probabilities} $x\in \Delta_n$
     \end{itemize}
     Expected gain of Alice is
     \begin{equation}
@@ -131,7 +131,7 @@
     \begin{theorem}[Saddle point exists]
       Expected gain of Alice $=$ expected loss of Bob
       \begin{equation}
-        \max_{x \in \Delta} \min_{y \in \Delta} \langle Ax, y \rangle = \min_{y \in \Delta} \max_{x \in \Delta} \langle Ax, y \rangle.
+        \min_{x \in \Delta} \max_{y \in \Delta} \, \langle Ax, y \rangle = \max_{y \in \Delta} \min_{x \in \Delta} \, \langle Ax, y \rangle.
       \end{equation}
 
     \end{theorem}
